@@ -38,9 +38,9 @@ One (1) Valid I.D of the Parent/guardian,assistance_requirements,Educational Ass
 Enrolment Assessment Form or Certificate of Enrolment or Registration,assistance_requirements,Educational Assistance,TRUE
 "Statement of Account for college students, when available. This may not available to State Universities",assistance_requirements,Educational Assistance,TRUE
 Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Educational Assistance,TRUE
-One (1) identification card of the client/person to be interviewed,assistance_requirements,Food Assistance for Individual and Families Endorsed in Groups,TRUE
-Project proposal and Food distribution List(CRCF client),assistance_requirements,Food Assistance for Individual and Families Endorsed in Groups,TRUE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Food Assistance for Individual and Families Endorsed in Groups,TRUE
+One (1) identification card of the client/person to be interviewed,assistance_requirements,Food Assistance,TRUE
+Project proposal and Food distribution List(CRCF client),assistance_requirements,Food Assistance,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Food Assistance,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Fire Victim,TRUE
 Police Report/ Bureau of Fire Protection Report from the Bureau of Fire,assistance_requirements,Cash Assistance for Fire Victim,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Distressed OFs,TRUE
@@ -51,7 +51,7 @@ One (1) identification card of the client/person to be interviewed,assistance_re
 Certification from a social worker or Case manager from rescued clients.,assistance_requirements,Cash Assistance for Rescued Client,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
 Police Report,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
-Social Worker’s certification for the victims of online sexual exploitation of children,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
+Social Worker? certification for the victims of online sexual exploitation of children,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Locally stranded individuals (LSI),TRUE
 "LSI without valid IDs, the Medical Certificate or the Travel Authority issued by the Philippine National Police will suffice and be accepted to prove his/her identity.",assistance_requirements,Cash Assistance for Locally stranded individuals (LSI),TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for all other Incidents,TRUE

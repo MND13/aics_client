@@ -63,8 +63,8 @@
         }" :page="page">
 
         <template v-slot:footer.page-text="{ pageStart, pageStop, itemsLength }">
-          <v-row align="center" no-gutters >
-            <v-col> 
+          <v-row align="center" no-gutters>
+            <v-col>
               <label for="">Page No.</label>
               <input type="text" name="" id="" class="form-control" v-model="page">
             </v-col>
@@ -117,6 +117,13 @@
             </template>
           </v-edit-dialog>
         </template>
+
+        <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="PrintGIS(item)" >
+          mdi-printer
+        </v-icon>
+      </template>
+
       </v-data-table>
     </v-card-text>
 
@@ -166,6 +173,7 @@ export default {
         { value: "amount", text: "Amount", sortable: false },
 
         { value: "status", text: "Status", sortable: false, width: "50px;" },
+        { value: "actions", text: "Actions", sortable: false, width: "50px;" },
       ],
       search: "",
       page: 1,
@@ -182,6 +190,7 @@ export default {
     {
       this.getClients();
     }
+
   },
   methods: {
     print() {
@@ -263,7 +272,15 @@ export default {
       );*/
 
 
-    }
+    },
+
+    PrintGIS(item) {
+      window.open(
+        route("api.pdf.gis2", { id: item.aics_client_id }),
+        "_blank"
+      );
+    },
+
 
 
   },
@@ -272,6 +289,17 @@ export default {
     // console.log(this.id);
     this.isBusy = true;
     this.getClients();
+
+    this._keyListener = function (e) {
+      if (e.key === "g" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault(); // present "Save Page" from getting triggered.
+
+        this.PrintGISMany()
+      }
+    };
+
+    document.addEventListener('keydown', this._keyListener.bind(this));
+
   },
 
 };

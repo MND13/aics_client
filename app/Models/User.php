@@ -20,9 +20,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'ext_name',
+        'gender',
+        'birth_date',
+        'psgc_id',
         'password',
+        'mobile_number',
+        'street_number'
     ];
 
     public static function boot()

@@ -80,7 +80,7 @@
         <div style="display:none;">
             {{ $padding = 18 }}
             @if (isset($_GET['gt']))
-                {{ $padding = 14 }}
+                {{ $padding = 12 }}
             @endif
         </div>
 
@@ -90,8 +90,8 @@
                     <div style="float: right;text-align: right; font-size:8pt;">{{ $clients->currentPage() }}</div>
                     Republic of the Philippines <br />
                     DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
-                    Field Office XI, Davao City
-                    <h3> {{ $payroll->title }} </h3>
+                    Field Office XI, Davao City <br>
+                    <b> {{ $payroll->title }} </b>
                 </td>
             </tr>
             <tr>
@@ -142,15 +142,15 @@
                 </tr>
             @endforeach
             <tr style="font-weight:bold;">
-                <td colspan="4">Sub Total</td>
-                <td style=" text-align:right;">{{ number_format($sum) }}</td>
-                <td colspan="2"> </td>
+                <td colspan="4" style=" padding: 2px 15px;">Sub Total</td>
+                <td style=" text-align:right;  padding: 2px 15px;">{{ number_format($sum) }}</td>
+                <td colspan="2" style= "padding: 2px 15px;"> </td>
             </tr>
             @if ($clients->onLastPage() && (isset($_GET['gt']) && $_GET['gt'] == 1))
                 <tr style="font-weight:bold;">
-                    <td colspan="4">Grand Total</td>
-                    <td style=" text-align:right;">{{ number_format($grand_total) }}</td>
-                    <td colspan="2"> </td>
+                    <td colspan="4" style=" padding: 2px 15px;">Grand Total</td>
+                    <td style=" text-align:right; padding: 2px 15px;">{{ number_format($grand_total) }}</td>
+                    <td colspan="2" style=" padding: 2px 15px;"> </td>
                 </tr>
             @endif
 

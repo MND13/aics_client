@@ -27,10 +27,11 @@
 </head>
 <body>
     <div id="app" data-app >
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none" >
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none"  color="red">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    AICS Online Application
+                    Assistance to Individuals in Crisis Situation (AICS)
+                    
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -52,15 +53,15 @@
                                 </li>
                             @endif
 
-                            <!--if (Route::has('register'))
+                            @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{ route('register') }}">{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            endif-->
+                            @endif
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->first_name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

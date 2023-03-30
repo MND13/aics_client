@@ -32,31 +32,12 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('clients', [\App\Http\Controllers\AicsClientController::class, 'client_upload'])->name("api.client.upload");
     Route::post('clients/{id}', [\App\Http\Controllers\AicsClientController::class, 'update'])->name("api.client.update");
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class, 'getCategories'])->name("api.categories");
-    Route::get('reports', [\App\Http\Controllers\AicsClientController::class, 'report'])->name("api.report");
-    Route::post('export/payroll/{id}', [\App\Http\Controllers\PayrollController::class, 'export'])->name("api.payroll.export");
-    Route::put('payroll-clients/{id}', [\App\Http\Controllers\PayrollClientController::class, 'update'])->name("api.payroll-clients.update");
 });
 
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
-Route::get('pdf/{uuid}', [\App\Http\Controllers\AicsAssistanceController::class, 'pdf'])->name("api.pdf.gis");
 Route::get('gis/{id}', [\App\Http\Controllers\AicsClientController::class, 'gis'])->name("api.pdf.gis2");
-Route::post('gis_many/{ids}', [\App\Http\Controllers\AicsClientController::class, 'gis_many'])->name("api.pdf.gis_many");
 
-Route::get('dirty_list', [\App\Http\Controllers\DirtyListClientsController::class, 'index'])->name("api.dirty_list.index");
-
-
-Route::post('payrolls', [\App\Http\Controllers\PayrollController::class, 'create'])->name("api.payroll.create");
-Route::get('payrolls', [\App\Http\Controllers\PayrollController::class, 'index'])->name("api.payroll.index");
-Route::post('payrolls/{id}', [\App\Http\Controllers\PayrollController::class, 'update'])->name("api.payroll.update");
-Route::post('payrolls/del/{id}', [\App\Http\Controllers\PayrollController::class, 'destroy'])->name("api.payrolls.delete");
-Route::get('payrolls/{id}', [\App\Http\Controllers\PayrollController::class, 'show'])->name("api.payroll.show");
-Route::get('payrolls/print/{id}', [\App\Http\Controllers\PayrollController::class, 'print'])->name("api.payroll.print");
-Route::get('payrolls/print_footer/{id}', [\App\Http\Controllers\PayrollController::class, 'print_footer'])->name("api.payroll.print_footer");
-Route::get('active_payrolls', [\App\Http\Controllers\PayrollController::class, 'active_payrolls'])->name("api.active_payrolls");
 
 Route::get('uploaded-files', [\App\Http\Controllers\DirtyListController::class, 'index'])->name("api.dirty-list.index");
 Route::delete('uploaded-files/{id}', [\App\Http\Controllers\DirtyListController::class, 'destroy'])->name("api.dirty-list.delete");
-
-Route::get('payrolls/printv2/{id}', [\App\Http\Controllers\PayrollController::class, 'printv2'])->name("api.payroll.printv2");
-Route::get('payrolls/print_coe/{id}', [\App\Http\Controllers\PayrollController::class, 'print_coe'])->name("api.payroll.print_coe");

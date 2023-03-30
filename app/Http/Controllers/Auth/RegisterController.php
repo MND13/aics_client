@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Psgc;
 
 class RegisterController extends Controller
 {
@@ -50,9 +51,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'ext_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'birth_date' => ['date'],
+            'psgc_id' => ['exists:psgcs,id'],
+            'mobile_number' => ['required', 'numeric', 'digits:11'],
+            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
+            'street_number' => ['sometimes', 'required', 'string', 'max:255'],
+            # 'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -65,9 +73,31 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
+            'first_name' => $data['first_name'],
+            'middle_name' => isset($data['middle_name']) ?  $data['middle_name'] : NULL,
+            'last_name' => $data['last_name'],
+            'ext_name' => isset($data['ext_name']) ? $data['ext_name'] : NULL,
+            'birth_date' => $data['birth_date'],
+            'psgc_id' => $data['psgc_id'],
+            'gender' => $data['gender'],
+            'mobile_number' => $data['mobile_number'],
+            'email' => isset($data['email']) ?  $data['email'] : NULL,
+            'password' => "DSWD12345",
+            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,
+           
+          
         ]);
+    }
+
+    public function showRegistrationForm()
+    {
+        $provinces = Psgc::getProvinces("region_psgc", "110000000");
+
+        return view(
+            'auth.register',
+            [
+                "provinces" => $provinces
+            ]
+        );
     }
 }

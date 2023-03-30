@@ -52,6 +52,9 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             $psgc = Psgc::where('brgy_psgc', $row['psgc'])->first();
             $psgc_id = $psgc->id;
         }
+
+        $mobile_number = isset($row['mobile_number'])? trim($row['mobile_number']) : null;
+
         return new AicsClient([
             'dirty_list_id' => $this->dirtyList->id,
             'first_name'    => mb_strtoupper(trim($row['first_name'] ?? null)),
@@ -62,6 +65,7 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
             'birth_date'    => $birth_date,
             'gender'        => $row['gender'],
             'psgc_id'       => $psgc_id,
+            'mobile_number' => $mobile_number
         ]);
     }
 
@@ -140,6 +144,10 @@ class ClientsImport implements WithHeadingRow, ToModel, WithStartRow, WithBatchI
         
         if(empty($data['birth_date'])){
             unset($data['birth_date']);
+        }
+
+        if(empty($data['mobile_number'])){
+            unset($data['mobile_number']);
         }
         
         return $data;

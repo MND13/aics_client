@@ -46,10 +46,16 @@ class PsgcController extends Controller
      */
     public function show(Request $request, $type)
     {
+        
+
         switch ($type) {
             case 'region':
                 return Psgc::getRegions();
                 break;
+            case 'cities':
+                $field = $request->field;
+                $value = $request->value;
+                return Psgc::getCities($field, $value)->toArray();
             case 'brgy':
                 $field = $request->field;
                 $value = $request->value;
@@ -59,7 +65,7 @@ class PsgcController extends Controller
             default:
                 # code...
                 break;
-        }
+            }
     }
 
     /**

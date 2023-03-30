@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app> 
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2">
@@ -34,8 +34,10 @@
     
        
       </div>
-      <div class="col-md-10">
-        <router-view :user="user"></router-view>
+      <div class="col-md-9"> 
+       <router-view :user="user">
+       
+        </router-view>
       </div>
     </div>
   </div>
@@ -55,22 +57,20 @@ export default {
           text: "Home",
         },
         {
-          to: "/import",
-          text: "Import",
+          to: "/client",
+          text: "Client Information",
           
         },
         {
-          to: "/master_list",
-          text: "Master List",
+          to: "/assistance",
+          text: "Request Assistance",
+          
         },
         {
-          to: "/payroll",
-          text: "Payroll",
+          to: "/contact",
+          text: "Contact Us",
         },
-        {
-          to: "/users",
-          text: "Users",
-        },
+       
       ],
     };
   },

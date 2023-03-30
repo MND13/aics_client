@@ -21,10 +21,7 @@ import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 import ImportFile from './Components/ImportFile.vue'
-import MasterList from "./Components/MasterList"
 import GISComponent from "./Components/GISComponent.vue"
-import Payroll from "./Components/Payroll"
-import PayrollClientList from "./Components/PayrollClientList"
 import Users from "./Components/Users"
 
 Vue.use(Vuetify);
@@ -35,7 +32,7 @@ Vue.use(VueViewer)
 
 const router = new VueRouter({
     mode: "history",
-    base: process.env.MIX_BASE_NAME,
+   // base: process.env.MIX_BASE_NAME ,
     routes: [
         // { path: "/404", component: NotFound },
         {
@@ -60,25 +57,7 @@ const router = new VueRouter({
             component: GISComponent,
 
         },
-        {
-            path: "/master_list",
-            name: "master_list",
-            component: MasterList,
-
-        },
-        {
-            path: "/payroll",
-            name: "payroll",
-            component: Payroll,
-
-        },
-        {
-            path: "/payroll/:id?",
-            name: "payroll_list",
-            component: PayrollClientList,
-            props: true
-
-        },
+      
         {
             path: "/users/:id?",
             name: "users",
@@ -94,6 +73,9 @@ Vue.filter("formatDate", function (value) {
     }
 });
 
+Vue.component('register-component', require('./components/Register.vue').default);
+
+
 export default new Vuetify({
     icons: {
       iconfont: 'mdi', // default - only for display purposes
@@ -108,3 +90,4 @@ const app = new Vue({
 
 });
 
+console.log(process.env.MIX_BASE_NAME);
