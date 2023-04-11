@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Psgc;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -60,7 +61,7 @@ class RegisterController extends Controller
             'mobile_number' => ['required', 'numeric', 'digits:11'],
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'street_number' => ['sometimes', 'required', 'string', 'max:255'],
-            # 'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -71,7 +72,12 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
     protected function create(array $data)
-    {
+    {   
+        $usernametemp = substr($data['first_name'], 0,1) .  substr($data['middle_name'], 0,1) . $data['last_name'];
+        $username = $this->generateUserName($usernametemp);
+
+    
+
         return User::create([
             'first_name' => $data['first_name'],
             'middle_name' => isset($data['middle_name']) ?  $data['middle_name'] : NULL,
@@ -82,9 +88,9 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'mobile_number' => $data['mobile_number'],
             'email' => isset($data['email']) ?  $data['email'] : NULL,
-            'password' => "DSWD12345",
-            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,
-           
+            'password' => $data['password'],
+            'username' =>$username ,
+            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,           
           
         ]);
     }
@@ -100,4 +106,15 @@ class RegisterController extends Controller
             ]
         );
     }
+
+    public function generateUserName($name){
+        $username = Str::lower(Str::slug($name));
+        if(User::where('username', '=', $username)->exists()){
+            $uniqueUserName = $username.'-'.Str::lower(Str::random(4));
+            $username = $this->generateUserName($uniqueUserName);
+        }
+        return $username;
+    }
+
+    
 }

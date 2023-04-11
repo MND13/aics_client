@@ -2,13 +2,13 @@
   <div class="container">
 
     <div class="alert alert-danger col-md-12 offset-md-1" role="alert" v-if="errors.length > 0">
-    
+
       <ul>
-        <li v-for="e in errors" :key="e">{{e}}</li>
+        <li v-for="e in errors" :key="e">{{ e }}</li>
       </ul>
     </div>
 
-   <form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">
+    <form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">
       <!-- <form method="POST"  enctype="multipart/form-data" action="">-->
 
       <input type="hidden" name="_token" :value="csrf">
@@ -21,28 +21,28 @@
 
         <div class="offset-md-1  col-md-3">
           <label for="">First Name</label>
-          <input type="text" v-model="form.first_name" name="first_name" id="" class="form-control" required>
+          <input type="text" v-model="form.first_name" name="first_name" class="form-control" required>
 
 
         </div>
 
         <div class="col-md-3">
           <label for="">Middle Name</label>
-          <input type="text" v-model="form.middle_name" name="middle_name" id="" class="form-control " required>
+          <input type="text" v-model="form.middle_name" name="middle_name" class="form-control " required>
 
 
         </div>
 
         <div class="col-md-3">
           <label for="">Last Name</label>
-          <input type="text" v-model="form.last_name" name="last_name" id="" class="form-control">
+          <input type="text" v-model="form.last_name" name="last_name" class="form-control">
 
 
         </div>
 
         <div class="col-md-1">
           <label for="">Ext Name</label>
-          <select v-model="form.ext_name" name="" id="" class="form-control">
+          <select v-model="form.ext_name" name="" class="form-control">
             <option value=""></option>
             <option value="JR">JR</option>
             <option value="SR">SR</option>
@@ -114,6 +114,10 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-md-12 offset-md-1"> </div>
+      </div>
+
       <div class="row g-2">
         <div class="offset-md-1  col-md-3">
           <label for="">Mobile No.</label>
@@ -139,28 +143,23 @@
             <option value="Babae">Babae</option>
           </select>
         </div>
-
-
       </div>
+
       <div class="row g-2">
-
-
-        <!-- <div class="offset-md-1  col-md-3">
-          <label for="">Occupation</label>
-          <input type="text"  v-model="form.occupation" name="occupation" class="form-control">
-        </div>
-        <div class="col-md-3">
-          <label for="">Monthly Salary</label>
-          <input type="text" v-model="form.monthly_salary" name="monthly_salary" class="form-control">
-        </div>-->
-
-        <div class="offset-md-1 col-md-4">
+        <div class="offset-md-1 col-md-3">
           <label for="">Email</label>
           <input type="email" v-model="form.email" name="email" class="form-control">
         </div>
 
+        <div class=" col-md-3">
+          <label for="">Confirm Password</label>
+          <input type="password" v-model="form.password" name="password" class="form-control">
+        </div>
 
-
+        <div class=" col-md-3">
+          <label for="">Password</label>
+          <input type="password" v-model="form.password_confirmation" name="password_confirmation" class="form-control">
+        </div>
       </div>
 
 
@@ -269,10 +268,12 @@ export default
       },
 
       submit() {
-        console.log("here");
-        axios.post("register", this.form).then(response => {
 
+        axios.post("register", this.form).then(response => {
+          console.log(response.message);
         }).catch(error => console.log(error));
+
+
       }
     }
   }

@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('street_number')->nullable();
             $table->unsignedBigInteger('psgc_id');
             $table->string('email')->unique()->nullable();
+            $table->string('username')->unique();
             $table->string('password');
             $table->string('uuid');
             $table->rememberToken();
