@@ -17,15 +17,83 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+
+
 
 
 
 class AicsAssistanceController extends Controller
 {
+
     public function store(Request $request)
     {
         DB::beginTransaction();
-        try {
+        $user = Auth::user();
+        $year = date("Y");
+        $month = date("m");
+
+        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+        }
+
+
+        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+            try {
+                $form_data = $request->all();
+                $errors = ["assistance" => []];
+
+                $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
+                $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
+                if ($assistance_validator->fails()) {
+                    $errors['assistance'] = $assistance_validator->errors();
+                }
+
+                if (
+                    $errors['assistance'] != array()
+                ) {
+                    return response(['errors' => $errors], 422);
+                }
+
+
+                $aics_assistance = AicsAssistance::create($form_data["assistance"]);
+
+                //Uploaded Documents
+                $documents = [];
+                $aics_type_id = request('assistance.aics_type_id');
+                $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
+               
+                $files = request('assistance.documents');
+               
+               
+
+                foreach ($requirements as $key => $requirement) {
+
+                  
+                    if (isset($files[$requirement->id])) {
+                        $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
+                        $url = Storage::url($path);
+                        $documents[] = new AicsDocument([
+                            'file_directory' => $url,
+                            'aics_requrement_id' => $requirement->id,
+                        ]);
+                    }
+                }
+
+               
+
+                $aics_assistance->aics_documents()->saveMany($documents);
+
+
+
+                DB::commit();
+                return ($aics_assistance->id);
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
+            }
+        }
+
+        /*try {
             $form_data = $request->all();
             $errors = [];
             $year = date("Y");
@@ -98,8 +166,6 @@ class AicsAssistanceController extends Controller
             $files = request('assistance.documents');
 
 
-
-
             foreach ($requirements as $key => $requirement) {
                 if (isset($files[$key])) {
                     $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$key]);
@@ -117,7 +183,7 @@ class AicsAssistanceController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;
-        }
+        }*/
     }
 
     public function show(Request $request, $uuid)
@@ -143,15 +209,33 @@ class AicsAssistanceController extends Controller
     }
 
     public function index()
-    {
-        return AicsAssistance::with(
-            "aics_client.psgc",
-            "aics_beneficiary.psgc",
-            "aics_type:id,name",
-            "aics_documents",          
-            "aics_documents.requirement:id,name",
-           
+    {   
+        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+
+            return AicsAssistance::with(
+                "aics_client.psgc",
+                "aics_beneficiary.psgc",
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+    
             )->get();
+
+        }
+
+
+        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+
+            return AicsAssistance::with(
+               
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+    
+            )->where("user_id","=",Auth::id() )->get();
+
+        }    
+       
     }
 
     public function update(request $request)
@@ -161,12 +245,11 @@ class AicsAssistanceController extends Controller
             $a = AicsAssistance::where("uuid", "=", $request->uuid)->first();
 
             if ($a) {
-                
+
                 $a->status = $request->status;
                 $a->status_date = Carbon::now();
-                $a->save(); 
+                $a->save();
                 return ["message" => "saved"];
-
             } else {
                 return ["message" => "Assistance Request Not Found"];
             }

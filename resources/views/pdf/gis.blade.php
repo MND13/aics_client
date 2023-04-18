@@ -264,88 +264,93 @@
     </div>
 
 
-    <div id="aics-type-name" class="data-textbox">{{ strtoupper($aics_beneficiary['aics_type']['name']) }}</div>
-    <div class="data-textbox"
-        style=" font-weight:bold; text-align:center;top:50pt;right:20pt; width:10px;height:10px;padding:10px; border: dotted 1px; border-radius:50%; ">
-        {{ $aics_beneficiary['payroll_client']['sequence'] }}</div>
+    <div id="aics-type-name" class="data-textbox">{{ strtoupper($assistance["aics_type"]['name']) }}</div>
+    
     <div class="data-textbox" style="top:86pt;right:20pt;">
-        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'm-d-Y') }}</div>
+        {{ date_format(date_create($assistance["created_at"]), 'm-d-Y') }}</div>
     <div class="data-textbox" style="top:103pt;right:20pt;">
-        {{ date_format(date_create($aics_beneficiary['payroll_client']['created_at']), 'H:i a') }}</div>
+        {{ date_format(date_create($assistance["created_at"]), 'H:i a') }}</div>
 
 
-    <div id="aics-beneficiary-last-name" class="data-textbox">{{ strtoupper($aics_beneficiary['last_name']) }}</div>
-    <div id="aics-beneficiary-first-name" class="data-textbox">{{ strtoupper($aics_beneficiary['first_name']) }}</div>
-    <div id="aics-beneficiary-middle-name" class="data-textbox">{{ strtoupper($aics_beneficiary['middle_name']) }}</div>
-    <div id="aics-beneficiary-ext-name" class="data-textbox">{{ strtoupper($aics_beneficiary['ext_name']) }}</div>
+    <div id="aics-beneficiary-last-name" class="data-textbox">{{ strtoupper($assistance["aics_client"]['last_name']) }}</div>
+    <div id="aics-beneficiary-first-name" class="data-textbox">{{ strtoupper($assistance["aics_client"]['first_name']) }}</div>
+    <div id="aics-beneficiary-middle-name" class="data-textbox">{{ strtoupper($assistance["aics_client"]['middle_name']) }}</div>
+    <div id="aics-beneficiary-ext-name" class="data-textbox">{{ strtoupper($assistance["aics_client"]['ext_name']) }}</div>
 
-    <div id="aics-beneficiary-street-number" class="data-textbox">{{ strtoupper($aics_beneficiary['street_number']) }}
+    <div id="aics-beneficiary-street-number" class="data-textbox">{{ strtoupper($assistance["aics_client"]['street_number']) }}
     </div>
-    <div id="aics-beneficiary-psgc-brgy" class="data-textbox">{{ strtoupper($aics_beneficiary['psgc']['brgy_name']) }}
+    <div id="aics-beneficiary-psgc-brgy" class="data-textbox">{{ strtoupper($assistance["aics_client"]['psgc']['brgy_name']) }}
     </div>
-    <div id="aics-beneficiary-psgc-city" class="data-textbox">{{ strtoupper($aics_beneficiary['psgc']['city_name']) }}
+    <div id="aics-beneficiary-psgc-city" class="data-textbox">{{ strtoupper($assistance["aics_client"]['psgc']['city_name']) }}
     </div>
     <div id="aics-beneficiary-psgc-province" class="data-textbox">
-        {{ strtoupper($aics_beneficiary['psgc']['province_name']) }}</div>
+        {{ strtoupper($assistance["aics_client"]['psgc']['province_name']) }}</div>
     <div id="aics-beneficiary-psgc-region" class="data-textbox">
-        {{ strtoupper($aics_beneficiary['psgc']['region_name_short']) }}</div>
+        {{ strtoupper($assistance["aics_client"]['psgc']['region_name_short']) }}</div>
 
-    <div id="aics-beneficiary-mobile-number" class="data-textbox">{{ strtoupper($aics_beneficiary['mobile_number']) }}
+    <div id="aics-beneficiary-mobile-number" class="data-textbox">{{ strtoupper($assistance["aics_client"]['mobile_number']) }}
     </div>
     <div id="aics-beneficiary-birth-month" class="data-textbox">
-        {{ date('d', strtotime($aics_beneficiary['birth_date'])) }}</div>
+        {{ date('d', strtotime($assistance["aics_client"]['birth_date'])) }}</div>
     <div id="aics-beneficiary-birth-day" class="data-textbox">
-        {{ date('m', strtotime($aics_beneficiary['birth_date'])) }}</div>
+        {{ date('m', strtotime($assistance["aics_client"]['birth_date'])) }}</div>
     <div id="aics-beneficiary-birth-year" class="data-textbox">
-        {{ date('Y', strtotime($aics_beneficiary['birth_date'])) }}</div>
-    <div id="aics-beneficiary-age" class="data-textbox">{{ $aics_beneficiary['age'] }}</div>
+        {{ date('Y', strtotime($assistance["aics_client"]['birth_date'])) }}</div>
+    <div id="aics-beneficiary-age" class="data-textbox">{{ $assistance['age'] }}</div>
 
-    <div id="aics-beneficiary-gender" class="data-textbox">{{ strtoupper($aics_beneficiary['gender']) }}</div>
-    <div id="aics-beneficiary-occupation" class="data-textbox">{{ strtoupper($aics_beneficiary['occupation']) }}</div>
-    <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ $aics_beneficiary['monthly_salary'] }}</div>
+    <div id="aics-beneficiary-gender" class="data-textbox">{{ strtoupper($assistance["aics_client"]['gender']) }}</div>
+    <div id="aics-beneficiary-occupation" class="data-textbox">{{ strtoupper($assistance['occupation']) }}</div>
+    <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ $assistance['monthly_salary'] }}</div>
 
-    @if (isset($aics_beneficiary['category']))
+    @if (isset($assistance["aics_client"]['category']))
         <div class="data-textbox" style=" top:420pt; left:20pt; text-align:left; height:80pt; ">
-            {{ $aics_beneficiary['category']['category'] }}
+            {{ $assistance["aics_client"]['category']['category'] }}
         </div>
     @endif
 
-    @if (isset($aics_beneficiary['subcategory']))
+    @if (isset($assistance["aics_client"]['subcategory']))
         <div class="data-textbox" style=" top:420pt; left:110pt;  text-align:left; height:80pt; ">
-            {{ $aics_beneficiary['subcategory']['subcategory'] }}
-            @if ($aics_beneficiary['subcategory_others'])
-                <br> {{ $aics_beneficiary['subcategory_others'] }}
+            {{ $assistance["aics_client"]['subcategory']['subcategory'] }}
+            @if ($assistance["aics_client"]['subcategory_others'])
+                <br> {{ $assistance["aics_client"]['subcategory_others'] }}
             @endif
         </div>
     @endif
 
-
+    @if (isset($assistance["aics_client"]['assessment']))
     <div class="data-textbox" style=" top:415pt; left:219pt; width: 300pt; text-align:left; height:80pt; ">
-        {{ $aics_beneficiary['assessment'] }}
+       {{ $assistance["aics_client"]['assessment'] }}
     </div>
+    @endif
+
+    @if (isset($assistance["aics_client"]['payroll_client']))
     <div id="payroll-amount" class="data-textbox" style=" right:150pt; bottom:100pt">
-        {{ number_format($aics_beneficiary['payroll_client']['payroll']['amount'], 2) }}
+        {{ number_format($assistance["aics_client"]['payroll_client']['payroll']['amount'], 2) }}
     </div>
+   
 
 
     <div id="payroll-amount" class="data-textbox"
         style=" right:13pt; bottom:100pt; width: 69px; font-size:5pt; text-align:center;">
-        {{ $aics_beneficiary['payroll_client']['payroll']['source_of_fund'] }}
+        {{ $assistance["aics_client"]['payroll_client']['payroll']['source_of_fund'] }}
     </div>
+    @endif
 
     <div id="bene-full-name" class="data-textbox"
         style="width: 180pt;text-align:center; bottom:20pt; left:16pt; font-size:6pt; ">
-        {{ strtoupper($aics_beneficiary['first_name']) }}
-        {{ strtoupper($aics_beneficiary['middle_name']) }}
-        {{ strtoupper($aics_beneficiary['last_name']) }}
-        {{ strtoupper($aics_beneficiary['ext_name']) }}
+        {{ strtoupper($assistance["aics_client"]['first_name']) }}
+        {{ strtoupper($assistance["aics_client"]['middle_name']) }}
+        {{ strtoupper($assistance["aics_client"]['last_name']) }}
+        {{ strtoupper($assistance["aics_client"]['ext_name']) }}
     </div>
 
+    @if (isset($assistance["aics_client"]['interviewed_by']))
     <div id="bene-full-name" class="data-textbox"
         style="width: 125pt;text-align:center; bottom:30pt; right:143pt; font-size:6pt; ">
-        {{ strtoupper($aics_beneficiary['interviewed_by']) }}
+        {{ strtoupper($assistance["aics_client"]['interviewed_by']) }}
 
     </div>
+    @endif  
 
 
     <!--

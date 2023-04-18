@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Psgc;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use App\Models\AicsDocument;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasRoles;
+
+
 
 class RegisterController extends Controller
 {
@@ -25,6 +31,7 @@ class RegisterController extends Controller
     */
 
     use RegistersUsers;
+    use HasRoles;
 
     /**
      * Where to redirect users after registration.
@@ -32,6 +39,16 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+    /*protected function redirectTo()
+    {
+        //You would need to modify this according to your needs, this is just an example.
+        if (Auth::user()->hasRole('admin')) {
+            return route("admin.home");
+        }
+
+        return route("user.home");
+    }*/
 
     /**
      * Create a new controller instance.
@@ -53,7 +70,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
             'last_name' => ['required', 'string', 'max:255'],
             'ext_name' => ['sometimes', 'required', 'string', 'max:255'],
             'birth_date' => ['date'],
@@ -72,27 +89,43 @@ class RegisterController extends Controller
      * @return \App\Models\User
      */
     protected function create(array $data)
-    {   
-        $usernametemp = substr($data['first_name'], 0,1) .  substr($data['middle_name'], 0,1) . $data['last_name'];
+    {
+        $usernametemp = substr($data['first_name'], 0, 1) .  substr($data['middle_name'], 0, 1) . $data['last_name'];
         $username = $this->generateUserName($usernametemp);
+        $middle_name = isset($data['middle_name']) && $data['middle_name'] != "NMN" ?  strtoupper($data['middle_name']) : NULL;
 
-    
-
-        return User::create([
-            'first_name' => $data['first_name'],
-            'middle_name' => isset($data['middle_name']) ?  $data['middle_name'] : NULL,
-            'last_name' => $data['last_name'],
-            'ext_name' => isset($data['ext_name']) ? $data['ext_name'] : NULL,
+        $user =  User::create([
+            'username' => strtoupper($username),
+            'first_name' => strtoupper($data['first_name']),
+            'middle_name' => $middle_name ,
+            'last_name' => strtoupper($data['last_name']),
+            'ext_name' => isset($data['ext_name']) ? strtoupper($data['ext_name']) : NULL,
             'birth_date' => $data['birth_date'],
             'psgc_id' => $data['psgc_id'],
             'gender' => $data['gender'],
             'mobile_number' => $data['mobile_number'],
             'email' => isset($data['email']) ?  $data['email'] : NULL,
             'password' => $data['password'],
-            'username' =>$username ,
-            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,           
-          
+            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,
         ]);
+
+        if ($user->id) {
+            $year = date("Y");
+            $month = date("m");
+
+            $files = request('file');
+            $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $user->uuid, $files);
+            $url = Storage::url($path);
+            $doc = new AicsDocument([
+                'file_directory' => $url,
+                'aics_requrement_id' => 1,
+                'aics_assistance_id' => 0,
+            ]);
+            $doc->save();
+            $user->assignRole('user');
+        }
+
+        return $user;
     }
 
     public function showRegistrationForm()
@@ -107,14 +140,13 @@ class RegisterController extends Controller
         );
     }
 
-    public function generateUserName($name){
+    public function generateUserName($name)
+    {
         $username = Str::lower(Str::slug($name));
-        if(User::where('username', '=', $username)->exists()){
-            $uniqueUserName = $username.'-'.Str::lower(Str::random(4));
+        if (User::where('username', '=', $username)->exists()) {
+            $uniqueUserName = $username . '-' . mt_rand(0000, 9999);
             $username = $this->generateUserName($uniqueUserName);
         }
         return $username;
     }
-
-    
 }

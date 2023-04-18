@@ -15,12 +15,7 @@
 
 <body class="antialiased">
    
-    <!--<div id="app">
-      
-    </div>
-
-    </div>
-    <script src="{ asset('js/app.js') }}" defer></script>-->
+   
 
 </body>
 

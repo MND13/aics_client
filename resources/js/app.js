@@ -20,10 +20,11 @@ import Home from "./components/Home.vue";
 import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
-import ImportFile from './Components/ImportFile.vue'
-import GISComponent from "./Components/GISComponent.vue"
-import Users from "./Components/Users"
-
+//import ImportFile from './Components/ImportFile.vue'
+//import GISComponent from "./Components/GISComponent.vue"
+//import Users from "./Components/Users"
+import Assistance from "./Components/Assistance.vue"
+import Contact from "./Components/Contact.vue"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -46,30 +47,26 @@ const router = new VueRouter({
             props: true,
         },
         {
-            path: "/import",
-            name: "import",
-            component: ImportFile,
+            path: "/assistance",
+            name: "assistance",
+            component: Assistance,
 
         },
         {
-            path: "/gis",
-            name: "gis",
-            component: GISComponent,
+            path: "/contact",
+            name: "contact",
+            component: Contact,
 
         },
-      
-        {
-            path: "/users/:id?",
-            name: "users",
-            component: Users,
-            props: true,
-        }
+
+        
+       
     ],
 });
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MM-DD-YYYY");
+        return moment(String(value)).format("MM/DD/YYYY h:mm:ss a");
     }
 });
 
@@ -82,6 +79,7 @@ export default new Vuetify({
     },
   })
 
+  
 const app = new Vue({
     el: '#app',
     components: { App },

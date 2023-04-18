@@ -23,22 +23,11 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-// Route::group(['prefix' => '/aics'], function () {
-//     Route::resource('clients/{client}/documents', AicsDocumentController::class);
-//     Route::resource('clients/{client}/beneficiaries', AicsBeneficiaryController::class);
-//     Route::resource('clients', AicsClientController::class);
-// });
 
-// Route::post('login', 'Auth\LoginController@login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Auth::routes();
-
 Route::get('/holiday-crawler', [App\Models\HolidayCrawler::class, 'crawler'])->name('holiday-crawler');
-
-//Route::get('/{any}',  [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');
 Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*');

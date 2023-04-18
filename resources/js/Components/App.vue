@@ -56,16 +56,18 @@ export default {
           to: "/",
           text: "Home",
         },
-        {
-          to: "/client",
-          text: "Client Information",
-          
-        },
+       
         {
           to: "/assistance",
           text: "Request Assistance",
           
         },
+        {
+          to: "/profile",
+          text: "Profile",
+          
+        },
+        
         {
           to: "/contact",
           text: "Contact Us",

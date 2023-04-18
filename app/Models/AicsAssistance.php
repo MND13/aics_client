@@ -6,20 +6,22 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Auth;
 class AicsAssistance extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'aics_client_id',
-        'aics_beneficiary_id',
+        'user_id',
         'aics_type_id',
-        'sub_type',
         'status',
-        'status_date',
+        'status_date',        
+        'age',
+        'occupation',
+        'monthly_salary'
     ];
 
+    
     public static function boot()
     {
         parent::boot();
@@ -27,6 +29,8 @@ class AicsAssistance extends Model
             $model->uuid = (string) Str::uuid();
             $model->status = "Pending";
             $model->status_date = Carbon::now();
+            $model->user_id = Auth::id();
+            $model->age =  Auth::user()->age();
         });
         self::updating(function($model) {
 
@@ -35,13 +39,13 @@ class AicsAssistance extends Model
 
     public function aics_client()
     {
-        return $this->belongsTo(AicsClient::class);
+        return $this->belongsTo(User::class, "user_id");
     }
 
-    public function aics_beneficiary()
+    /*public function aics_beneficiary()
     {
         return $this->belongsTo(AicsBeneficiary::class);
-    }
+    }*/
 
     public function aics_type()
     {
@@ -52,4 +56,6 @@ class AicsAssistance extends Model
     {
         return $this->hasMany(AicsDocument::class);
     }
+
+    
 }

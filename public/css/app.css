@@ -10912,3 +10912,13 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+#preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#preview img {
+  max-width: 100%;
+  max-height: 500px;
+}

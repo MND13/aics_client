@@ -1,10 +1,12 @@
 <template>
   <div class="container">
 
-    <div class="alert alert-danger col-md-12 offset-md-1" role="alert" v-if="errors.length > 0">
+    <div class="alert alert-danger col-md-10 offset-md-1" role="alert" v-if="Object.keys(errors).length > 0">
+
+      {{ errors.message }}
 
       <ul>
-        <li v-for="e in errors" :key="e">{{ e }}</li>
+        <li v-for="(e, i) in errors.errors" :key="i">{{ e[0] }}</li>
       </ul>
     </div>
 
@@ -28,7 +30,8 @@
 
         <div class="col-md-3">
           <label for="">Middle Name</label>
-          <input type="text" v-model="form.middle_name" name="middle_name" class="form-control " required>
+          <input type="text" v-model="form.middle_name" name="middle_name" class="form-control ">
+          <v-checkbox label="I have No Middle Name (NMN)" v-model="nmn" ></v-checkbox>
 
 
         </div>
@@ -60,6 +63,7 @@
         </div>
 
       </div>
+
 
       <div class="row">
         <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
@@ -115,15 +119,12 @@
       </div>
 
       <div class="row">
-        <div class="col-md-12 offset-md-1"> </div>
+        <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
       </div>
 
       <div class="row g-2">
+
         <div class="offset-md-1  col-md-3">
-          <label for="">Mobile No.</label>
-          <input v-model="form.mobile_number" type="text" class="form-control">
-        </div>
-        <div class="col-md-3">
           <label for="">Birthday</label>
           <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
             @input="calculateAge" required />
@@ -136,6 +137,7 @@
         </div>
 
 
+
         <div class="col-md-3">
           <label for="">Gender</label>
           <select class="form-control" v-model="form.gender">
@@ -143,7 +145,15 @@
             <option value="Babae">Babae</option>
           </select>
         </div>
+
+        <div class=" col-md-3">
+          <label for="">Mobile No.</label>
+          <input v-model="form.mobile_number" type="text" class="form-control">
+        </div>
       </div>
+
+
+
 
       <div class="row g-2">
         <div class="offset-md-1 col-md-3">
@@ -173,20 +183,6 @@
         <div class="col-md-4 offset-md-1 ">
           <p>Upload a clear copy of your valid ID</p>
 
-
-        </div>
-        <div class="col-md-6">
-          <input name="documents" class="form-control" type="file" id="formFileMultiple" multiple required>
-        </div>
-
-
-
-      </div>
-
-      <div class="row">
-        <div class="col-md-10 offset-md-1 ">
-
-
           <p> Accepted valid IDS:</p>
           <ul style=" column-count: 2;">
             <li>National ID</li>
@@ -201,6 +197,28 @@
             <li>Any Government Issued IDs</li>
 
           </ul>
+
+
+        </div>
+        <div class="col-md-6">
+          <input name="documents" class="form-control" @change="uploadFile" ref="file" type="file"
+            accept="image/png, image/jpeg, application/pdf" required>
+
+          <div class="preview">
+
+            <img v-if="url" :src="url" style="max-width: 300px;" />
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-10 offset-md-1 ">
+
+
+
         </div>
 
 
@@ -235,7 +253,22 @@ export default
         cities: [],
         brgys: [],
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        errors: [],
+        errors: {},
+        file: null,
+        url: "",
+        nmn: false
+      }
+    },
+    watch: {
+      nmn(e) {
+        if (e) {
+          this.form.middle_name = "NMN";
+
+        } else {
+          this.form.middle_name = "";
+
+        }
+
       }
     },
     methods:
@@ -269,11 +302,33 @@ export default
 
       submit() {
 
-        axios.post("register", this.form).then(response => {
-          console.log(response.message);
-        }).catch(error => console.log(error));
+        let formData = new FormData();
+        formData.append('file', this.file);
+
+        const entries = Object.entries(this.form);
+
+        entries.forEach(element => {
+          formData.append(element[0], element[1]);
+        });
+
+        axios.post("register", formData).then(response => {
+          console.log(response.data);
+          alert("Registered");
+          //location.reload();
+        }).catch(error => {
+          console.log(error.response.data);
+          if (error.response.data) {
+            this.errors = error.response.data;
+            window.scrollTo(0, 0);
+
+          }
+        });
 
 
+      },
+      uploadFile() {
+        this.file = this.$refs.file.files[0];
+        this.url = URL.createObjectURL(this.file);
       }
     }
   }

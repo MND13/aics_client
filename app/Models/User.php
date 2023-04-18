@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -29,7 +30,9 @@ class User extends Authenticatable
         'psgc_id',
         'password',
         'mobile_number',
-        'street_number'
+        'street_number',
+        'username',
+        'email'
     ];
 
     public static function boot()
@@ -38,8 +41,7 @@ class User extends Authenticatable
         self::creating(function ($model) {
             $model->uuid = (string) Str::uuid();
         });
-        self::updating(function($model) {
-
+        self::updating(function ($model) {
         });
     }
 
@@ -62,13 +64,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function aics_client()
+    /*public function aics_client()
     {
         return $this->belongsTo(AicsClient::class);
-    }
+    }*/
 
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function age()
+    {
+        return Carbon::parse($this->attributes['birth_date'])->age;
+    }
+
+    public function psgc()
+    {
+        return $this->belongsTo(Psgc::class);
     }
 }

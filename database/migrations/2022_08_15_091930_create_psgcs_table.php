@@ -27,7 +27,6 @@ class CreatePsgcsTable extends Migration
             $table->string('district')->nullable();
             $table->string('subdistrict')->nullable();
             $table->timestamps();
-
             $table->index('region_psgc');
             $table->unique('brgy_psgc');
         });
