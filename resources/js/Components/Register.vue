@@ -312,9 +312,9 @@ export default
         });
 
         axios.post("register", formData).then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           alert("Registered");
-          //location.reload();
+          location.reload();
         }).catch(error => {
           console.log(error.response.data);
           if (error.response.data) {

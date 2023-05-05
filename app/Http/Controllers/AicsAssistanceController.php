@@ -86,7 +86,7 @@ class AicsAssistanceController extends Controller
 
 
                 DB::commit();
-                return ($aics_assistance->id);
+                return ["message"=> "Saved"];
             } catch (\Throwable $th) {
                 DB::rollBack();
                 throw $th;
@@ -212,15 +212,17 @@ class AicsAssistanceController extends Controller
     {   
         if (Auth::check() &&   Auth::user()->hasRole('admin')) {
 
-            return AicsAssistance::with(
-                "aics_client.psgc",
-                "aics_beneficiary.psgc",
+           return AicsAssistance::with([
+               
                 "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
-    
-            )->get();
-
+                "office:id,name,address",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                "assessment"
+              
+                ])->whereRelation("office","user_id","=",Auth::id() )->get();
         }
 
 
@@ -231,6 +233,10 @@ class AicsAssistanceController extends Controller
                 "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client",
+                "assessment"
+    
     
             )->where("user_id","=",Auth::id() )->get();
 

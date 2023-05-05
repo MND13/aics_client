@@ -10922,3 +10922,10 @@ textarea.form-control-lg {
   max-width: 100%;
   max-height: 500px;
 }
+
+#GIS label {
+  font-weight: bold;
+  color: black;
+  display: block;
+  clear: both;
+}

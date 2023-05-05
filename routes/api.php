@@ -33,4 +33,7 @@ Route::group(['prefix' => '/aics'], function () {
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
 Route::get('gis/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gis'])->name("api.pdf.gis2");
+Route::get('offices', [\App\Http\Controllers\OfficesController::class, 'index'])->name("api.offices.index");
+Route::get('assessment_opts', [\App\Http\Controllers\AssessmentOptionsController::class, 'index'])->name("api.assessment_opts");
 
+Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");

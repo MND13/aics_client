@@ -20,5 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesSeeder::class);
         $this->call(SubcategoriesSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(UsersSeeder::class);
+        $this->call(OfficesSeeder::class);
+        $this->call(AssessmentOptsSeeder::class);
+
+     
     }
 }

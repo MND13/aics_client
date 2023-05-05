@@ -21,10 +21,18 @@ class CreateAicsAssistancesTable extends Migration
             $table->foreignId('aics_type_id')->constrained('aics_types')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->foreignId('office_id')->constrained('offices')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('assessment_id')->nullable()->constrained('aics_assessments')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('uuid')->nullable();
             $table->integer("age");
+            $table->string("civil_status")->nullable();
             $table->string("occupation")->nullable();
             $table->string("monthly_salary")->nullable();
+            $table->string("mode_of_admission")->nullable();            
             $table->date('schedule')->nullable();
             $table->string('status')->nullable();
             $table->date('status_date')->nullable();           
@@ -43,7 +51,9 @@ class CreateAicsAssistancesTable extends Migration
 
         Schema::table('aics_assistances', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
-            $table->dropForeign(['assistance_type']);
+            $table->dropForeign(['aics_type_id']);
+            $table->dropForeign(['office_id']);
+            $table->dropForeign(['assessment_id']);
         });
 
 

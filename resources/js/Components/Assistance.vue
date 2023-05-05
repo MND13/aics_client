@@ -14,6 +14,10 @@
             <v-divider></v-divider>
 
             <v-stepper-step step="3">
+                Prefferred Schedule & Office
+            </v-stepper-step>
+
+            <v-stepper-step step="4">
                 Document Upload
             </v-stepper-step>
         </v-stepper-header>
@@ -40,7 +44,7 @@
                             <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
                                 <span v-if="r.is_required">(REQUIRED)</span>
                                 <span v-else>(OPTIONAL)</span>
-                                   {{ r.name }}
+                                {{ r.name }}
                             </li>
                         </ul>
 
@@ -117,6 +121,7 @@
                                 <th>Telephone/Mobile No.</th>
                                 <th>Trabaho</th>
                                 <th>Buwanang Kita</th>
+                                <th>Civil Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -126,11 +131,19 @@
                                 <td><input type="text" name="" v-model="form.mobile_number" id="" class="form-control"></td>
                                 <td><input type="text" name="" v-model="form.occupation" id="" class="form-control"></td>
                                 <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
+                                    
+                                </td>
+                                <td>
+                                    <select v-model="form.civil_status" name="civil_status" id="civil_status" class="form-control">
+                                    <option :value="e" v-for="e in ['Single','Married','Widowed','Separated']" :key="e"> {{e}}</option>
+                                    </select>
                                 </td>
 
                             </tr>
                         </tbody>
                     </table>
+
+
 
 
                 </v-card>
@@ -146,16 +159,59 @@
 
             <v-stepper-content step="3">
                 <v-card class="mb-12" flat>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Preferred Schedule
+
+                                    <input type="date" v-model="form.schedule" name="" id="" class="form-control" max="">
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Select Office nearest to your convenience: <br>
+
+
+                                    <ul style="    list-style: none; padding: 10px;">
+                                        <li v-for="(e, i) in offices" :key="i">
+                                            <input type="radio" name="" v-model="form.office_id" id="" v-bind:value="e.id">
+                                            <b>{{ e.name }} </b><br> {{ e.address }}
+                                            <hr>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
+                </v-card>
+
+                <v-btn color="primary" :disabled="form.office_id > 0 && form.schedule ? false : true" @click="e1 = 4">
+                    Continue
+                </v-btn>
+
+                <v-btn text @click="e1 = 2">
+                    Cancel
+                </v-btn>
+
+
+            </v-stepper-content>
+
+            <v-stepper-content step="4">
+                <v-card class="mb-12" flat>
                     Upload Files
 
                     <ul v-if="requirements.length > 0">
                         <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
                             <label for="" class="form-label">
-                                
 
-                                <span v-if="r.is_required " style="color:red">(REQUIRED)</span>
+
+                                <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
                                 <span v-else>(OPTIONAL)</span>
-                            
+
                                 {{ r.name }}
                             </label><br>
 
@@ -169,15 +225,16 @@
                 </v-card>
 
                 <v-btn color="primary" @click="submit">
-                    Continue
+                    SUBMIT
                 </v-btn>
 
-                <v-btn text @click="e1 = 2">
+                <v-btn text @click="e1 = 3">
                     Cancel
                 </v-btn>
 
 
             </v-stepper-content>
+
         </v-stepper-items>
     </v-stepper>
 </template>
@@ -201,7 +258,8 @@ export default {
                 assistance: {},
             },
             psgc_data: {},
-            file: []
+            file: [],
+            offices: [],
         }
     },
     methods:
@@ -237,13 +295,6 @@ export default {
             this.form;
 
             let formData = new FormData();
-            /*const entries = Object.entries(this.form);
-
-
-            entries.forEach(element => {
-                formData.append(element[0], element[1]);
-            });*/
-
 
             _.each(this.form, (value, key) => {
                 if (typeof value === "object") {
@@ -255,10 +306,9 @@ export default {
                 }
             });
 
-            console.log(formData);
-
             axios.post(route("assistances.store"), formData).then(response => {
-                console.log(response.data)
+                console.log(response.data);
+                alert(response.data.message);
             }).catch(error => console.log(error));
         },
 
@@ -270,11 +320,18 @@ export default {
             this.form.documents[i] = e.target.files[0];
             console.log(this.form.documents);
         },
+        getOffices() {
+            axios.get(route("api.offices.index")).then(response => {
+                this.offices = response.data;
+                console.log(response.data);
+            }).catch(error => console.log(error));
+        }
 
     },
     mounted() {
         this.getAssistanceTypes();
         this.getPsgc();
+        this.getOffices();
     }
 }
 </script>

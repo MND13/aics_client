@@ -28,9 +28,10 @@
 <body>
     <div id="app" data-app >
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm d-print-none"  color="red">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Assistance to Individuals in Crisis Situation (AICS)
+            <div class="container"><a class="navbar-brand" href="{{ url('/') }}">
+                <img style="max-width:250px" src="/images/DSWD-DVO-LOGO.png"  /> 
+                
+                     Assistance to Individuals in Crisis Situation (AICS)
                     
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

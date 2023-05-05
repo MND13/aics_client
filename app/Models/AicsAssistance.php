@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 class AicsAssistance extends Model
@@ -18,7 +19,10 @@ class AicsAssistance extends Model
         'status_date',        
         'age',
         'occupation',
-        'monthly_salary'
+        'monthly_salary',
+        'office_id',
+        'schedule',
+        'civil_status'
     ];
 
     
@@ -55,6 +59,21 @@ class AicsAssistance extends Model
     public function aics_documents()
     {
         return $this->hasMany(AicsDocument::class);
+    }
+
+    public function office()
+    {
+        return $this->belongsTo(Offices::class);
+    }
+
+    public function psgc(): HasOneThrough
+    {
+        return $this->hasOneThrough(User::class, Psgc::class);
+    }
+
+    public function assessment()
+    {
+        return $this->belongsTo(AicsAssessment::class);
     }
 
     
