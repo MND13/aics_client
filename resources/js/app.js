@@ -22,7 +22,7 @@ import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 //import ImportFile from './Components/ImportFile.vue'
 import GISComponent from "./Components/GISComponent.vue"
-//import Users from "./Components/Users"
+import Users from "./Components/Users"
 import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
 import Assessment from "./Components/Assessment.vue"
@@ -72,6 +72,13 @@ const router = new VueRouter({
             component: COEComponent,
 
         },
+        {
+            path: "/users",
+            name: "users",
+            component: Users,
+
+        },
+
 
 
         

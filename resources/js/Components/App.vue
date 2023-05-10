@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-2">
@@ -65,45 +64,19 @@ export default {
           text: "Contact Us",
         },
       ],
-      admin_menu: [ {
+      admin_menu: [
+        {
           to: "/",
-          text: "Home",
-          subLinks: [
-          {
-            text: "Food and Non-Food Items",
-            to: "/inventory/fni",
-          },
-          {
-            text: "Raw Items",
-            to: "/inventory/raw",
-          },
-          {
-            text: "Create New Item",
-            to: "/item",
-          },
-          /*{
-                        text: "Donations",
-                        to: "/donations_create",
-                    },
-                    {
-                        text: "Acknowledgment Receipts",
-                        to: "/acknowledgment_receipts",
-                    },*/
-        ],
-      
+          text: "Home"
         },
-
-       
         {
-          to: "/profile",
-          text: "Profile",
-
+          to: "/users",
+          text: "Users",
         },
-
         {
-          to: "/contact",
-          text: "Contact Us",
-        },
+          to:"/fund_source",
+          text: "Fund Source",
+        }
       ],
     };
   },
