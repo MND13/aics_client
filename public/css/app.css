@@ -10929,3 +10929,11 @@ textarea.form-control-lg {
   display: block;
   clear: both;
 }
+
+#GIS ul li {
+  list-style: none;
+}
+
+#GIS ul {
+  padding: 0px;
+}

@@ -1,259 +1,173 @@
 <template>
-  <div>
-    <b-table
-      class="table text-center"
-      striped
-      hover
-      bordered
-      :items="data"
-      :fields="fields"
-      :busy="isBusy"
-      label-sort-asc=""
-      label-sort-desc=""
-      label-sort-clear=""
-    >
-      <template #cell(created_at)="data">
-        {{ data.item.created_at | formatDate }}
-      </template>
+  <v-card flat>
 
-      <template #cell(client)="data">
-        {{ data.item.aics_client.last_name }}
-        {{ data.item.aics_client.ext_name }},
-        {{ data.item.aics_client.first_name }}
-        {{ data.item.aics_client.middle_name }}
-      </template>
+    <v-card-title v-if="userData.role=='user'"> 
+    
+      WELCOME {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}! <br>
+      USERNAME: {{ user.username }} <br>
+      <v-spacer></v-spacer>
+      <v-btn  elevation="0" color="primary" :to="{ name: 'assistance' }">Request Assistance </v-btn>
 
-      <template #cell(beneficiary)="data">
-        {{ data.item.aics_beneficiary.last_name }}
-        {{ data.item.aics_beneficiary.first_name }}
-        {{ data.item.aics_beneficiary.middle_name }}
-      </template>
+    </v-card-title>
+    <v-card-text>
 
-      <template #cell(assistance)="data">
-        {{ data.item.aics_type.name }}
-      </template>
 
-      <template #cell(status)="data">
-        <div :class="getColor(data.item.status)">
-          {{ data.item.status }}
-        </div>
-      </template>
+      <!--<v-data-table dense flat :headers="headers" :items="assistances" @click:row="openAssistance">-->
+      <v-data-table dense :headers="headers" :items="assistances">
 
-      <template #cell(actions)="data">
-        <b-button size="sm" @click="ViewDetails(data.item)" v-b-modal.modal-xl>
-          Show Details
-        </b-button>
-      </template>
 
-      <!--<template #row-details="row">
-        <b-card>
-          <b-row class="mb-2">
-            <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
-          </b-row>
+        <template v-slot:item.aics_client="{ item }">
 
-          <b-row class="mb-2">
-            <b-col sm="3" class="text-sm-right"><b>Is Active:</b></b-col>
-          </b-row>
+          <span v-if="item.aics_client">{{
+            item.aics_client.last_name }}, {{ item.aics_client.first_name }} {{ item.aics_client.middle_name }}  {{ item.aics_client.ext_name }}
+          </span>
+        </template>
 
-          <b-button size="sm" @click="row.toggleDetails">Hide Details</b-button>
-        </b-card>
-      </template>-->
-    </b-table>
+        <template v-slot:item.status="{ item }">
+          <v-chip :color="status_color" dark  small  label> {{ item.status }} </v-chip>
+        </template>
 
-    <b-modal
-      id="modal-xl"
-      title="Details"
-      size="xl"
-      class="modal modal-xl"
-      role="document"
-      modal-class="modal-fullscreen"
-      button-size="sm"
-    >
-      <div class="container-fluid" v-if="details">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="images" v-viewer v-if="show_img_pv">
-              <!--<img v-for="src in images" :key="src" :src="src" />-->
-              <img :src="src" style="width: 100%; height: auto" />
-            </div>
+        <template v-slot:item.created_at="{ item }">
+          {{ item.created_at | formatDate }}
+        </template>
 
-            <iframe
-              v-if="!show_img_pv"
-              :src="src"
-              style="min-height: 56.25vw; width: 100%"
-            ></iframe>
-          </div>
+        <template v-slot:item.aics_type="{ item }">
+          {{ item.aics_type.name }}
+        </template>
 
-          <div class="col-md-4" v-if="details.aics_type">
-            Assistance Requested: <b> {{ details.aics_type.name }}</b> <br />
-            <hr />
+        <template v-slot:item.office="{ item }">
+          {{ item.office.name }}
+        </template>
 
-            <b-button size="sm" @click="ViewFile(gis_pdf)"
-              >View General Intake Sheet</b-button
-            >
 
-            <br />
-            <hr />
-            Requirements:
+        <template v-slot:item.actions="{ item }">
+          <v-btn dark small @click="openDetails(item)">
+            Details
+          </v-btn>
+        </template>
 
-            <div
-              class="card tex-center"
-              v-for="(docs, i) in details.aics_documents"
-              :key="i"
-              @click="ViewFile(docs.file_directory)"
-              style="cursor: pointer; margin-bottom: 10px"
-            >
-              <div class="card-body">
-                <b-icon icon="paperclip" style="color: grey"></b-icon>
-                {{ docs.requirement.name }}
+
+      </v-data-table>
+
+
+      <v-dialog v-model="dialog_create" fullscreen>
+        <v-card>
+          <v-card-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="dialog_create = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text v-if="dialog_data" >
+            
+
+            <div class="row" v-if="userData.role=='admin'">
+              <div class="col-md-9">
+
+             
+                <GISComponent :dialog_data="dialog_data" :getList="getList" :user-data="userData" :set-dialog-create="setDialogCreate"></GISComponent>
+             
+
+
+                
+
+
+              </div>
+              <div class="col-md-3">
+
+
+                <h5 v-if="dialog_data.aics_type">{{ dialog_data.aics_type.name }} </h5>
+
+                <span> Status: {{ dialog_data.status }} <br></span>
+                <span> Date: {{ dialog_data.created_at | formatDate }} </span><br>
+
+                <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br> {{ dialog_data.office.address
+                }}
+                </span>
+
+                <table class="table table-bordered " v-if="dialog_data.aics_documents">
+                  <thead>
+                    <tr>
+                      <td>Attachments:</td>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <tr v-for="(e, i) in dialog_data.aics_documents" :key="i">
+
+                      <td> <a :href="e.file_directory" target="_blank">
+                          {{ e.requirement.name }}</a></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <template #modal-footer="{ close }">
-        <b-button
-          class="btn btn-success float-right"
-          @click="UpdateStatus(details, 'Served')"
-        >
-          Serve
-        </b-button>
-        <b-button
-          class="btn btn-danger float-right"
-          @click="UpdateStatus(details, 'Rejected')"
-        >
-          Reject
-        </b-button>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
 
-        <!--<b-button variant="primary" class="float-right" @click="close()">
-            Close
-          </b-button>-->
-      </template>
-    </b-modal>
-  </div>
+
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
+import userMixin from '../Mixin/userMixin';
+import GISComponent from './GISComponent.vue';
+
 export default {
+  components: { GISComponent },
+  mixins: [userMixin],
+  props: ["user"],
   data() {
     return {
-      data: [],
-      details: [],
-      gis_pdf: [],
-      fields: [
-        { key: "created_at", label: "Date", sortable: true },
-        { key: "client", label: "Client", sortable: true },
-        { key: "beneficiary", label: "Beneficiary", sortable: true },
-        { key: "assistance", label: "Assistance Requested", sortable: true },
-        { key: "status", label: "Status", sortable: true },
-        { key: "actions", label: "Actions" },
+      headers: [
+        { text: 'Date', value: 'created_at' },
+        { text: 'Client', value: 'aics_client' },
+        { text: 'Assistance', value: 'aics_type', width: "30%" },
+        { text: 'Office', value: 'office' },
+        { text: 'Status', value: 'status' },
+        { text: 'Actions', value: 'actions', },
       ],
-      isBusy: true,
-      src: "",
-      color: "blue",
-      show_img_pv: false,
-    };
+      assistances: [],
+      dialog_create: false,
+      dialog_data: {},
+      status_color: "blue",
+      dialog_create: false,
+      getList: [],
+    }
   },
-  computed: {
-    images() {
-      this.details.aics_documents;
-    },
-  },
+
   methods: {
-    getGIS() {
-      this.isBusy = true;
-      axios
-        .get("api/aics/assistances")
-        .then((response) => {
-          console.log(response.data);
-          this.data = response.data;
-          this.isBusy = false;
-        })
-        .catch((error) => console.log(error));
+    getAssistances() {
+      axios.get(route("assistances.index"))
+        .then(response => {
+          // console.log(response.data);
+          this.assistances = response.data;
+        }).catch(error => console.log(error));
     },
+    /*openAssistance(item, row) {
+      window.open("/api/gis/" + item.uuid);
+    },*/
+    openDetails(item) {
 
-    ViewDetails(e) {
-      this.gis_pdf = "api/pdf/" + e.uuid;
-      this.details = e;
-      this.src = this.gis_pdf;
-      this.show_img_pv = false;
-    },
-    ViewFile(e) {
-      let ext = e.split(".").pop();
-      let images = ["png", "jpeg", "jpg"];
+      this.dialog_data = {};
+      this.dialog_data = item;
+      this.dialog_create = true;
 
-      if (images.includes(ext)) {
-        this.src = e;
-        this.show_img_pv = true;
-      } else {
-        this.show_img_pv = false;
-        this.src = e;
-      }
     },
-    Print(e) {
-      /*console.log(e.uuid);
-      
-        axios.get()
-        .then((response)=>{
-            console.log(response.data);
-            this.details = response.data;
-        }).error((err)=>console.log(err));*/
-    },
-    UpdateStatus(e, s) {
-      axios
-        .put("api/aics/assistances/" + e.uuid, { uuid: e.uuid, status: s })
-        .then((response) => {
-          if (response.data.message == "saved") {
-            alert(response.data.message + " " + s);
-            this.getGIS();
-          } else {
-            alert(response.data.message);
-          }
-        })
-        .catch((error) => console.log(error));
-    },
-    getColor(e) {
-      switch (e) {
-        case "Served":
-          return "green";
-          break;
-        case "Rejected":
-          return "red";
-          break;
-        default:
-          return "blue";
-          break;
-      }
-    },
+    setDialogCreate(value) {
+      this.dialog_create = value;
+    }
   },
   mounted() {
-    this.getGIS();
-    console.log("here 2" );
-  },
-};
+    this.getAssistances()
+
+  }
+
+}
 </script>
 
-<style>
-.modal-fullscreen .modal-dialog {
-  max-width: 100%;
-  margin: 0;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  display: flex;
-  position: fixed;
-  z-index: 100000;
-}
-.red {
-  color: red;
-}
-.green {
-  color: green;
-}
-.blue {
-  color: blue;
-}
-</style>
+<style></style>

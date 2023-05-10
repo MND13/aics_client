@@ -1,310 +1,425 @@
 <template>
   <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
-    <div class="container-fluid">
-
-      <div class="row">
-        <div class="col-md-4 text-center">
-          <img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" class="img-fluid" />
-        </div>
-        <div class="col-md-8 text-md-end text-center">
-          <h1 style="
-                            font-size: 2rem;
-                            font-family: arial;
-                            font-weight: bold;
-                            margin-bottom: 0px;
-                          ">
-            CRISIS INTERVENTION DIVISION
-          </h1>
-          <p>
-            IBP Road, Batasan Pambansa Complex Constitution Hills, Quezon City
-          </p>
-        </div>
-      </div>
+    <div class="container">
       <div class="row text-center">
-        <div class="col-md-12">
 
-          <h2 style="font-family: 'Arial black', sans-serif; margin-bottom: 0px">
-            GENERAL INTAKE SHEET<br />
-          </h2>
+        <h2 style="font-family: 'Arial black', sans-serif; margin-bottom: 0px">
+          GENERAL INTAKE SHEET<br /><br />
+        </h2>
 
-        </div>
-      </div>
-
-
-      <div class="card mt-2">
-        <div class="card-title">
-          NAIS HINGIIN NA TULONG (Assistance Requested)
-          <span color="red"></span>
-        </div>
-        <div class="card-body">
-          <div class="col-md-12">
-            <b>{{ dialog_data.aics_type.name }}</b>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mt-2">
-        <div class="card-title">
-          IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)
-        </div>
-        <div class="card-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-md-3">
-                <label for="last_name">
-                  Apelyido <small>(Last name) <span color="red"></span></small> <br>
-                </label>
-                {{ dialog_data.aics_client.last_name }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="first_name">
-                  Unang Pangalan
-                  <small>(First name) <span color="red"></span></small></label>
-                {{ dialog_data.aics_client.first_name }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="middle_name">Gitnang Pangalan <small>(Middle name)</small></label>
-                {{ dialog_data.aics_client.middle_name }}
-
-
-
-              </div>
-
-              <div class="col-md-3">
-                <label for="ext_name">Ext <small>(Sr.,Jr., II, III)</small></label><br />
-                {{ dialog_data.aics_client.ext_name }}
-              </div>
-            </div>
-
-            <div class="row mt-2">
-              <div class="col-md-12">
-                <label for="street_number">House No./Street/Purok
-                  <small>(Ex. 123 Sun St.)</small>
-                  <span color="red"></span>
-                </label>
-                {{ dialog_data.aics_client.street_number }}
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label>Region <small>(Ex. NCR)</small>
-                  <span color="red"></span>
-                </label>
-
-                {{ dialog_data.aics_client.psgc.region_name }}
-
-              </div>
-
-              <div class="col-md-3">
-                <label>Province/District <small>(Ex. Dis. III)</small>
-                  <span color="red"></span>
-                </label>
-
-                {{ dialog_data.aics_client.psgc.province_name }}
-
-
-              </div>
-
-              <div class="col-md-3">
-                <label>
-                  City/Municipality <small>(Ex. Quezon City)</small>
-                  <span color="red"></span>
-                </label>
-
-                {{ dialog_data.aics_client.psgc.city_name }}
-
-
-              </div>
-
-              <div class="col-md-3">
-                <label>Barangay
-                  <small>(Ex. Batasan Hills)</small>
-                  <span style="color:red;">*</span>
-                </label>
-
-                {{ dialog_data.aics_client.psgc.brgy_name }}
-
-
-              </div>
-            </div>
-
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label for="mobile_number">Telepono <small>(Mobile Number)</small></label>
-                {{ dialog_data.aics_client.mobile_number }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
-                {{ dialog_data.aics_client.birth_date }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="age">Edad <small>(Age)</small></label>
-                {{ dialog_data.age }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="gender">Kasarian <small>(gender)</small></label>
-
-
-                {{ dialog_data.aics_client.gender }}
-
-
-              </div>
-            </div>
-
-            <div class="row mt-2">
-              <div class="col-md-3">
-                <label for="occupation">Trabaho <small> (Occupation)</small> </label>
-
-                {{ dialog_data.occupation }}
-
-
-              </div>
-              <div class="col-md-3">
-                <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
-                  <span color="red"></span></label>
-                {{ dialog_data.monthly_salary }}
-              </div>
-
-              <div class="col-md-3">
-                <label for="civil_status">Civil Status</label>
-                {{ dialog_data.civil_status }}
-              </div>
-
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-title">Beneficiary Category</div>
-            <div class="card-body">
-              Target Sector
-
-              <select v-model="form.category_id" class="form-control">
-                <option></option>
-                <option v-for="(e, i) in categories" :key="i" :value="e.id">
-                  {{ e.category }}
-                </option>
-              </select>
-
-              Specific Subcategory
-
-              <select v-model="form.subcategory_id" class="form-control">
-                <option></option>
-                <option v-for="(e, i) in subcategories" :key="i" :value="e.id">
-                  {{ e.subcategory }}
-                </option>
-              </select>
-
-              <div class="" v-if="form.subcategory_id == 8">
-                Others
-                <input type="text" v-model="form.subcategory_others" class="form-control" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div class="card">
-            <div class="card-title">Social Worker's Assessment</div>
-            <div class="card-body">
-              Assessment Option
-              <select name="" id="" class="form-control" v-model="selected_assessment_option">
-                <option :value="o" v-for="(o, i) in assessment_options" :key="i">{{ o.option }}</option>
-              </select>
-              Social Worker's Assessment
-              <textarea name="" id="" v-model="form.assessment" class="form-control" cols="30" rows="10"></textarea>
-
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <br />
-
-      <div class="card mt-2">
-        <div class="card-title">
-          ASSESSMENT INFORMATION
-          <span color="red"></span>
-        </div>
-        <div class="card-body">
-
-          <div class="row">
-
-            <div class="col-md-3">
-              Mode of Admission
-              <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control">
-                <option :value="e" v-for="(e, i) in ['Walk-in']" :key="i">
-                  {{ e }}
-                </option>
-              </select>
-
-
-            </div>
-          </div>
-          <div class="row">
-
-            <div class="col-md-6">
-              Purpose
-              <input type="text" v-model="form.purpose" class="form-control">
-            </div>
-
-            <div class="col-md-2">
-              Amount
-              <input type="text" v-model="form.amount" class="form-control">
-            </div>
-
-            <div class="col-md-2">
-              Mode of Assistance
-
-              <select name="" id="" class="form-control" v-model="form.mode_of_assistance">
-                <option :value="e" v-for="e in ['CAV', 'GL']" :key="e">{{ e }}</option>
-              </select>
-            </div>
-
-            <div class="col-md-2">
-              Fund Source
-              <input type="text" v-model="form.fund_source" class="form-control">
-            </div>
-          </div>
-
-          <div class="row">
-
-            <div class="col-md-6">
-              Interviewed by
-              <input type="text" class="form-control" v-model="form.interviewed_by" />
-            </div>
-            <div class="col-md-6">
-              Approved by
-              <input type="text" class="form-control" v-model="form.approved_by" />
-
-            </div>
-          </div>
-
-
-
-        </div>
-
-
-
-      </div>
-
-
-      <div class="text-center col-md-12" style="padding: 10px 0px">
-        <button type="submit" class="btn btn-primary btn-lg btn-lg btn-block" :disabled="submit">
-          SUBMIT
-        </button>
       </div>
     </div>
+
+    <div class="card mt-2">
+      <div class="card-title">
+        NAIS HINGIIN NA TULONG (Assistance Requested)
+        <span color="red"></span>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+          <div class="col-md-6">
+            <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }}<br />
+
+              <small> Status: {{ gis_data.status }} <br></small>
+            </h5>
+
+            <span> Date Submitted: {{ gis_data.created_at | formatDate }} </span><br>
+            <span> Requested Schedule: {{ gis_data.schedule | formatDate }} </span><br>
+            <span v-if="gis_data.office"> Office: {{ gis_data.office.name }} <br>
+              {{ gis_data.office.address }}</span>
+
+          </div>
+          <div class="col-md-6" v-if="gis_data">
+
+            <table class="table table-bordered " v-if="gis_data.aics_documents">
+              <thead>
+                <tr>
+                  <td>Attachments:</td>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr v-for="(e, i) in gis_data.aics_documents" :key="i">
+                  <td> <a :href="e.file_directory" target="_blank">
+                      {{ e.requirement.name }}</a></td>
+                </tr>
+              </tbody>
+            </table>
+
+
+
+
+
+            <br /><br />
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-2" v-if="gis_data.aics_client">
+      <div class="card-title">
+        IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)
+      </div>
+      <div class="card-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="last_name">
+                Apelyido <small>(Last name) <span color="red"></span></small> <br>
+              </label>
+              {{ gis_data.aics_client.last_name }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="first_name">
+                Unang Pangalan
+                <small>(First name) <span color="red"></span></small></label>
+              {{ gis_data.aics_client.first_name }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="middle_name">Gitnang Pangalan <small>(Middle name)</small></label>
+              {{ gis_data.aics_client.middle_name }}
+
+
+
+            </div>
+
+            <div class="col-md-3">
+              <label for="ext_name">Ext <small>(Sr.,Jr., II, III)</small></label><br />
+              {{ gis_data.aics_client.ext_name }}
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-12">
+              <label for="street_number">House No./Street/Purok
+                <small>(Ex. 123 Sun St.)</small>
+                <span color="red"></span>
+              </label>
+              {{ gis_data.aics_client.street_number }}
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-3">
+              <label>Region <small>(Ex. NCR)</small>
+                <span color="red"></span>
+              </label>
+
+              {{ gis_data.aics_client.psgc.region_name }}
+
+            </div>
+
+            <div class="col-md-3">
+              <label>Province/District <small>(Ex. Dis. III)</small>
+                <span color="red"></span>
+              </label>
+
+              {{ gis_data.aics_client.psgc.province_name }}
+
+
+            </div>
+
+            <div class="col-md-3">
+              <label>
+                City/Municipality <small>(Ex. Quezon City)</small>
+                <span color="red"></span>
+              </label>
+
+              {{ gis_data.aics_client.psgc.city_name }}
+
+
+            </div>
+
+            <div class="col-md-3">
+              <label>Barangay
+                <small>(Ex. Batasan Hills)</small>
+                <span style="color:red;">*</span>
+              </label>
+
+              {{ gis_data.aics_client.psgc.brgy_name }}
+
+
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-3">
+              <label for="mobile_number">Telepono <small>(Mobile Number)</small></label>
+              {{ gis_data.aics_client.mobile_number }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
+              {{ gis_data.aics_client.birth_date }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="age">Edad <small>(Age)</small></label>
+              {{ gis_data.age }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="gender">Kasarian <small>(gender)</small></label>
+
+
+              {{ gis_data.aics_client.gender }}
+
+
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-3">
+              <label for="occupation">Trabaho <small> (Occupation)</small> </label>
+
+              {{ gis_data.occupation }}
+
+
+            </div>
+            <div class="col-md-3">
+              <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
+                <span color="red"></span></label>
+              {{ gis_data.monthly_salary }}
+            </div>
+
+            <div class="col-md-3">
+              <label for="civil_status">Civil Status</label>
+              {{ gis_data.civil_status }}
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-title">Beneficiary Category</div>
+          <div class="card-body">
+            Target Sector
+
+            <select v-model="form.category_id" class="form-control"
+              :class="{ 'is-invalid': validationErrors.category_id }">
+              <option></option>
+              <option v-for="(e, i) in categories" :key="i" :value="e.id">
+                {{ e.category }}
+              </option>
+            </select>
+
+            <div class="invalid-feedback" v-if="validationErrors.category_id">
+              <ul>
+                <li v-for="e in validationErrors.category_id">{{ e }}</li>
+              </ul>
+            </div>
+
+
+
+            Specific Subcategory
+
+            <select v-model="form.subcategory_id" class="form-control">
+              <option></option>
+              <option v-for="(e, i) in subcategories" :key="i" :value="e.id">
+                {{ e.subcategory }}
+              </option>
+            </select>
+
+            <div class="" v-if="form.subcategory_id == 8">
+              Others
+              <input type="text" v-model="form.subcategory_others" class="form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-title">Social Worker's Assessment</div>
+          <div class="card-body">
+            Assessment Option
+            <select id="" class="form-control" v-model="selected_assessment_option">
+              <option :value="o" v-for="(o, i) in assessment_options" :key="i">{{ o.option }}</option>
+            </select>
+            Social Worker's Assessment
+            <textarea id="" v-model="form.assessment" class="form-control" cols="30" rows="10"
+              :class="{ 'is-invalid': validationErrors.mode_of_admission }"></textarea>
+            <div class="invalid-feedback" v-if="validationErrors.assessment">
+              <ul>
+                <li v-for="e in validationErrors.assessment">{{ e }}</li>
+              </ul>
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <br />
+
+    <div class="card mt-2">
+      <div class="card-title">
+        ASSESSMENT INFORMATION
+        <span color="red"></span>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+          <div class="col-md-3">
+            Mode of Admission
+            <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control"
+              :class="{ 'is-invalid': validationErrors.mode_of_admission }">
+              <option :value="e" v-for="(e, i) in ['Walk-in']" :key="i">
+                {{ e }}
+              </option>
+            </select>
+
+            <div class="invalid-feedback" v-if="validationErrors.mode_of_admission">
+
+              <ul>
+                <li v-for="e in validationErrors.mode_of_admission">{{ e }}</li>
+              </ul>
+            </div>
+
+
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col-md-6">
+            Purpose
+            <input type="text" v-model="form.purpose" class="form-control "
+              :class="{ 'is-invalid': validationErrors.purpose }">
+
+            <div class="invalid-feedback" v-if="validationErrors.purpose">
+
+              <ul>
+                <li v-for="e in validationErrors.purpose">{{ e }}</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-md-2">
+            Amount
+            <input type="text" v-model="form.amount" class="form-control"
+              :class="{ 'is-invalid': validationErrors.amount }">
+
+            <div class="invalid-feedback" v-if="validationErrors.amount">
+              <ul>
+                <li v-for="e in validationErrors.amount">{{ e }}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            Mode of Assistance
+            <select name="" id="" class="form-control" v-model="form.mode_of_assistance"
+              :class="{ 'is-invalid': validationErrors.mode_of_assistance }">
+              <option :value="e" v-for="e in ['CAV', 'GL']" :key="e">{{ e }}</option>
+            </select>
+
+            <div class="invalid-feedback" v-if="validationErrors.mode_of_assistance">
+              <ul>
+                <li v-for="e in validationErrors.mode_of_assistance">{{ e }}</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-md-2">
+            Fund Source
+            <input type="text" v-model="form.fund_source" class="form-control"
+              :class="{ 'is-invalid': validationErrors.fund_source }">
+            <div class="invalid-feedback" v-if="validationErrors.fund_source">
+              <ul>
+                <li v-for="e in validationErrors.fund_source">{{ e }}</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-6">
+            Interviewed by
+            <input type="text" class="form-control" v-model="form.interviewed_by"
+              :class="{ 'is-invalid': validationErrors.interviewed_by }" />
+
+            <div class="invalid-feedback" v-if="validationErrors.interviewed_by">
+              <ul>
+                <li v-for="e in validationErrors.interviewed_by">{{ e }}</li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="col-md-6">
+            Approved by
+            <input type="text" class="form-control" v-model="form.approved_by"
+              :class="{ 'is-invalid': validationErrors.approved_by }" />
+            <div class="invalid-feedback" v-if="validationErrors.approved_by">
+              <ul>
+                <li v-for="e in validationErrors.approved_by">{{ e }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+    <div class="text-center col-md-12" style="padding: 10px 0px">
+      <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit">
+        SUBMIT
+      </v-btn>
+      <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
+
+      <v-btn large class="--white-text" color="error" @click="dialog_reject = true" :disabled="submit">
+        REJECT
+      </v-btn>
+    </div>
+
+    <v-dialog v-model="dialog_reject" width="50%">
+      <v-card>
+        <v-card-title>Reject GIS</v-card-title>
+        <v-card-text>
+          Reason
+          <select class="form-control">
+            <option value="" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
+          </select>
+          Message
+          <textarea v-model="rejectform.message" id="" cols="10" rows="5" class="form-control"></textarea>
+
+          <v-btn @click="RejectGIS" dark color="red">
+            Reject
+          </v-btn>
+        </v-card-text>
+
+      </v-card>
+    </v-dialog>
+
+    </div>
+
+
+
+
+
   </form>
 </template>
 
@@ -319,28 +434,27 @@
 <script>
 import { debounce, cloneDeep } from 'lodash'
 export default {
-  props: ["dialog_data", "getList", "userData", "setDialogCreate"],
+  //props: ["gis_data", "getList", "userData", "setDialogCreate"],
   data() {
     return {
+      gis_data: {},
       form: {},
       assistance_types: {},
       psgc: {},
       regions: {},
 
       errors: {},
-      validationErrors: {
-        client: {},
-        beneficiary: {},
-        assistance: {},
-      },
+      validationErrors: {},
       max_date: new Date().toISOString().split("T")[0],
 
       categories: [],
       subcategories: [],
-      payrolls: [],
+
       submit: false,
       assessment_options: [],
-      selected_assessment_option: {}
+      selected_assessment_option: {},
+      dialog_reject: false,
+      rejectform: {}
     };
   },
   watch: {
@@ -349,88 +463,50 @@ export default {
         this.form.subcategory_others = "";
       }
     },
-    dialog_data(e) {
-      this.resetForm();
-      this.form.assistance_id = e.id;
-      //this.form = e;
 
-    },
     selected_assessment_option(val) {
       //console.log(val);
       this.form.assessment = val.template;
 
     }
-    /*beneficiary_region_selector(newVal, oldVal) {
-      ((this.beneficiary_provinces = {}),
-        (this.beneficiary_cities = {}),
-        (this.beneficiary_barangays = {})),
-        (this.beneficiary_provinces = this.groupByKey(newVal, "province_name"));
-    },
 
-    beneficiary_province_selector(newVal, oldVal) {
-      ((this.beneficiary_cities = {}), (this.beneficiary_barangays = {})),
-        (this.beneficiary_cities = this.groupByKey(newVal, "city_name"));
-
-      if (this.dialog_data.psgc) {
-        this.beneficiary_city_selector =
-          this.beneficiary_cities[this.dialog_data.psgc.city_name];
-      }
-    },
-
-    beneficiary_city_selector(newVal, oldVal) {
-      (this.beneficiary_barangays = {}),
-        (this.beneficiary_barangays = this.groupByKey(newVal, "brgy_name"));
-    },*/
-    /*client_region_selector(newVal, oldVal) {
-      ((this.client_provinces = {}),
-      (this.client_cities = {}),
-      (this.client_barangays = {})),
-        (this.client_provinces = this.groupByKey(newVal, "province_name"));
-    },
-
-    client_province_selector(newVal, oldVal) {
-      ((this.client_cities = {}), (this.client_barangays = {})),
-        (this.client_cities = this.groupByKey(newVal, "city_name"));
-    },
-
-    client_city_selector(newVal, oldVal) {
-      (this.client_barangays = {}),
-        (this.client_barangays = this.groupByKey(newVal, "brgy_name"));
-    },*/
-    /*is_beneficiary(newVal, oldVal) {
-      console.log(newVal);
-      if (newVal === true) {
-        this.form.client = this.form.beneficiary;
-        this.form.client.rel_beneficiary = "Myself";
-      } else {
-        this.form.client = {};
-        this.form.client.rel_beneficiary = "";
-      }
-    },*/
   },
 
   methods: {
     submitForm: debounce(function () {
       this.submit = true;
+      this.form.gis_id = this.gis_data.id; // FOREIGN KEY
 
-      axios
-        .post(route("api.assessment.create", this.dialog_data.id), this.form)
-        .then((response) => {
-          this.submit = false;
-          console.log(response.data);
-          this.setDialogCreate(false);
-          // alert(`${response.data.message}! Client number: ${response.data.client.payroll_client.sequence}`);
-          this.getList();
+      if (this.form.id) { //UPDATE
+        axios
+          .post(route("api.assessment.update", this.form.id), this.form)
+          .then((response) => {
+            this.submit = false; 
+            alert(response.data.message);
+          })
+          .catch((error) => {
+            this.submit = false;
+            if (error.response && error.response.status == 422) {
+              alert("Kumpletohin ang form. \nPlease complete the form.");
+              this.validationErrors = error.response.data.errors[0];
+            }
+          });
 
-        })
-        .catch((error) => {
-          this.submit = false;
-          console.log(error);
-          if (error.response && error.response.status == 422) {
-            alert("Kumpletohin ang form. \nPlease complete the form.");
-            this.validationErrors = error.response.data.errors;
-          }
-        });
+      } else { //CREATE 
+        axios
+          .post(route("api.assessment.create", this.gis_data.id), this.form)
+          .then((response) => {
+            this.submit = false;
+            alert(response.data.message);
+          })
+          .catch((error) => {
+            this.submit = false;
+            if (error.response && error.response.status == 422) {
+              alert("Kumpletohin ang form. \nPlease complete the form.");
+              this.validationErrors = error.response.data.errors[0];
+            }
+          });
+      }
 
     }, 250),
     resetForm() {
@@ -458,15 +534,36 @@ export default {
         //console.log( response.data);
         this.assessment_options = response.data;
       });
+    },
+    RejectGIS() {
+
+
+      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Rejected" }).then(response => {
+
+        alert(response.data.message);
+        this.dialog_reject = false;
+        this.$router.push({ path: '/' })
+
+      }).catch(error => console.log(error));
+    },
+
+    getGISData() {
+      // console.log({ "assistance": this.$route.params.uuid });
+      axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
+        .then(response => {
+          //console.log(response.data);
+          this.gis_data = response.data;
+          if (this.gis_data.assessment) { this.form = this.gis_data.assessment; }
+        })
     }
+
   },
   mounted() {
-    //this.form = cloneDeep(this.dialog_data);
-    this.form.assistance_id = this.dialog_data.id;
+
+    this.getGISData();
     this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
-
 
 
   },

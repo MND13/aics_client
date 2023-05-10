@@ -1,12 +1,12 @@
 <template>
   <v-card flat>
 
-    <v-card-title v-if="userData.role=='user'"> 
-    
+    <v-card-title v-if="userData.role == 'user'">
+
       WELCOME {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}! <br>
       USERNAME: {{ user.username }} <br>
       <v-spacer></v-spacer>
-      <v-btn  elevation="0" color="primary" :to="{ name: 'assistance' }">Request Assistance </v-btn>
+      <v-btn elevation="0" color="primary" :to="{ name: 'assistance' }">Request Assistance </v-btn>
 
     </v-card-title>
     <v-card-text>
@@ -19,12 +19,13 @@
         <template v-slot:item.aics_client="{ item }">
 
           <span v-if="item.aics_client">{{
-            item.aics_client.last_name }}, {{ item.aics_client.first_name }} {{ item.aics_client.middle_name }}  {{ item.aics_client.ext_name }}
+            item.aics_client.last_name }}, {{ item.aics_client.first_name }} {{ item.aics_client.middle_name }} {{
+    item.aics_client.ext_name }}
           </span>
         </template>
 
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color" dark  small  label> {{ item.status }} </v-chip>
+          <v-chip :color="status_color" dark small label> {{ item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -41,16 +42,22 @@
 
 
         <template v-slot:item.actions="{ item }">
-          <v-btn dark small @click="openDetails(item)">
+          <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user'">
             Details
           </v-btn>
+
+          <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role == 'admin'">
+            Review
+          </v-btn>
+
+
         </template>
 
 
       </v-data-table>
 
 
-      <v-dialog v-model="dialog_create" fullscreen>
+      <v-dialog v-model="dialog_create" width="50%">
         <v-card>
           <v-card-title>
             <v-spacer></v-spacer>
@@ -59,51 +66,36 @@
             </v-btn>
           </v-card-title>
           <v-card-text v-if="dialog_data">
-            <div class="row">
-              <div class="col-md-9">
-
-             
-                <GISComponent :dialog_data="dialog_data" :getList="getList" :user-data="userData" :set-dialog-create="setDialogCreate"></GISComponent>
-             
-
-
-                
-
-
-              </div>
-              <div class="col-md-3">
 
 
 
+            <h5 v-if="dialog_data.aics_type">{{ dialog_data.aics_type.name }} </h5>
+
+            <span> Status: {{ dialog_data.status }} <br></span>
+            <span> Date: {{ dialog_data.created_at | formatDate }} </span><br>
+
+            <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br> {{ dialog_data.office.address
+            }}
+            </span>
+
+            <table class="table table-bordered " v-if="dialog_data.aics_documents">
+              <thead>
+                <tr>
+                  <td>Attachments:</td>
+
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr v-for="(e, i) in dialog_data.aics_documents" :key="i">
+
+                  <td> <a :href="e.file_directory" target="_blank">
+                      {{ e.requirement.name }}</a></td>
+                </tr>
+              </tbody>
+            </table>
 
 
-                <h5 v-if="dialog_data.aics_type">{{ dialog_data.aics_type.name }} </h5>
-
-                <span> Status: {{ dialog_data.status }} <br></span>
-                <span> Date: {{ dialog_data.created_at | formatDate }} </span><br>
-
-                <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br> {{ dialog_data.office.address
-                }}
-                </span>
-
-                <table class="table table-bordered " v-if="dialog_data.aics_documents">
-                  <thead>
-                    <tr>
-                      <td>Attachments:</td>
-
-                    </tr>
-                  </thead>
-                  <tbody>
-
-                    <tr v-for="(e, i) in dialog_data.aics_documents" :key="i">
-
-                      <td> <a :href="e.file_directory" target="_blank">
-                          {{ e.requirement.name }}</a></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
 
           </v-card-text>
         </v-card>
@@ -116,10 +108,9 @@
 
 <script>
 import userMixin from '../Mixin/userMixin';
-import GISComponent from './GISComponent.vue';
 
 export default {
-  components: { GISComponent },
+
   mixins: [userMixin],
   props: ["user"],
   data() {

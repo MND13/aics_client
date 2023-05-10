@@ -18,7 +18,7 @@ class CreateAicsAssessmentsTable extends Migration
             $table->foreignId('category_id')->constrained('categories')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreignId('subcategory_id')->constrained('subcategories')
+            $table->foreignId('subcategory_id')->nullable()->constrained('subcategories')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->string("subcategory_others")->nullable();

@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-
 class AicsAssistanceController extends Controller
 {
 
@@ -33,7 +32,9 @@ class AicsAssistanceController extends Controller
         $year = date("Y");
         $month = date("m");
 
-        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+        if (Auth::check() &&   Auth::user()->hasRole('admin'))
+        {
+            
         }
 
 
@@ -97,7 +98,7 @@ class AicsAssistanceController extends Controller
             $form_data = $request->all();
             $errors = [];
             $year = date("Y");
-            $month = date("m");
+            $nmonth = date("m");
 
             $errors = [
                 "client" => [],
@@ -188,7 +189,45 @@ class AicsAssistanceController extends Controller
 
     public function show(Request $request, $uuid)
     {
-        $aics_assistance = AicsAssistance::with(
+
+        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+
+            return AicsAssistance::with([
+                
+                 "aics_type:id,name",
+                 "aics_documents",
+                 "aics_documents.requirement:id,name",
+                 "office:id,name,address",
+                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                 "assessment"
+               
+                 ])
+                 ->where("uuid","=",$uuid)
+                 ->whereRelation("office","user_id","=",Auth::id() )->first();
+         }
+ 
+ 
+         if (Auth::check() &&   Auth::user()->hasRole('user')) {
+ 
+             return AicsAssistance::with(
+                
+                 "aics_type:id,name",
+                 "aics_documents",
+                 "aics_documents.requirement:id,name",
+                 "office:id,name,address",
+                 "aics_client",
+                 "assessment"
+     
+     
+             )
+             ->where("uuid","=",$uuid)
+             ->where("user_id","=",Auth::id() )->first();
+ 
+         }   
+
+
+        /*$aics_assistance = AicsAssistance::with(
             'aics_client.psgc',
             'aics_beneficiary.psgc',
             'aics_type',
@@ -197,7 +236,7 @@ class AicsAssistanceController extends Controller
             ->where('uuid', $uuid)
             ->first();
 
-        return $aics_assistance;
+        return $aics_assistance;*/
     }
 
     public function pdf(Request $request, $uuid)

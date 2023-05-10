@@ -21,10 +21,12 @@ import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
 //import ImportFile from './Components/ImportFile.vue'
-//import GISComponent from "./Components/GISComponent.vue"
+import GISComponent from "./Components/GISComponent.vue"
 //import Users from "./Components/Users"
 import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
+import Assessment from "./Components/Assessment.vue"
+import COEComponent from "./Components/COE.vue"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -58,6 +60,19 @@ const router = new VueRouter({
             component: Contact,
 
         },
+        {
+            path: "/assessment/:uuid",
+            name: "assessment",
+            component: GISComponent,
+
+        },
+        {
+            path: "/assessment/:uuid/coe",
+            name: "coe",
+            component: COEComponent,
+
+        },
+
 
         
        
@@ -66,7 +81,7 @@ const router = new VueRouter({
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MM/DD/YYYY h:mm:ss a");
+        return moment(String(value)).format("MMMM DD, YYYY h:mm a");
     }
 });
 
