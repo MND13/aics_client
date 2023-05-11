@@ -19,9 +19,6 @@ class CreateOfficesTable extends Migration
             $table->string("address");
             $table->string("contact_person");
             $table->string("contact_no");
-            $table->foreignId('user_id')->constrained('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@
 
 
       <!--<v-data-table dense flat :headers="headers" :items="assistances" @click:row="openAssistance">-->
-      <v-data-table dense :headers="headers" :items="assistances">
+      <v-data-table :loading="isLoading" dense :headers="headers" :items="assistances">
 
 
         <template v-slot:item.aics_client="{ item }">
@@ -46,7 +46,7 @@
             Details
           </v-btn>
 
-          <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role == 'admin'">
+          <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role != 'user'  ">
             Review
           </v-btn>
 
@@ -129,15 +129,18 @@ export default {
       status_color: "blue",
       dialog_create: false,
       getList: [],
+      isLoading: false,
     }
   },
 
   methods: {
     getAssistances() {
+      this.isLoading = true;
       axios.get(route("assistances.index"))
         .then(response => {
           // console.log(response.data);
           this.assistances = response.data;
+          this.isLoading = false;
         }).catch(error => console.log(error));
     },
     /*openAssistance(item, row) {

@@ -27,6 +27,8 @@ import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
 import Assessment from "./Components/Assessment.vue"
 import COEComponent from "./Components/COE.vue"
+import Providers from "./Components/Providers"
+import FundSource from "./Components/FundSource"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -35,7 +37,7 @@ Vue.use(VueViewer)
 
 const router = new VueRouter({
     mode: "history",
-   // base: process.env.MIX_BASE_NAME ,
+    base: process.env.MIX_BASE_NAME ,
     routes: [
         // { path: "/404", component: NotFound },
         {
@@ -78,11 +80,16 @@ const router = new VueRouter({
             component: Users,
 
         },
-
-
-
-        
-       
+        {
+            path: "/providers",
+            name: "Providers",
+            component: Providers,
+        },
+        {
+            path: "/fund_source",
+            name: "FundSource",
+            component: FundSource,
+        },
     ],
 });
 

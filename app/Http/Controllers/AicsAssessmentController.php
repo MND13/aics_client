@@ -28,7 +28,7 @@ class AicsAssessmentController extends Controller
      */
     public function create(Request $request)
     {
-        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+        if (Auth::check() &&   !Auth::user()->hasRole('user')) {
 
 
             DB::beginTransaction();
@@ -125,7 +125,7 @@ class AicsAssessmentController extends Controller
      */
     public function update(Request $request)
     {
-        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
+        if (Auth::check() &&   !Auth::user()->hasRole(['user'])) {
 
 
             DB::beginTransaction();

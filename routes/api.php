@@ -38,3 +38,9 @@ Route::get('assessment_opts', [\App\Http\Controllers\AssessmentOptionsController
 
 Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
 Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
+Route::get('fund_source', [\App\Http\Controllers\FundSourceController::class, 'index'])->name("api.fund_src");
+Route::post('fund_source', [\App\Http\Controllers\FundSourceController::class, 'store'])->name("api.fund_src.store");
+Route::put('fund_source/{id}', [\App\Http\Controllers\FundSourceController::class, 'update'])->name("api.fund_src.update");
+Route::delete('fund_source/{id}', [\App\Http\Controllers\FundSourceController::class, 'destroy'])->name("api.fund_src.delete");
+
+

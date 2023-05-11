@@ -1,5 +1,6 @@
 <template>
-  <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
+  <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">   
+    
     <div class="container">
       <div class="row text-center">
 
@@ -10,16 +11,27 @@
       </div>
     </div>
 
+    <div class="row" v-if="gis_data.status & gis_data.status != 'Pending' ">
+
+      <small> Status: {{ gis_data.status }} <br></small>
+    
+
+    </div>
+
     <div class="card mt-2">
       <div class="card-title">
         NAIS HINGIIN NA TULONG (Assistance Requested)
         <span color="red"></span>
       </div>
       <div class="card-body">
+        
 
-        <div class="row">
+        <div class="row" v-if="gis_data.id" >
 
           <div class="col-md-6">
+
+          
+
             <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }}<br />
 
               <small> Status: {{ gis_data.status }} <br></small>
@@ -57,6 +69,15 @@
           </div>
 
         </div>
+        <div v-else >
+
+          <v-skeleton-loader             
+            type="article"
+          ></v-skeleton-loader>
+
+
+        </div>
+        
       </div>
     </div>
 
@@ -390,7 +411,7 @@
       </v-btn>
       <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
 
-      <v-btn large class="--white-text" color="error" @click="dialog_reject = true" :disabled="submit">
+      <v-btn v-if="gis_data.status == 'Pending' " large class="--white-text" color="error" @click="dialog_reject = true" :disabled="submit">
         REJECT
       </v-btn>
     </div>
@@ -551,7 +572,7 @@ export default {
       // console.log({ "assistance": this.$route.params.uuid });
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
-          //console.log(response.data);
+         // console.log(response.data);
           this.gis_data = response.data;
           if (this.gis_data.assessment) { this.form = this.gis_data.assessment; }
         })

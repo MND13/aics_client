@@ -32,7 +32,7 @@ class OfficesSeeder extends Seeder
             $insert_data['address'] = $psgc_data[1];
             $insert_data['contact_person'] = $psgc_data[2];
             $insert_data['contact_no'] = $psgc_data[3];
-            $insert_data['user_id'] = $psgc_data[6];
+          //  $insert_data['user_id'] = $psgc_data[6];
             //$insert_data['email'] = $psgc_data[4];
         
             $office = Offices::create($insert_data);

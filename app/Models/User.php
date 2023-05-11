@@ -32,7 +32,8 @@ class User extends Authenticatable
         'mobile_number',
         'street_number',
         'username',
-        'email'
+        'email',
+        'office_id'
     ];
 
     public static function boot()
@@ -83,4 +84,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Psgc::class);
     }
+
+   
 }

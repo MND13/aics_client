@@ -165,7 +165,7 @@
                             <tr>
                                 <td>Preferred Schedule
 
-                                    <input type="date" v-model="form.schedule" name="" id="" class="form-control" max="">
+                                    <input type="datetime-local" v-model="form.schedule" name="" id="" class="form-control" max="">
                                 </td>
 
                             </tr>

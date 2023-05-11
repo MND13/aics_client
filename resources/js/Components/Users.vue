@@ -5,12 +5,40 @@
         <v-card-title>User Form</v-card-title>
         <v-card-text>
           <v-form ref="form">
-            <v-text-field v-model="formData.first_name" label="First Name" :error-messages="formErrors.first_name"></v-text-field>
+            <v-text-field v-model="formData.first_name" label="First Name"
+              :error-messages="formErrors.first_name"></v-text-field>
 
-            <v-text-field v-model="formData.middle_name" label="Middle Name" :error-messages="formErrors.middle_name"></v-text-field>
-            
-            <v-text-field v-model="formData.last_name" label="Last Name" :error-messages="formErrors.last_name"></v-text-field>
+            <v-text-field v-model="formData.middle_name" label="Middle Name"
+              :error-messages="formErrors.middle_name"></v-text-field>
 
+            <v-text-field v-model="formData.last_name" label="Last Name"
+              :error-messages="formErrors.last_name"></v-text-field>
+
+
+            <v-text-field v-model="formData.username" label="User Name"
+              :error-messages="formErrors.username"></v-text-field>
+
+
+            <v-select v-model="formData.office_id" label="Office" :items="offices" item-value="id" item-text="name">
+
+              <template v-slot:selection="{ item }">
+                {{ getText(item) }}
+              </template>
+
+            </v-select>
+
+
+
+
+
+            <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
+              type="date"></v-text-field>
+
+
+            <v-text-field v-model="formData.mobile_number" label="Mobile Number"
+              :error-messages="formErrors.mobile_number"></v-text-field>
+
+            <v-select v-model="formData.gender" label="Select" :items="['Babae', 'Lalake']"></v-select>
 
 
             <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
@@ -28,8 +56,7 @@
               hint="At least 8 characters" counter
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
-            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="userData.role == 'admin'">
+            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit" v-if="userData.role == 'admin'">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -52,6 +79,8 @@
                 {{ userRole(item) }}
               </span>
             </template>
+
+
 
             <template v-slot:item.actions="{ item }">
               <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'admin'">
@@ -95,7 +124,7 @@ export default {
       showPassword: false,
       showPasswordConfirmation: false,
       headers: [
-        { text: 'Name', value: 'first_name' },
+        { text: 'Name', value: 'username' },
         { text: 'Email Address', value: 'email' },
         { text: 'Role', value: 'role' },
         { text: 'Actions', value: 'actions' },
@@ -103,6 +132,7 @@ export default {
       users: [],
       loading: true,
       submit: false,
+      offices: [],
     };
   },
   methods: {
@@ -115,7 +145,8 @@ export default {
     }, 250),
     createUser() {
       this.submit = true;
-      console.log(this.formData);
+      this.formData.psgc_id = 368;
+
       axios.post(route('users.store'), this.formData)
         .then(res => {
           this.submit = false;
@@ -175,9 +206,17 @@ export default {
           ;
       }
     },
+    getOffices() {
+      axios.get(route("api.offices.index")).then(response => {
+        this.offices = response.data;
+      }).catch(error => console.log(error));
+    },
+    getText(item){ return `${item.name}`},
   },
   mounted() {
+    this.getOffices()
     this.getUsers();
+
   },
 }
 </script>

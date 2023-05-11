@@ -15,7 +15,10 @@ class CreateFundSourcesTable extends Migration
     {
         Schema::create('fund_sources', function (Blueprint $table) {
             $table->id();
-            $table->name("name");
+            $table->string("name")->nullable();
+            $table->string("description")->nullable();
+            $table->string("legislators")->nullable();
+            $table->string("type")->nullable();           
             $table->timestamps();
         });
     }

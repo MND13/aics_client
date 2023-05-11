@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\FundSource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class FundSourceController extends Controller
 {
@@ -14,7 +17,7 @@ class FundSourceController extends Controller
      */
     public function index()
     {
-        //
+        return FundSource::all();
     }
 
     /**
@@ -35,7 +38,31 @@ class FundSourceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required',
+                    'legislators' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    $errors = $validator->errors();
+                    return response(['errors' => $errors], 422);
+                }
+
+                DB::beginTransaction();
+                $f = new FundSource;
+                $f->fill($request->toArray());
+                $f->save();
+                DB::commit();
+                return ["message" => "Saved"];
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -69,7 +96,34 @@ class FundSourceController extends Controller
      */
     public function update(Request $request, FundSource $fundSource)
     {
-        //
+        try {
+
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+
+                $f = FundSource::findOrFail($request->id);
+                if ($f) {
+                    $validator = Validator::make($request->all(), [
+                        'name' => 'required',
+                        'legislators' => 'required',
+                    ]);
+
+                    if ($validator->fails()) {
+                        $errors = $validator->errors();
+                        return response(['errors' => $errors], 422);
+                    }
+
+                    DB::beginTransaction();
+
+                    $f->fill($request->toArray());
+                    $f->save();
+                    DB::commit();
+                    return ["message" => "Saved"];
+                }
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -78,8 +132,19 @@ class FundSourceController extends Controller
      * @param  \App\Models\FundSource  $fundSource
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FundSource $fundSource)
+    public function destroy(request $request)
     {
-        //
+        try {
+
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) 
+            {
+                $f = FundSource::findOrFail($request->id);
+                $f->delete();
+
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

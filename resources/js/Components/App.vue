@@ -2,9 +2,8 @@
   <v-app>
     <div class="container-fluid">
       <div class="row">
+        
         <div class="col-md-2">
-
-
           <v-list dense>
 
             <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
@@ -18,6 +17,23 @@
               </v-list-item>
             </v-list-item-group>
           </v-list>
+
+
+          <v-list dense>
+
+            <v-list-item-group v-model="selectedItem" v-if="userData.role == 'super-admin'" color="primary"
+              class="d-print-none">
+              <v-list-item v-for="(link, i) in lib_menu" :key="i" :to="link.to">
+                <v-list-item-icon>
+                  <v-icon v-text="link.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="link.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+
 
 
         </div>
@@ -42,7 +58,6 @@ export default {
       selectedItem: 1,
       links: [],
       default_menu: [
-
         {
           to: "/",
           text: "Home",
@@ -58,7 +73,6 @@ export default {
           text: "Profile",
 
         },
-
         {
           to: "/contact",
           text: "Contact Us",
@@ -69,15 +83,25 @@ export default {
           to: "/",
           text: "Home"
         },
-        {
-          to: "/users",
-          text: "Users",
-        },
-        {
-          to:"/fund_source",
-          text: "Fund Source",
-        }
+
+
+
       ],
+      lib_menu:
+        [
+          {
+            to: "/users",
+            text: "Users",
+          },
+          {
+            to: "/providers",
+            text: "Providers",
+          },
+          {
+            to: "/fund_source",
+            text: "Fund Source",
+          },
+        ]
     };
   },
 
@@ -86,12 +110,11 @@ export default {
 
 
     switch (this.userData.role) {
-      case "admin":
-        this.links = this.admin_menu
-        break;
-
-      default:
+      case "user":
         this.links = this.default_menu
+        break;
+      default:
+        this.links = this.admin_menu
         break;
     }
 
