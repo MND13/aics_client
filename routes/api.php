@@ -18,8 +18,8 @@ use App\Http\Controllers\AicsTypeController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->get('/Providers', function (Request $request) {
+    return $request->Providers();
 });
 
 Route::group(['prefix' => '/aics'], function () {
@@ -38,9 +38,17 @@ Route::get('assessment_opts', [\App\Http\Controllers\AssessmentOptionsController
 
 Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
 Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
+
 Route::get('fund_source', [\App\Http\Controllers\FundSourceController::class, 'index'])->name("api.fund_src");
 Route::post('fund_source', [\App\Http\Controllers\FundSourceController::class, 'store'])->name("api.fund_src.store");
 Route::put('fund_source/{id}', [\App\Http\Controllers\FundSourceController::class, 'update'])->name("api.fund_src.update");
 Route::delete('fund_source/{id}', [\App\Http\Controllers\FundSourceController::class, 'destroy'])->name("api.fund_src.delete");
+
+Route::get('provider', [\App\Http\Controllers\AicsProvidersController::class, 'index'])->name("api.providers");
+Route::post('provider', [\App\Http\Controllers\AicsProvidersController::class, 'store'])->name("api.providers.store");
+Route::put('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'update'])->name("api.providers.update");
+Route::delete('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'destroy'])->name("api.providers.delete");
+
+
 
 

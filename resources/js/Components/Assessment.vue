@@ -3,13 +3,7 @@
 
         <v-card-text>
 
-       
-                <GISComponent :dialog_data="data" :user-data="userData"></GISComponent>
-        
-
-
-
-           
+            <GISComponent :dialog_data="data" :user-data="userData"></GISComponent>
 
         </v-card-text>
 
@@ -31,7 +25,7 @@ export default {
     },
     methods: {
         getAssistanceData() {
-           // console.log({ "assistance": this.$route.params.uuid });
+            // console.log({ "assistance": this.$route.params.uuid });
             axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
                 .then(response => {
                     //console.log(response.data);

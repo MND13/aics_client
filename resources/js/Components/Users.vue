@@ -56,7 +56,7 @@
               hint="At least 8 characters" counter
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
-            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit" v-if="userData.role == 'admin'">
+            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit" v-if="userData.role == 'admin' || userData.role == 'super-admin' ">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -83,10 +83,10 @@
 
 
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'admin'">
+              <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'admin' || userData.role == 'super-admin'  ">
                 mdi-pencil
               </v-icon>
-              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'admin'">
+              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'admin' || userData.role == 'super-admin'">
                 mdi-delete
               </v-icon>
             </template>

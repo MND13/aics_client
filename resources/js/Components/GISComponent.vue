@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">   
-    
+  <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
+
     <div class="container">
       <div class="row text-center">
 
@@ -11,10 +11,10 @@
       </div>
     </div>
 
-    <div class="row" v-if="gis_data.status & gis_data.status != 'Pending' ">
+    <div class="row" v-if="gis_data.status & gis_data.status != 'Pending'">
 
       <small> Status: {{ gis_data.status }} <br></small>
-    
+
 
     </div>
 
@@ -24,13 +24,13 @@
         <span color="red"></span>
       </div>
       <div class="card-body">
-        
 
-        <div class="row" v-if="gis_data.id" >
+
+        <div class="row" v-if="gis_data.id">
 
           <div class="col-md-6">
 
-          
+
 
             <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }}<br />
 
@@ -69,15 +69,13 @@
           </div>
 
         </div>
-        <div v-else >
+        <div v-else>
 
-          <v-skeleton-loader             
-            type="article"
-          ></v-skeleton-loader>
+          <v-skeleton-loader type="article"></v-skeleton-loader>
 
 
         </div>
-        
+
       </div>
     </div>
 
@@ -359,8 +357,15 @@
 
           <div class="col-md-2">
             Fund Source
-            <input type="text" v-model="form.fund_source" class="form-control"
+            <!--<input type="text" v-model="form.fund_source" class="form-control"
+              :class="{ 'is-invalid': validationErrors.fund_source }">-->
+
+            <select v-model="form.fund_source" name="" id="" class="form-control"
               :class="{ 'is-invalid': validationErrors.fund_source }">
+              <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">{{
+                fund_source.name }}</option>
+            </select>
+
             <div class="invalid-feedback" v-if="validationErrors.fund_source">
               <ul>
                 <li v-for="e in validationErrors.fund_source">{{ e }}</li>
@@ -411,8 +416,16 @@
       </v-btn>
       <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
 
-      <v-btn v-if="gis_data.status == 'Pending' " large class="--white-text" color="error" @click="dialog_reject = true" :disabled="submit">
+      <v-btn v-if="gis_data.status == 'Pending'" large class="--white-text" color="error" @click="dialog_reject = true"
+        :disabled="submit">
         REJECT
+      </v-btn>
+
+      
+
+      <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid }  }" outlined large
+        class="--white-text" color="primary" :disabled="submit">
+        Certificate Of Eligibility (COE)
       </v-btn>
     </div>
 
@@ -475,7 +488,9 @@ export default {
       assessment_options: [],
       selected_assessment_option: {},
       dialog_reject: false,
-      rejectform: {}
+      rejectform: {},
+      fund_sources: [],
+
     };
   },
   watch: {
@@ -502,7 +517,7 @@ export default {
         axios
           .post(route("api.assessment.update", this.form.id), this.form)
           .then((response) => {
-            this.submit = false; 
+            this.submit = false;
             alert(response.data.message);
           })
           .catch((error) => {
@@ -572,11 +587,20 @@ export default {
       // console.log({ "assistance": this.$route.params.uuid });
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
-         // console.log(response.data);
+          // console.log(response.data);
           this.gis_data = response.data;
           if (this.gis_data.assessment) { this.form = this.gis_data.assessment; }
         })
-    }
+    },
+    getFundSrc() {
+
+      axios.get(route("api.fund_src")).then(response => {
+        this.fund_sources = response.data;
+
+
+      }).catch(error => console.log(error))
+    },
+
 
   },
   mounted() {
@@ -585,6 +609,7 @@ export default {
     this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
+    this.getFundSrc();
 
 
   },

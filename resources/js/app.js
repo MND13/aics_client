@@ -117,4 +117,4 @@ const app = new Vue({
 
 });
 
-console.log(process.env.MIX_BASE_NAME);
+//console.log(process.env.MIX_BASE_NAME);

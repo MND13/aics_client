@@ -2,7 +2,7 @@
   <v-app>
     <div class="container-fluid">
       <div class="row">
-        
+
         <div class="col-md-2">
           <v-list dense>
 
@@ -18,11 +18,14 @@
             </v-list-item-group>
           </v-list>
 
+          <v-divider inset></v-divider>
+
 
           <v-list dense>
-
             <v-list-item-group v-model="selectedItem" v-if="userData.role == 'super-admin'" color="primary"
               class="d-print-none">
+              <v-subheader inset>Libraries</v-subheader>
+
               <v-list-item v-for="(link, i) in lib_menu" :key="i" :to="link.to">
                 <v-list-item-icon>
                   <v-icon v-text="link.icon"></v-icon>
@@ -62,7 +65,6 @@ export default {
           to: "/",
           text: "Home",
         },
-
         {
           to: "/assistance",
           text: "Request Assistance",
@@ -84,7 +86,23 @@ export default {
           text: "Home"
         },
 
+        {
+          to: "/",
+          text: "Pending"
+        },
+        {
+          to: "/",
+          text: "Serving"
+        },
 
+        {
+          to: "/",
+          text: "Served"
+        },
+        {
+          to: "/",
+          text: "Rejected"
+        },
 
       ],
       lib_menu:

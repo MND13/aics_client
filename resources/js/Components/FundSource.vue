@@ -154,21 +154,7 @@ export default {
                     this.formErrors = err.response.data.errors
                 })
         },
-        updateUser() {
-            this.submit = true;
-            this.formErrors = {};
-            axios.put(route('users.update', this.formData.id), this.formData)
-                .then(res => {
-                    this.submit = false;
-                    this.getUsers();
-                    this.resetForm();
-                    alert('User has been updated');
-                })
-                .catch(err => {
-                    this.submit = false;
-                    this.formErrors = err.response.data.errors
-                })
-        },
+       
         editFsrc(fsrc) {
             this.formType = "Update";
             this.formData = cloneDeep(fsrc);

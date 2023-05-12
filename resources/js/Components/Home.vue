@@ -1,7 +1,10 @@
 <template>
   <v-card flat>
 
+
     <v-card-title v-if="userData.role == 'user'">
+
+
 
       WELCOME {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}! <br>
       USERNAME: {{ user.username }} <br>
@@ -25,7 +28,7 @@
         </template>
 
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color" dark small label> {{ item.status }} </v-chip>
+          <v-chip :color="status_color(item.status)" dark small label> {{ item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -40,17 +43,14 @@
           {{ item.office.name }}
         </template>
 
-
         <template v-slot:item.actions="{ item }">
           <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user'">
             Details
           </v-btn>
 
-          <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role != 'user'  ">
+          <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role != 'user'">
             Review
           </v-btn>
-
-
         </template>
 
 
@@ -112,7 +112,7 @@ import userMixin from '../Mixin/userMixin';
 export default {
 
   mixins: [userMixin],
-  props: ["user"],
+  props: ["user", "status"],
   data() {
     return {
       headers: [
@@ -126,14 +126,24 @@ export default {
       assistances: [],
       dialog_create: false,
       dialog_data: {},
-      status_color: "blue",
-      dialog_create: false,
-      getList: [],
       isLoading: false,
     }
   },
 
   methods: {
+    status_color(c) {
+      switch (c) {
+        case "Rejected":
+          return "red";
+          break;
+        case "Serving":
+          return "green";
+          break;
+        default:
+          return "blue";
+          break;
+      }
+    },
     getAssistances() {
       this.isLoading = true;
       axios.get(route("assistances.index"))
