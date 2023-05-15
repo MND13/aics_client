@@ -66,13 +66,14 @@ const router = new VueRouter({
             path: "/assessment/:uuid",
             name: "assessment",
             component: GISComponent,
+            props: true,
 
         },
         {
             path: "/assessment/:uuid/coe",
             name: "coe",
             component: COEComponent,
-
+            props: true,
         },
         {
             path: "/users",

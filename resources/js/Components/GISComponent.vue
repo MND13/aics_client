@@ -11,20 +11,18 @@
       </div>
     </div>
 
-    <div class="row" v-if="gis_data.status & gis_data.status != 'Pending'">
-
-      <small> Status: {{ gis_data.status }} <br></small>
-
-
-    </div>
-
     <div class="card mt-2">
       <div class="card-title">
         NAIS HINGIIN NA TULONG (Assistance Requested)
-        <span color="red"></span>
+
       </div>
       <div class="card-body">
 
+        <div class="row">
+          <div class="col-md-12">
+            <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </h5>
+          </div>
+        </div>
 
         <div class="row" v-if="gis_data.id">
 
@@ -32,16 +30,23 @@
 
 
 
-            <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }}<br />
-
-              <small> Status: {{ gis_data.status }} <br></small>
-            </h5>
-
-            <span> Date Submitted: {{ gis_data.created_at | formatDate }} </span><br>
-            <span> Requested Schedule: {{ gis_data.schedule | formatDate }} </span><br>
-            <span v-if="gis_data.office"> Office: {{ gis_data.office.name }} <br>
-              {{ gis_data.office.address }}</span>
-
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td> Status: {{ gis_data.status }} </td>
+                </tr>
+                <tr>
+                  <td> Date Submitted: {{ gis_data.created_at | formatDate }} </td>
+                </tr>
+                <tr>
+                  <td> Requested Schedule: {{ gis_data.schedule | formatDate }} </td>
+                </tr>
+                <tr>
+                  <td v-if="gis_data.office"> Office: {{ gis_data.office.name }} <br>
+                    {{ gis_data.office.address }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div class="col-md-6" v-if="gis_data">
 
@@ -59,20 +64,11 @@
                 </tr>
               </tbody>
             </table>
-
-
-
-
-
-            <br /><br />
-
           </div>
 
         </div>
         <div v-else>
-
           <v-skeleton-loader type="article"></v-skeleton-loader>
-
 
         </div>
 
@@ -118,7 +114,7 @@
             <div class="col-md-12">
               <label for="street_number">House No./Street/Purok
                 <small>(Ex. 123 Sun St.)</small>
-                <span color="red"></span>
+
               </label>
               {{ gis_data.aics_client.street_number }}
             </div>
@@ -126,7 +122,7 @@
           <div class="row mt-2">
             <div class="col-md-3">
               <label>Region <small>(Ex. NCR)</small>
-                <span color="red"></span>
+
               </label>
 
               {{ gis_data.aics_client.psgc.region_name }}
@@ -135,7 +131,7 @@
 
             <div class="col-md-3">
               <label>Province/District <small>(Ex. Dis. III)</small>
-                <span color="red"></span>
+
               </label>
 
               {{ gis_data.aics_client.psgc.province_name }}
@@ -146,7 +142,7 @@
             <div class="col-md-3">
               <label>
                 City/Municipality <small>(Ex. Quezon City)</small>
-                <span color="red"></span>
+
               </label>
 
               {{ gis_data.aics_client.psgc.city_name }}
@@ -202,7 +198,7 @@
             </div>
             <div class="col-md-3">
               <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
-                <span color="red"></span></label>
+              </label>
               {{ gis_data.monthly_salary }}
             </div>
 
@@ -235,11 +231,9 @@
 
             <div class="invalid-feedback" v-if="validationErrors.category_id">
               <ul>
-                <li v-for="e in validationErrors.category_id">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.category_id" :key="i">{{ e }}</li>
               </ul>
             </div>
-
-
 
             Specific Subcategory
 
@@ -270,7 +264,7 @@
               :class="{ 'is-invalid': validationErrors.mode_of_admission }"></textarea>
             <div class="invalid-feedback" v-if="validationErrors.assessment">
               <ul>
-                <li v-for="e in validationErrors.assessment">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.assessment" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -280,14 +274,14 @@
         </div>
       </div>
     </div>
-    </div>
+
 
     <br />
 
     <div class="card mt-2">
       <div class="card-title">
         ASSESSMENT INFORMATION
-        <span color="red"></span>
+
       </div>
       <div class="card-body">
 
@@ -305,7 +299,7 @@
             <div class="invalid-feedback" v-if="validationErrors.mode_of_admission">
 
               <ul>
-                <li v-for="e in validationErrors.mode_of_admission">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.mode_of_admission" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -322,7 +316,7 @@
             <div class="invalid-feedback" v-if="validationErrors.purpose">
 
               <ul>
-                <li v-for="e in validationErrors.purpose">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.purpose" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -335,7 +329,7 @@
 
             <div class="invalid-feedback" v-if="validationErrors.amount">
               <ul>
-                <li v-for="e in validationErrors.amount">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.amount" :key="i">{{ e }}</li>
               </ul>
             </div>
           </div>
@@ -349,7 +343,7 @@
 
             <div class="invalid-feedback" v-if="validationErrors.mode_of_assistance">
               <ul>
-                <li v-for="e in validationErrors.mode_of_assistance">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.mode_of_assistance" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -368,7 +362,7 @@
 
             <div class="invalid-feedback" v-if="validationErrors.fund_source">
               <ul>
-                <li v-for="e in validationErrors.fund_source">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.fund_source" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -384,7 +378,7 @@
 
             <div class="invalid-feedback" v-if="validationErrors.interviewed_by">
               <ul>
-                <li v-for="e in validationErrors.interviewed_by">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.interviewed_by" :key="i">{{ e }}</li>
               </ul>
             </div>
 
@@ -395,7 +389,7 @@
               :class="{ 'is-invalid': validationErrors.approved_by }" />
             <div class="invalid-feedback" v-if="validationErrors.approved_by">
               <ul>
-                <li v-for="e in validationErrors.approved_by">{{ e }}</li>
+                <li v-for="(e, i) in validationErrors.approved_by" :key="i">{{ e }}</li>
               </ul>
             </div>
           </div>
@@ -421,9 +415,7 @@
         REJECT
       </v-btn>
 
-      
-
-      <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid }  }" outlined large
+      <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid } }" outlined large
         class="--white-text" color="primary" :disabled="submit">
         Certificate Of Eligibility (COE)
       </v-btn>
@@ -448,7 +440,7 @@
       </v-card>
     </v-dialog>
 
-    </div>
+
 
 
 
@@ -490,6 +482,7 @@ export default {
       dialog_reject: false,
       rejectform: {},
       fund_sources: [],
+      formType: "Create",
 
     };
   },
