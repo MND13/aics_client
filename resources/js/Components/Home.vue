@@ -44,13 +44,14 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user'">
+          <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user' ">
             Details
           </v-btn>
 
           <v-btn small dark :to="{ name: 'assessment', params: { 'uuid': item.uuid } }" v-if="userData.role != 'user'">
             Review
           </v-btn>
+
         </template>
 
 
@@ -116,12 +117,12 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Date', value: 'created_at' },
-        { text: 'Client', value: 'aics_client' },
-        { text: 'Assistance', value: 'aics_type', width: "30%" },
+        { text: 'Date', value: 'created_at', width: "150px" },
+        { text: 'Client', value: 'aics_client', },
+        { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
-        { text: 'Status', value: 'status' },
-        { text: 'Actions', value: 'actions', },
+        { text: 'Status', value: 'status', width: "100px" },
+        { text: 'Actions', value: 'actions',  width: "150px" },
       ],
       assistances: [],
       dialog_create: false,

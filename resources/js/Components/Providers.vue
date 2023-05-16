@@ -9,10 +9,10 @@
 
               
 
-            <v-text-field v-model="formData.addressee_name" label="Adressee"
+            <v-text-field v-model="formData.addressee_name" label="Addressee"
               :error-messages="formErrors.addressee_name"></v-text-field>
 
-            <v-text-field v-model="formData.addressee_position" label="Posiotion"
+            <v-text-field v-model="formData.addressee_position" label="Position"
               :error-messages="formErrors.addressee_position"></v-text-field>
 
             <v-text-field v-model="formData.company_name" label="Company"

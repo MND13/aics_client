@@ -30,7 +30,9 @@ class UserRequest extends FormRequest
             'birth_date' => 'date',
             'psgc_id' => 'exists:psgcs,id',
             'mobile_number' => 'required|numeric|digits:11',
-            'username' => 'required|unique:users,username',
+           // 'username' => 'required|unique:users,username,',
+            //'username' => 'required|unique:users,username,',
+           
             'email' => 'required|email|max:255',
             'role' => 'required',
             'password' => 'sometimes|required|confirmed|max:255|min:8',

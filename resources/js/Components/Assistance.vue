@@ -165,7 +165,7 @@
                             <tr>
                                 <td>Preferred Schedule
 
-                                    <input type="datetime-local" v-model="form.schedule" name="" id="" class="form-control" max="">
+                                    <input type="date" v-model="form.schedule" name="" id="" class="form-control" max="">
                                 </td>
 
                             </tr>
@@ -309,6 +309,10 @@ export default {
             axios.post(route("assistances.store"), formData).then(response => {
                 console.log(response.data);
                 alert(response.data.message);
+                if( response.data.message =="Saved")
+                {
+                    document.location.href="/";
+                }
             }).catch(error => console.log(error));
         },
 

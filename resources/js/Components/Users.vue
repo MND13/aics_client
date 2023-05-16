@@ -2,7 +2,9 @@
   <v-row no-gutters>
     <v-col cols="12" sm="4">
       <v-card flat>
-        <v-card-title>User Form</v-card-title>
+        <v-card-title>User Form
+
+         </v-card-title>
         <v-card-text>
           <v-form ref="form">
             <v-text-field v-model="formData.first_name" label="First Name"
@@ -56,7 +58,8 @@
               hint="At least 8 characters" counter
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
-            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit" v-if="userData.role == 'admin' || userData.role == 'super-admin' ">
+            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
+              v-if="userData.role == 'admin' || userData.role == 'super-admin'">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -71,9 +74,14 @@
 
     <v-col cols="12" sm="8">
       <v-card flat>
-        <v-card-title>User Table</v-card-title>
+        <v-card-title>User Table
+<v-spacer></v-spacer>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+     
+
+        </v-card-title>
         <v-card-text>
-          <v-data-table :headers="headers" :items="users" :items-per-page="5" :loading="loading" class="elevation-1">
+          <v-data-table  :search="search" :headers="headers" :items="users" :items-per-page="5" :loading="loading" class="elevation-1">
             <template v-slot:item.role="{ item }">
               <span>
                 {{ userRole(item) }}
@@ -83,10 +91,12 @@
 
 
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editUser(item)" v-if="userData.role == 'admin' || userData.role == 'super-admin'  ">
+              <v-icon small class="mr-2" @click="editUser(item)"
+                v-if="userData.role == 'admin' || userData.role == 'super-admin'">
                 mdi-pencil
               </v-icon>
-              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="userData.role == 'admin' || userData.role == 'super-admin'">
+              <v-icon small class="mr-2" @click="deleteUser(item)"
+                v-if="userData.role == 'admin' || userData.role == 'super-admin'">
                 mdi-delete
               </v-icon>
             </template>
@@ -125,6 +135,7 @@ export default {
       showPasswordConfirmation: false,
       headers: [
         { text: 'Name', value: 'username' },
+        { text: 'Office', value: 'office' },
         { text: 'Email Address', value: 'email' },
         { text: 'Role', value: 'role' },
         { text: 'Actions', value: 'actions' },
@@ -133,6 +144,7 @@ export default {
       loading: true,
       submit: false,
       offices: [],
+      search: ''
     };
   },
   methods: {
@@ -162,7 +174,7 @@ export default {
     updateUser() {
       this.submit = true;
       this.formErrors = {};
-      axios.put(route('users.update', this.formData.id), this.formData)
+      axios.patch(route('users.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;
           this.getUsers();
@@ -211,7 +223,7 @@ export default {
         this.offices = response.data;
       }).catch(error => console.log(error));
     },
-    getText(item){ return `${item.name}`},
+    getText(item) { return `${item.name}` },
   },
   mounted() {
     this.getOffices()
