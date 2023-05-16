@@ -27,8 +27,8 @@ import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
 import Assessment from "./Components/Assessment.vue"
 import COEComponent from "./Components/COE.vue"
-import Providers from "./Components/Providers"
-import FundSource from "./Components/FundSource"
+import Providers from "./Components/Providers.vue"
+import FundSource from "./Components/FundSource.vue"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
