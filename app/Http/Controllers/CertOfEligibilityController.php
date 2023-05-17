@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AicsAssistance;
 use App\Models\CertOfEligibility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,15 +36,23 @@ class CertOfEligibilityController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
 
-            $coe = new CertOfEligibility;
-            $coe->sdo = $request->sdo;
-            $coe->records = json_encode($request->records);
-            $coe->save();
 
-            DB::commit();
+            $gis = AicsAssistance::where("uuid","=",$request->uuid)->first();
+
+            if ($gis) {
+               
+                $coe = new CertOfEligibility;
+                $coe->sdo = $request->sdo;
+                $coe->records = json_encode($request->records);
+                $coe->save();
+
+                $gis->coe_id =  $coe->id;
+                $gis->save();
+                DB::commit();
+            }
             return ["message" => "Saved"];
         } catch (\Throwable $th) {
             throw $th;

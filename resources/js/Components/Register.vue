@@ -305,11 +305,18 @@ export default
         let formData = new FormData();
         formData.append('file', this.file);
 
+        if(this.form.ext_name == "") 
+        {
+          delete this.form["ext_name"];
+        }
+
         const entries = Object.entries(this.form);
 
         entries.forEach(element => {
           formData.append(element[0], element[1]);
         });
+
+      
 
         axios.post("register", formData).then(response => {
           //console.log(response.data);

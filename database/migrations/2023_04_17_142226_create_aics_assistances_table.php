@@ -27,15 +27,18 @@ class CreateAicsAssistancesTable extends Migration
             $table->foreignId('assessment_id')->nullable()->constrained('aics_assessments')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->foreignId('coe_id')->nullable()->constrained('cert_of_eligibilities')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('uuid')->nullable();
             $table->integer("age");
             $table->string("civil_status")->nullable();
             $table->string("occupation")->nullable();
             $table->string("monthly_salary")->nullable();
-            $table->string("mode_of_admission")->nullable();            
+            $table->string("mode_of_admission")->nullable();
             $table->date('schedule')->nullable();
             $table->string('status')->nullable();
-            $table->date('status_date')->nullable();           
+            $table->date('status_date')->nullable();
             $table->timestamps();
         });
     }
@@ -54,6 +57,7 @@ class CreateAicsAssistancesTable extends Migration
             $table->dropForeign(['aics_type_id']);
             $table->dropForeign(['office_id']);
             $table->dropForeign(['assessment_id']);
+            $table->dropForeign(['coe_id']);
         });
 
 

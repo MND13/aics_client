@@ -29,7 +29,7 @@
 
             <div class="text-center">
 
-              <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
+              <v-btn color="primary" class="mr-4" @click="submitForm"  :disabled="submit"
                 v-if="userData.role == 'admin' || userData.role == 'super-admin' || userData.role == 'social-worker'">
                 <span>{{ formType }} COE </span>
               </v-btn>
@@ -118,6 +118,8 @@ export default {
     }, 250),
     createCOE() {
       this.submit = true;
+      this.formData.uuid = this.uuid;
+      console.log(this.formData);
       axios.post(route('api.coe.store'), this.formData)
         .then(res => {
           this.submit = false;
