@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(OfficesSeeder::class);
         $this->call(AssessmentOptsSeeder::class);
         $this->call(FundSourceSeeder::class);
+        $this->call(ProvidersSeeder::class);
 
      
     }

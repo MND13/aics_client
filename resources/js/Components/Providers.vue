@@ -177,7 +177,7 @@ export default {
     },
 
     deleteProviders(providers) {
-      if (confirm(`Are you sure you want to delete ${providers.name}`)) {
+      if (confirm(`Are you sure you want to delete ${providers.addressee_name}, ${providers.company_name} ?`)) {
         axios.delete(route('api.providers.delete', providers.id))
           .then(res => {
             this.getProviders();

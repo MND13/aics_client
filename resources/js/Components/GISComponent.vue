@@ -359,7 +359,7 @@
                   <!--<input type="text" v-model="form.fund_source" class="form-control"
               :class="{ 'is-invalid': validationErrors.fund_source }">-->
 
-                  <select v-model="form.fund_source" name="" id="" class="form-control"
+                  <select v-model="form.fund_source_id" name="" id="" class="form-control"
                     :class="{ 'is-invalid': validationErrors.fund_source }">
                     <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">{{
                       fund_source.name }}</option>
@@ -420,7 +420,7 @@
               REJECT
             </v-btn>
 
-            <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid } }" outlined
+            <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid, 'gis_data': gis_data } }" outlined
               large class="--white-text" color="primary" :disabled="submit">
               Certificate Of Eligibility (COE)
             </v-btn>

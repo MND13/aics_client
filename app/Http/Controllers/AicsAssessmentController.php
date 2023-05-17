@@ -125,12 +125,11 @@ class AicsAssessmentController extends Controller
      */
     public function update(Request $request)
     {
-        if (Auth::check() &&   !Auth::user()->hasRole(['user'])) {
+        if (Auth::check() && !Auth::user()->hasRole(['user'])) {
 
 
             DB::beginTransaction();
             try {
-
 
                 $validator = Validator::make($request->all(), [
                     'category_id' => 'required',
@@ -138,7 +137,7 @@ class AicsAssessmentController extends Controller
                     'assessment' => 'required',
                     'purpose' => 'required',
                     'amount' => 'required',
-                    'fund_source' => 'required',
+                    'fund_source_id' => 'required',
                     'mode_of_assistance' => 'required',
                     'interviewed_by' => 'required',
                     'approved_by' => 'required',

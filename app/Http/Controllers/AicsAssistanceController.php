@@ -10,6 +10,7 @@ use App\Models\AicsBeneficiary;
 use App\Models\AicsClient;
 use App\Models\AicsDocument;
 use App\Models\AicsRequrement;
+use App\Models\CertOfEligibility;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -80,11 +81,7 @@ class AicsAssistanceController extends Controller
                     }
                 }
 
-               
-
                 $aics_assistance->aics_documents()->saveMany($documents);
-
-
 
                 DB::commit();
                 return ["message"=> "Saved"];
@@ -343,4 +340,6 @@ class AicsAssistanceController extends Controller
             return ["message" => $th];
         }
     }
+
+   
 }

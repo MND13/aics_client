@@ -27,6 +27,9 @@ class CreateAicsAssessmentsTable extends Migration
             $table->longText("purpose")->nullable();
             $table->double("amount",8,2);
             $table->string("mode_of_assistance")->nullable();
+            $table->foreignId('fund_source_id')->nullable()->constrained('fund_sources')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->string("interviewed_by")->nullable();
             $table->string("approved_by")->nullable();
             $table->timestamps();
@@ -43,6 +46,7 @@ class CreateAicsAssessmentsTable extends Migration
         Schema::table('aics_assessments', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
             $table->dropForeign(['subcategory_id']);
+            $table->dropForeign(['fund_source_id']);
            
         });
 
