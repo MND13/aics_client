@@ -219,7 +219,7 @@
           </div>
 
 
-          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status == 'Verified'">
+          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
             <div class="col-md-4">
               <div class="card">
                 <div class="card-title">Beneficiary Category</div>
@@ -283,7 +283,7 @@
 
           <br />
 
-          <div class="card mt-2"  v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status == 'Verified'">
+          <div class="card mt-2"  v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
             <div class="card-title">
               ASSESSMENT INFORMATION
 
@@ -415,6 +415,9 @@
             </v-btn>
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified'">
               SUBMIT
+            </v-btn>
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
+              UPDATE
             </v-btn>
             <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
 
