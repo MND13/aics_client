@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark>Print CAV</v-btn>
@@ -219,7 +219,7 @@
           </div>
 
 
-          <div class="row">
+          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status == 'Verified'">
             <div class="col-md-4">
               <div class="card">
                 <div class="card-title">Beneficiary Category</div>
@@ -283,7 +283,7 @@
 
           <br />
 
-          <div class="card mt-2">
+          <div class="card mt-2"  v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status == 'Verified'">
             <div class="card-title">
               ASSESSMENT INFORMATION
 
@@ -410,7 +410,10 @@
 
 
           <div class="text-center col-md-12" style="padding: 10px 0px">
-            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit">
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['encoder', 'social-worker']) && gis_data.status == 'Pending'">
+              VERIFY
+            </v-btn>
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified'">
               SUBMIT
             </v-btn>
             <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
@@ -470,9 +473,13 @@
 </style>
 
 <script>
+import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
+
 import { debounce, cloneDeep } from 'lodash'
 export default {
-  //props: ["gis_data", "getList", "userData", "setDialogCreate"],
+  mixins: [userMixin, authMixin],
+  // props: ["gis_data", "getList", "userData", "setDialogCreate"],
   data() {
     return {
       gis_data: {},
@@ -521,37 +528,60 @@ export default {
       this.form.gis_id = this.gis_data.id; // FOREIGN KEY
 
       if (this.form.id) { //UPDATE
-        axios
-          .post(route("api.assessment.update", this.form.id), this.form)
-          .then((response) => {
-            this.submit = false;
-            alert(response.data.message);
-          })
-          .catch((error) => {
-            this.submit = false;
-            if (error.response && error.response.status == 422) {
-              alert("Kumpletohin ang form. \nPlease complete the form.");
-              this.validationErrors = error.response.data.errors[0];
-            }
-          });
-
+        this.updateAssessment();
       } else { //CREATE 
-        axios
-          .post(route("api.assessment.create", this.gis_data.id), this.form)
-          .then((response) => {
-            this.submit = false;
-            alert(response.data.message);
-          })
-          .catch((error) => {
-            this.submit = false;
-            if (error.response && error.response.status == 422) {
-              alert("Kumpletohin ang form. \nPlease complete the form.");
-              this.validationErrors = error.response.data.errors[0];
-            }
-          });
+        if(this.gis_data.status == "Pending"){
+          this.verifyGis();
+        }else{
+          this.createAssessment();
+        }
       }
 
     }, 250),
+
+    updateAssessment(){
+      axios
+      .post(route("api.assessment.update", this.form.id), this.form)
+      .then((response) => {
+        this.submit = false;
+        alert(response.data.message);
+      })
+      .catch((error) => {
+        this.submit = false;
+        if (error.response && error.response.status == 422) {
+          alert("Kumpletohin ang form. \nPlease complete the form.");
+          this.validationErrors = error.response.data.errors[0];
+        }
+      });
+    },
+
+    createAssessment(){
+      axios
+      .post(route("api.assessment.create"), this.form)
+      .then((response) => {
+        this.submit = false;
+        this.getGISData();
+        alert(response.data.message);
+      })
+      .catch((error) => {
+        this.submit = false;
+        if (error.response && error.response.status == 422) {
+          alert("Kumpletohin ang form. \nPlease complete the form.");
+          this.validationErrors = error.response.data.errors[0];
+        }
+      });
+    },
+
+    verifyGis(){
+      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified" }).then(response => {
+
+      alert(response.data.message);
+      this.dialog_reject = false;
+      this.$router.push({ path: '/' })
+
+      }).catch(error => console.log(error));
+    },
+
     resetForm() {
       this.form = {};
     },

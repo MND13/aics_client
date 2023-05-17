@@ -18,7 +18,7 @@
                         <v-select v-model="formData.type" label="Type" :items="types"></v-select>
 
                         <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-                            v-if="userData.role == 'super-admin'">
+                            v-if="hasRoles(['super-admin'])">
                             <span>{{ formType }}</span>
                         </v-btn>
 
@@ -67,10 +67,10 @@
                     :search="search">
 
                     <template v-slot:item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="editFsrc(item)" v-if="userData.role == 'super-admin'">
+                        <v-icon small class="mr-2" @click="editFsrc(item)" v-if="hasRoles(['super-admin'])">
                             mdi-pencil
                         </v-icon>
-                        <v-icon small class="mr-2" @click="deleteFsrc(item)" v-if="userData.role == 'super-admin'">
+                        <v-icon small class="mr-2" @click="deleteFsrc(item)" v-if="hasRoles(['super-admin'])">
                             mdi-delete
                         </v-icon>
                     </template>

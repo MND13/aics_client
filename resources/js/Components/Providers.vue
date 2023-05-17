@@ -29,7 +29,7 @@
 
           
             <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="userData.role == 'super-admin'">
+              v-if="hasRoles(['super-admin'])">
               <span>{{ formType }}</span>
             </v-btn>
 
@@ -56,10 +56,10 @@
         <v-data-table dense :items-per-page="20" :loading="isLoading" :headers="headers" :items="data" :search="search">
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editProviders(item)" v-if="userData.role == 'super-admin'">
+            <v-icon small class="mr-2" @click="editProviders(item)" v-if="hasRoles(['super-admin'])">
               mdi-pencil
             </v-icon>
-            <v-icon small class="mr-2" @click="deleteProviders(item)" v-if="userData.role == 'super-admin'">
+            <v-icon small class="mr-2" @click="deleteProviders(item)" v-if="hasRoles(['super-admin'])">
               mdi-delete
             </v-icon>
           </template>
@@ -77,10 +77,11 @@
 
 <script>
 import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
 import { debounce, cloneDeep, isEmpty } from 'lodash'
 
 export default {
-  mixins: [userMixin],
+  mixins: [userMixin, authMixin],
   props: ['user'],
   data() {
     return {

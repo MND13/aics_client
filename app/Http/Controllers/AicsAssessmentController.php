@@ -40,12 +40,12 @@ class AicsAssessmentController extends Controller
                 if ($gis) {
 
                     $validator = Validator::make($request->all(), [
-                        'category_id' => 'required',
+                        'category_id' => ['required', 'exists:categories,id'],
                         'mode_of_admission' => 'required',
                         'assessment' => 'required',
                         'purpose' => 'required',
-                        'amount' => 'required',
-                        'fund_source' => 'required',
+                        'amount' => ['required', 'numeric'],
+                        'fund_source' => ['required', 'exists:fund_sources,id'],
                         'mode_of_assistance' => 'required',
                         'interviewed_by' => 'required',
                         'approved_by' => 'required',

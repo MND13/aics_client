@@ -70,7 +70,6 @@ import userMixin from './../Mixin/userMixin.js'
 
 export default {
   mixins: [userMixin],
-  props: ["user"],
   components: { GISComponent },
   data() {
     return {

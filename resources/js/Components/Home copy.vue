@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
 
-    <v-card-title v-if="userData.role=='user'"> 
+    <v-card-title v-if="hasRoles(['user'])"> 
     
       WELCOME {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}! <br>
       USERNAME: {{ user.username }} <br>
@@ -61,7 +61,7 @@
           <v-card-text v-if="dialog_data" >
             
 
-            <div class="row" v-if="userData.role=='admin'">
+            <div class="row" v-if="hasRoles(['admin'])">
               <div class="col-md-9">
 
              
@@ -120,7 +120,6 @@ import GISComponent from './GISComponent.vue';
 export default {
   components: { GISComponent },
   mixins: [userMixin],
-  props: ["user"],
   data() {
     return {
       headers: [

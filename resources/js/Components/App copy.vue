@@ -22,7 +22,7 @@
 
 
           <v-list dense>
-            <v-list-item-group v-model="selectedItem" v-if="userData.role == 'super-admin'" color="primary"
+            <v-list-item-group v-model="selectedItem" v-if="hasRoles(['super-admin'])" color="primary"
               class="d-print-none">
               <v-subheader inset>Libraries</v-subheader>
 

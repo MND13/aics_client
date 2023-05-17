@@ -17,7 +17,7 @@ import GISComponent from './GISComponent.vue';
 export default {
     components: { GISComponent },
     mixins: [userMixin],
-    props: ["user", "uuid"],
+    props: ["uuid"],
     data() {
         return {
             data: {},

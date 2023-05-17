@@ -7,7 +7,7 @@
         :error-messages="formErrors.first_name"></v-text-field>
 
       <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-        v-if="userData.role == 'admin' || userData.role == 'super-admin'">
+        v-if="hasRoles(['super-admin', 'admin'])">
         <span>{{ formType }} User</span>
       </v-btn>
 
@@ -21,10 +21,12 @@
 </template>
 
 <script>
-import userMixin from '../Mixin/userMixin';
+import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
+
 export default {
-  props: ["user", "uuid"],
-  mixins: [userMixin],
+  props: ["uuid"],
+  mixins: [userMixin, authMixin],
   data()
   {
     return {

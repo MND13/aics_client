@@ -2,7 +2,7 @@
   <v-card flat>
 
 
-    <v-card-title v-if="userData.role == 'user'">
+    <v-card-title v-if="hasRoles(['user'])">
 
 
 
@@ -44,7 +44,7 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user' ">
+          <v-btn dark small @click="openDetails(item)" v-if="hasRoles(['user'])">
             Details
           </v-btn>
 
@@ -113,7 +113,7 @@ import userMixin from '../Mixin/userMixin';
 export default {
 
   mixins: [userMixin],
-  props: ["user", "status"],
+  props: ["status"],
   data() {
     return {
       headers: [

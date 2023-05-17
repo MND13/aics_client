@@ -154,7 +154,7 @@
         <v-progress-circular :width="3" indeterminate color="primary" v-if="isExporting"></v-progress-circular>
 
         <v-btn @click="NewPayroll()" dark class="m-1"
-          v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">New Payroll</v-btn>
+          v-if="hasRoles(['super-admin', 'admin'])">New Payroll</v-btn>
       </v-card-title>
       <v-card-text>
         <v-data-table :headers="headers" :items="payrolls" :items-per-page="50" :loading="isBusy"
@@ -181,7 +181,7 @@
             </v-icon>
 
             <v-icon small class="mr-5" @click="EditItem(item)"
-              v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">
+              v-if="hasRoles(['super-admin', 'admin'])">
               mdi-pencil
             </v-icon>
 
@@ -189,7 +189,7 @@
               <template v-slot:activator="{ on, attrs }">
 
                 <v-icon small v-bind="attrs" v-on="on"
-                  v-if="userData.role == 'Super-Admin' || userData.role == 'Admin'">mdi-download</v-icon>
+                  v-if="hasRoles(['super-admin', 'admin'])">mdi-download</v-icon>
 
               </template>
 

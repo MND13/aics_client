@@ -239,8 +239,11 @@
     </v-stepper>
 </template>
 <script>
+import userMixin from './../Mixin/userMixin.js'
+import authMixin from './../Mixin/authMixin.js'
+
 export default {
-    props: ["user"],
+    mixins: [userMixin, authMixin],
     data() {
         return {
             e1: 1,

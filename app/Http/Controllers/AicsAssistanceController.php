@@ -189,7 +189,7 @@ class AicsAssistanceController extends Controller
 
     public function show(Request $request, $uuid)
     {
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
             
             #RESTRICTED TO OFFICE ID
 
@@ -261,7 +261,7 @@ class AicsAssistanceController extends Controller
 
     public function index()
     {   
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
 
            // var_dump(Auth::user());
 
