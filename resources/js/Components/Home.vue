@@ -1,8 +1,8 @@
 <template>
   <v-card flat>
 
-
-    <v-card-title v-if="userData.role == 'user'">
+    {{ s }}
+    <v-card-title v-if="hasRoles(['user'])">
 
 
 
@@ -15,7 +15,16 @@
     <v-card-text>
 
 
-      <!--<v-data-table dense flat :headers="headers" :items="assistances" @click:row="openAssistance">-->
+      <div class="row" v-if="!hasRoles(['user'])">
+        <div class="col-md-3">
+          <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
+        </div>
+
+        <div class="col-md-3">
+
+          <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
+        </div>
+      </div>
       <v-data-table :loading="isLoading" dense :headers="headers" :items="assistances">
 
 
@@ -28,7 +37,7 @@
         </template>
 
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color(item.status)" dark small label> {{ item.status }} </v-chip>
+          <v-chip :color="status_color(item.status)" :outlined="item.status=='Pending'? true: false" dark small label> {{ item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -44,7 +53,7 @@
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-btn dark small @click="openDetails(item)" v-if="userData.role == 'user' ">
+          <v-btn dark small @click="openDetails(item)" v-if="hasRoles(['user'])">
             Details
           </v-btn>
 
@@ -113,7 +122,7 @@ import userMixin from '../Mixin/userMixin';
 export default {
 
   mixins: [userMixin],
-  props: ["user", "status"],
+  props: ["s"],
   data() {
     return {
       headers: [
@@ -121,13 +130,31 @@ export default {
         { text: 'Client', value: 'aics_client', },
         { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
-        { text: 'Status', value: 'status', width: "100px" },
-        { text: 'Actions', value: 'actions',  width: "150px" },
+        { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },
+        { text: 'Actions', value: 'actions', width: "150px" },
       ],
       assistances: [],
       dialog_create: false,
       dialog_data: {},
       isLoading: false,
+      status_list: [
+        "",
+        "Pending",
+        "Verified",
+        "Serving",
+        "Served",
+        "Rejected",
+      ],
+      StatusFilterValue: ""
+    }
+
+  }, watch:
+  {
+    s(saa) {
+
+      console.log(saa);
+      //this.StatusFilterValue = s;
+
     }
   },
 
@@ -166,6 +193,14 @@ export default {
     },
     setDialogCreate(value) {
       this.dialog_create = value;
+    },
+    StatusFilter(value) {
+
+      if (!this.StatusFilterValue) {
+        return true;
+      }
+
+      return value === this.StatusFilterValue;
     }
   },
   mounted() {

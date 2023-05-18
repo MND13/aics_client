@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AicsAssessment;
 use App\Models\AicsAssistance;
+use App\Models\CertOfEligibility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,7 @@ class AicsAssessmentController extends Controller
                 if ($gis) {
 
                     $validator = Validator::make($request->all(), [
-                        'category_id' => 'required',
+                        'category_id' => ['required', 'exists:categories,id'],
                         'mode_of_admission' => 'required',
                         'assessment' => 'required',
                         'purpose' => 'required',
@@ -64,6 +65,16 @@ class AicsAssessmentController extends Controller
                     $assessment->save();
 
                     if ($assessment->id) {
+
+                        #COE
+                        if($request->coe )
+                        {
+                            $coe = New CertOfEligibility;
+                            $coe->fill($request->coe->toArray());
+                            $coe->save();
+                            $assessment->coe_id = $coe->id;
+                            $assessment->save();
+                        }
 
                         //UPDATE GIS / SENT BY USER
 

@@ -4,7 +4,8 @@
 
       <v-card>
 
-        {{ uuid }}
+{{ uuid }} <br>
+{{ coe_id }}
 
         <v-card-title>Certificate Of Eligibility (COE)</v-card-title>
         <v-card-text>
@@ -19,19 +20,18 @@
                 RECORDS OF THE CASE SUCH AS THE FOLLOWING ARE CONFIDENTIALLY FILED AT THE CRISIS INTERVENTION SECTION
               </div>
               <div class="col-md-12" style="column-count: 3;">
-                
+
                 <template v-for="(e, i) in records_opts">
                   <v-checkbox v-model="formData.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                 </template>
               </div>
-              
+
             </div>
 
             <div class="text-center">
 
-              <v-btn color="primary" class="mr-4" @click="submitForm"  :disabled="submit"
-                v-if="userData.role == 'admin' || userData.role == 'super-admin' || userData.role == 'social-worker'">
-                <span>{{ formType }} COE </span>
+              <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
+                v-if="hasRoles(['super-admin', 'admin','social-worker'])"> <span>{{ formType }} COE </span>
               </v-btn>
 
               <v-btn color="error" class="mr-4" @click="resetForm">
@@ -54,10 +54,11 @@
 <script>
 import userMixin from './../Mixin/userMixin.js'
 import { debounce, cloneDeep, isEmpty } from 'lodash'
+import authMixin from './../Mixin/authMixin.js'
 
 export default {
-  props: ["user", "uuid", "id", "gis_data"],
-  mixins: [userMixin],
+  props: ["uuid","coe_id"],
+  mixins: [userMixin, authMixin],
   data() {
     return {
       formData: {
@@ -81,9 +82,7 @@ export default {
         "Charge Slip",
         "Funeral Contract",
         "Death Certificate",
-        "Death Summary",
-        "Referral Letter",
-        "Social Case Study Report",
+        "Death Summary",      
         " Others",
       ],
       formType: "Create",
@@ -132,12 +131,17 @@ export default {
         })
 
 
+    },
+    getCOE()
+    {
+      axios.get(route("api.coe",this.uuid)).then(response=>{
+        console.log(response.data);
+      }).catch(err=>console.log(err));
     }
+
   },
   mounted() {
-    console.log("this.$route.query");
-    console.log(this.$route.query);
-    console.log(this.$route.query.uuid);
+   
   }
 
 }

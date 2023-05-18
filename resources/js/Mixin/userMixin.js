@@ -1,6 +1,7 @@
 import { cloneDeep, isEmpty } from "lodash"
 
 export default {
+    props: ["user"],
     data() {
         return {
             userData : {}
@@ -12,6 +13,9 @@ export default {
                 return user.roles[0].name;
             }
             return null;
+        },
+        hasRoles(roles = []){
+            return roles.includes(this.userData.role)
         }
     },
     mounted() {

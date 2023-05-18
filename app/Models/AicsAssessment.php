@@ -15,5 +15,20 @@ class AicsAssessment extends Model
         return $this->hasOne(AicsAssistance::class);
     }
 
+    public function fund_source()
+    {
+        return $this->belongsTo(FundSource::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
+    }
+
 
 }

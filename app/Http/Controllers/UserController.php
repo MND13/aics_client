@@ -17,7 +17,8 @@ class UserController extends Controller
     {
         return [
             'users' => User::with([
-                'roles'
+                'roles',
+                'office'
             ])->get()
         ];
     }

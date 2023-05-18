@@ -84,6 +84,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Psgc::class);
     }
+    public function office()
+    {
+        return $this->belongsTo(Offices::class);
+    }
 
    
 }

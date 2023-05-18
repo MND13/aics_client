@@ -76,5 +76,10 @@ class AicsAssistance extends Model
         return $this->belongsTo(AicsAssessment::class);
     }
 
+    public function coe()
+    {
+        return $this->belongsTo(CertOfEligibility::class, "coe_id");
+    }
+
     
 }

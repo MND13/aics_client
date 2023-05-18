@@ -49,6 +49,7 @@ Route::post('provider', [\App\Http\Controllers\AicsProvidersController::class, '
 Route::put('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'update'])->name("api.providers.update");
 Route::delete('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'destroy'])->name("api.providers.delete");
 Route::post('coe', [\App\Http\Controllers\CertOfEligibilityController::class, 'store'])->name("api.coe.store");
+Route::get('coe/{uuid}', [\App\Http\Controllers\CertOfEligibilityController::class, 'edit'])->name("api.coe.edit");
 
 
 

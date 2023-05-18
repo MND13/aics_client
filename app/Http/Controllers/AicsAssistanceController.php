@@ -186,7 +186,7 @@ class AicsAssistanceController extends Controller
 
     public function show(Request $request, $uuid)
     {
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
             
             #RESTRICTED TO OFFICE ID
 
@@ -198,7 +198,8 @@ class AicsAssistanceController extends Controller
                  "office:id,name,address",
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment"
+                 "assessment",
+                 "coe"
                
                  ])
                  ->where("uuid","=",$uuid)
@@ -216,7 +217,8 @@ class AicsAssistanceController extends Controller
                  "office:id,name,address",
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment"
+                 "assessment",
+                 "coe"
                
                  ])
                  ->where("uuid","=",$uuid)
@@ -258,7 +260,7 @@ class AicsAssistanceController extends Controller
 
     public function index()
     {   
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
 
            // var_dump(Auth::user());
 

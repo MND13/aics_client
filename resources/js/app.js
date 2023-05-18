@@ -27,8 +27,9 @@ import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
 import Assessment from "./Components/Assessment.vue"
 import COEComponent from "./Components/COE.vue"
-import Providers from "./Components/Providers"
-import FundSource from "./Components/FundSource"
+import Providers from "./Components/Providers.vue"
+import FundSource from "./Components/FundSource.vue"
+
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -43,6 +44,7 @@ const router = new VueRouter({
         {
             path: "/",
             redirect: { name: "home" },
+            props: true,
         },
         {
             path: "/home",
@@ -54,42 +56,68 @@ const router = new VueRouter({
             path: "/assistance",
             name: "assistance",
             component: Assistance,
-
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["user"]
+            }
         },
         {
             path: "/contact",
             name: "contact",
             component: Contact,
-
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["user"]
+            }
         },
         {
             path: "/assessment/:uuid",
             name: "assessment",
+            //component: Assessment,
             component: GISComponent,
             props: true,
-
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin", "encoder", "social-worker"]
+            }
         },
         {
             path: "/assessment/:uuid/coe",
             name: "coe",
             component: COEComponent,
+            //component: COEComponent,
             props: true,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin","social-worker"]
+            }
         },
         {
             path: "/users",
             name: "users",
             component: Users,
-
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin"]
+            }
         },
         {
             path: "/providers",
             name: "Providers",
             component: Providers,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin"]
+            }
         },
         {
             path: "/fund_source",
             name: "FundSource",
             component: FundSource,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin"]
+            }
         },
     ],
 });

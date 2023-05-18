@@ -2,7 +2,7 @@
   <v-card flat outlined>
 
 
-    <v-card-title v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+    <v-card-title v-if="hasRoles(['super-admin', 'admin'])">
 
       <!--<v-btn @click="print_options=!print_options" color="black" dark class="m-1">Print</v-btn>-->
 
@@ -38,7 +38,7 @@
             class="d-print-none"></v-text-field>
         </div>
       </div>
-      <div class="col-md-12 text-end" v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+      <div class="col-md-12 text-end" v-if="hasRoles(['super-admin', 'admin'])">
 
         <v-btn v-if="selected.length > 0" color="black" class="white--text" @click="MarkAsClaimed()">Mark as
           Claimed</v-btn>
@@ -104,7 +104,7 @@
 
         <template v-slot:item.status="{ item }">
           <v-edit-dialog :return-value.sync="item.status" large persistent @save="save(item)" @cancel="cancel(item)"
-            v-if="userData.role == 'Admin' || userData.role == 'Super-Admin'">
+            v-if="hasRoles(['super-admin', 'admin'])">
             <div>{{ item.status }}</div>
             <template v-slot:input>
               <div class="mt-4 text-h6">Claim Status</div>
@@ -158,7 +158,7 @@ import userMixin from './../Mixin/userMixin.js'
 
 export default {
   mixins: [userMixin],
-  props: ["id", "user"],
+  props: ["id"],
   data() {
     return {
       data: [],

@@ -104,19 +104,27 @@ class AicsClientController extends Controller
     public function gis($uuid)
     {
         //  $client =  AicsClient::with("psgc", "aics_type", "payroll_client.payroll", "category", "subcategory")->findOrFail($id);
-        $assistance =  AicsAssistance::with(
-            "aics_client.psgc",
+         /*"aics_client.psgc",
             "aics_type:id,name",
             "aics_documents",
-            "aics_documents.requirement:id,name",
+            "aics_documents.requirement:id,name",*/
 
+        $assistance =  AicsAssistance::with(
+          
+            "aics_type:id,name",
+            "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+            "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
+            "assessment.fund_source:id,name",
+            "assessment.category:id,category",
+            "assessment.subcategory:id,subcategory",
+            "assessment",
         )->where("uuid", "=", $uuid)->first();
-       
 
+#dd( $assistance->toArray());
         if ($assistance) {
-            
-           
-            $pdf = Pdf::loadView('pdf.gis', ["assistance" =>   $assistance->toArray() ]);
+
+
+            $pdf = Pdf::loadView('pdf.gis', ["assistance" =>   $assistance->toArray()]);
             return $pdf->stream('gis.pdf');
         }
     }
