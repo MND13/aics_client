@@ -199,11 +199,11 @@ class AicsAssistanceController extends Controller
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                  "assessment",
-                 "coe"
+                
                
                  ])
                  ->where("uuid","=",$uuid)
-                 ->whereRelation("office","office_id","=",Auth::user()->office_id )->first();
+                 ->whereRelation("office","office_id","=",Auth::user()->office_id )->firstOrFail();
                
          }
 
@@ -218,11 +218,11 @@ class AicsAssistanceController extends Controller
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                  "assessment",
-                 "coe"
+                
                
                  ])
                  ->where("uuid","=",$uuid)
-                 ->first();
+                 ->firstOrFail();
               
          }
  
@@ -270,7 +270,7 @@ class AicsAssistanceController extends Controller
                 "aics_documents",
                 "aics_documents.requirement:id,name",
                 "office:id,name,address",
-                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment"
               
@@ -309,7 +309,7 @@ class AicsAssistanceController extends Controller
                  "aics_documents",
                  "aics_documents.requirement:id,name",
                  "office:id,name,address",
-                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                  "assessment"
                

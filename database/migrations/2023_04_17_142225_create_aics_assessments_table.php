@@ -15,30 +15,41 @@ class CreateAicsAssessmentsTable extends Migration
     {
         Schema::create('aics_assessments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->foreignId('subcategory_id')->nullable()->constrained('subcategories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+
             $table->string("subcategory_others")->nullable();
             $table->string("mode_of_admission")->nullable();
+            $table->string("referal")->nullable();
             $table->longText("assessment")->nullable();
             $table->longText("purpose")->nullable();
             $table->double("amount", 8, 2);
             $table->string("mode_of_assistance")->nullable();
+            $table->string("interviewed_by")->nullable();
+            $table->string("approved_by")->nullable();
+            $table->string("sdo")->nullable();
+            $table->json("records")->nullable();
+
+            $table->foreignId('category_id')->constrained('categories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('subcategory_id')->nullable()->constrained('subcategories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->foreignId('fund_source_id')->nullable()->constrained('fund_sources')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('interviewed_by_id')->nullable()->constrained('users')
+
+            $table->foreignId('provider_id')->nullable()->constrained('aics_providers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('approved_by_id')->nullable()->constrained('signatories')
+                
+            $table->foreignId('gl_signatory_id')->nullable()->constrained('signatories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-           
-            $table->string("sdo")->nullable();
-            $table->json("records")->nullable();
+
+
+
             $table->timestamps();
         });
     }
@@ -54,8 +65,9 @@ class CreateAicsAssessmentsTable extends Migration
             $table->dropForeign(['category_id']);
             $table->dropForeign(['subcategory_id']);
             $table->dropForeign(['fund_source_id']);
-            $table->dropForeign(['interviewed_by_id']);
-            $table->dropForeign(['approved_by_id']);
+
+            $table->dropForeign(['gl_signatory_id']);
+            $table->dropForeign(['provider_id']);
         });
 
         Schema::dropIfExists('aics_assessments');

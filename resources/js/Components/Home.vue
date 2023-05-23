@@ -16,10 +16,7 @@
 
 
       <div class="row" v-if="!hasRoles(['user'])">
-        <div class="col-md-3">
-          <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
-        </div>
-
+        
         <div class="col-md-3">
 
           <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
@@ -35,6 +32,8 @@
     item.aics_client.ext_name }}
           </span>
         </template>
+
+       
 
         <template v-slot:item.status="{ item }">
           <v-chip :color="status_color(item.status)" :outlined="item.status=='Pending'? true: false" dark small label> {{ item.status }} </v-chip>
@@ -128,6 +127,7 @@ export default {
       headers: [
         { text: 'Date', value: 'created_at', width: "150px" },
         { text: 'Client', value: 'aics_client', },
+        { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
         { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },

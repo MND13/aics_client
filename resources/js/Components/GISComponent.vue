@@ -1,8 +1,9 @@
 <template>
   <div class="container-fluid">
     <div class="row g-2">
-      
-      <div class="col-md-12" v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+
+      <div class="col-md-12"
+        v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark>Print CAV</v-btn>
@@ -77,6 +78,8 @@
             </div>
             <div class="card-body">
               <p v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </p>
+              <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+
 
             </div>
           </div>
@@ -219,6 +222,7 @@
             </div>
           </div>
 
+        
 
           <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
             <div class="col-md-4">
@@ -298,7 +302,7 @@
                   Mode of Admission
                   <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control"
                     :class="{ 'is-invalid': validationErrors.mode_of_admission }">
-                    <option :value="e" v-for="(e, i) in ['Walk-in']" :key="i">
+                    <option :value="e" v-for="(e, i) in ['Walk-in', 'Referral']" :key="i">
                       {{ e }}
                     </option>
                   </select>
@@ -395,8 +399,15 @@
                 </div>
                 <div class="col-md-4">
                   Approved by
-                  <input type="text" class="form-control" v-model="form.approved_by"
-                    :class="{ 'is-invalid': validationErrors.approved_by }" />
+
+
+                  <select v-model="form.approved_by_id" class="form-control"
+                    :class="{ 'is-invalid': validationErrors.approved_by }">
+                    <option></option>
+                    <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }}</option>
+
+                  </select>
+
                   <div class="invalid-feedback" v-if="validationErrors.approved_by">
                     <ul>
                       <li v-for="(e, i) in validationErrors.approved_by" :key="i">{{ e }}</li>
@@ -404,7 +415,7 @@
                   </div>
                 </div>
                 <div class="col-md-4">
-                  SDO
+                  Special Disbursing Officer (SDO)
 
                   <input type="text" v-model="form.sdo" class="form-control"
                     :class="{ 'is-invalid': validationErrors.sdo }">
@@ -433,15 +444,12 @@
             </div>
             <div class="card-body">
 
-
-
-
               <div class="row">
 
                 <div class="col-md-12 " style="display: block; column-count: 4;">
-                  <template v-for="(e, i) in records_opts">
-                    <v-checkbox v-model="form.coe.records" :label="e" :value="e" :key=i
-                      class="shrink mr-0 mt-0"></v-checkbox>
+                  <template v-for="e in records_opts">
+                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"
+                    ></v-checkbox>
                   </template>
                 </div>
 
@@ -459,15 +467,16 @@
 
               Provider
               <select name="" id="" v-model="selected_provider" class="form-control">
-                <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name}} </option>
+                <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name }} | {{ e.company_address }}
+                </option>
               </select>
 
               Signatory
-              <select name="" id="" v-model="selected_provider" class="form-control">
-                <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name}} </option>
+              <select name="" id="" v-model="selected_gl_signatory" class="form-control">
+                <option :value="e" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
               </select>
 
-              
+
 
               <hr>
 
@@ -476,7 +485,9 @@
                 {{ selected_provider.addressee_name }} <br />
                 {{ selected_provider.addressee_position }}<br />
                 {{ selected_provider.company_name }}<br />
-                {{ selected_provider.company_address }}<br /></div>
+                {{ selected_provider.company_address }}<br />
+
+              </div>
 
 
 
@@ -561,10 +572,8 @@ export default {
       gis_data: {},
       form: {
         mode_of_admission: "Walk-in",
-        coe: {
-          records: []
-        }
-
+        interviewed_by: this.user.first_name + " " + this.user.middle_name + " " + this.user.last_name,
+        records: [],
       },
       assistance_types: {},
       psgc: {},
@@ -617,7 +626,10 @@ export default {
         "TIN Card",
         "PRC ID"],
       providers: [],
-      selected_provider: {}
+      selected_provider: {},
+      signatories: {},
+      selected_gl_signatory: ""
+
 
 
     };
@@ -629,7 +641,7 @@ export default {
       }
     },
     "form.mode_of_assistance": function (newVal, oldVal) {
-     
+
     },
 
     selected_assessment_option(val) {
@@ -703,9 +715,9 @@ export default {
     resetForm() {
       this.form = {
         mode_of_admission: "Walk-in",
-        coe: {
-          records: []
-        }
+        records: [],
+
+
       };
     },
 
@@ -751,10 +763,24 @@ export default {
           this.gis_data = response.data;
           if (this.gis_data.assessment) {
             this.form = this.gis_data.assessment;
-            if (!this.form.coe) {
-              this.form.coe = { records: [] };
+            if (!this.form.records) {
+              this.form.records = [];
+             
             };
+            this.form.records = JSON.parse(this.gis_data.assessment.records);
 
+            console.log(this.form.records);
+            console.log(Array.isArray(this.form.records));
+            
+
+          }
+        }).catch(error => {
+          console.log("error");
+          console.log(error);
+
+          if (error.response.status === 404) {
+
+            this.$router.push({ name: 'NotFound' });
           }
         })
     },
@@ -775,6 +801,12 @@ export default {
         this.providers = response.data.sort();
       }).catch(error => console.log(error))
     },
+    getSignatories() {
+
+      axios.get(route("api.signatories")).then(response => {
+        this.signatories = response.data.sort();
+      }).catch(error => console.log(error))
+    },
 
 
   },
@@ -786,6 +818,7 @@ export default {
     this.getAssessmentOpts();
     this.getFundSrc();
     this.getProviders();
+    this.getSignatories();
 
 
   },

@@ -25,10 +25,11 @@ import GISComponent from "./Components/GISComponent.vue"
 import Users from "./Components/Users"
 import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
-import Assessment from "./Components/Assessment.vue"
+//import Assessment from "./Components/Assessment.vue"
 import COEComponent from "./Components/COE.vue"
 import Providers from "./Components/Providers.vue"
 import FundSource from "./Components/FundSource.vue"
+import NotFound from "./Components/NotFound.vue"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -38,9 +39,12 @@ Vue.use(VueViewer)
 
 const router = new VueRouter({
     mode: "history",
-    base: process.env.MIX_BASE_NAME ,
+    base: process.env.MIX_BASE_NAME,
     routes: [
-        // { path: "/404", component: NotFound },
+        //{ path: "/404", component: NotFound },
+        {   path: "*", 
+            name: "NotFound",
+            component: NotFound, },
         {
             path: "/",
             redirect: { name: "home" },
@@ -89,7 +93,7 @@ const router = new VueRouter({
             props: true,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["super-admin", "admin","social-worker"]
+                requiresRoles: ["super-admin", "admin", "social-worker"]
             }
         },
         {
@@ -133,11 +137,11 @@ Vue.component('register-component', require('./components/Register.vue').default
 
 export default new Vuetify({
     icons: {
-      iconfont: 'mdi', // default - only for display purposes
+        iconfont: 'mdi', // default - only for display purposes
     },
-  })
+})
 
-  
+
 const app = new Vue({
     el: '#app',
     components: { App },

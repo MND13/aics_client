@@ -15,11 +15,8 @@ class CreateSignatoriesTable extends Migration
     {
         Schema::create('signatories', function (Blueprint $table) {
             $table->id();
-            $table->string("name")->nullable();
-            $table->string("title")->nullable();
+            $table->string("name")->nullable();           
             $table->string("position")->nullable();
-            $table->integer("range_start")->nullable();
-            $table->integer("range_end")->nullable();
             $table->timestamps();
         });
     }

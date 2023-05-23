@@ -14,7 +14,7 @@ class SignatoriesController extends Controller
      */
     public function index()
     {
-        //
+        return Signatories::all();
     }
 
     /**

@@ -49,7 +49,7 @@ class AicsAssessmentController extends Controller
                         'fund_source_id' => 'required',
                         'mode_of_assistance' => 'required',
                         'interviewed_by' => 'required',
-                        'approved_by' => 'required',
+                        'approved_by_id' => 'required',
 
                     ]);
 
@@ -62,25 +62,17 @@ class AicsAssessmentController extends Controller
 
                     $assessment = new AicsAssessment();
                     $assessment->fill($request->toArray());
+                    $assessment->interviewed_by_id = Auth::id();
+                    $assessment->records = json_encode($request->records);
                     $assessment->save();
 
                     if ($assessment->id) {
-
-                        #COE
-                        if($request->coe )
-                        {
-                            $coe = New CertOfEligibility;
-                            $coe->fill($request->coe->toArray());
-                            $coe->save();
-                            $assessment->coe_id = $coe->id;
-                            $assessment->save();
-                        }
 
                         //UPDATE GIS / SENT BY USER
 
                         $gis->assessment_id = $assessment->id;
                         $gis->mode_of_admission = $assessment->mode_of_admission;
-                        $gis->status = "Serving";
+                        $gis->status = "Served";
                         $gis->save();
 
                         DB::commit();
@@ -151,7 +143,7 @@ class AicsAssessmentController extends Controller
                     'fund_source_id' => 'required',
                     'mode_of_assistance' => 'required',
                     'interviewed_by' => 'required',
-                    'approved_by' => 'required',
+                    'approved_by_id' => 'required',
 
                 ]);
 
@@ -164,11 +156,11 @@ class AicsAssessmentController extends Controller
 
                 if ($assessment) {
                     $assessment->fill($request->toArray());
+                    $assessment->records = json_encode($request->records);
                     $assessment->save();
-
+                    
                     DB::commit();
                     return ["message" => "Saved!"];
-                    
                 }
             } catch (\Throwable $th) {
                 DB::rollBack();
