@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
 
-    {{ s }}
+    
     <v-card-title v-if="hasRoles(['user'])">
 
 
@@ -36,8 +36,8 @@
 
 
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color(item.status)" :outlined="item.status == 'Pending' ? true : false" dark small label> {{
-            item.status }} </v-chip>
+          <v-chip :color="status_color(item.status)" :outlined="item.status == 'Pending' ? true : false" dark small label>
+            {{item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -124,7 +124,7 @@ import userMixin from '../Mixin/userMixin';
 export default {
 
   mixins: [userMixin],
-  props: ["s"],
+  props: ["status"],
   data() {
     return {
       headers: [
@@ -153,19 +153,23 @@ export default {
 
   }, watch:
   {
-    s(saa) {
-
-      console.log(saa);
-      //this.StatusFilterValue = s;
-
+    status(s)
+    {
+      console.log(s);
+      this.StatusFilterValue = s;
     }
   },
 
   methods: {
     status_color(c) {
+
+
       switch (c) {
         case "Rejected":
           return "red";
+          break;
+        case "Served":
+          return "green darken-4";
           break;
         case "Serving":
           return "green";
@@ -211,7 +215,9 @@ export default {
   },
   mounted() {
     this.getAssistances()
-
+    
+    
+    this.StatusFilterValue  = this.status
   }
 
 }

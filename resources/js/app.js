@@ -51,10 +51,10 @@ const router = new VueRouter({
         {
             path: "/",
             redirect: { name: "home" },
-            props: true,
+          
         },
         {
-            path: "/home",
+            path: "/home/:status?",
             name: "home",
             component: Home,
             props: true,
