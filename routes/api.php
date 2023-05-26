@@ -33,7 +33,6 @@ Route::group(['prefix' => '/aics'], function () {
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
 Route::get('gis/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gis'])->name("api.pdf.gis2");
-Route::get('offices', [\App\Http\Controllers\OfficesController::class, 'index'])->name("api.offices.index");
 Route::get('assessment_opts', [\App\Http\Controllers\AssessmentOptionsController::class, 'index'])->name("api.assessment_opts");
 
 Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
@@ -49,6 +48,12 @@ Route::post('provider', [\App\Http\Controllers\AicsProvidersController::class, '
 Route::put('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'update'])->name("api.providers.update");
 Route::delete('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'destroy'])->name("api.providers.delete");
 
+Route::get('offices', [\App\Http\Controllers\OfficesController::class, 'index'])->name("api.offices.index");
+Route::post('offices', [\App\Http\Controllers\OfficesController::class, 'store'])->name("offices.store");
+Route::post('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'update'])->name("offices.update");
+Route::delete('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'destroy'])->name("offices.destroy");
 
-
-
+Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, 'index'])->name("api.signatories");
+Route::post('signatories', [\App\Http\Controllers\SignatoriesController::class, 'store'])->name("signatories.store");
+Route::post('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'update'])->name("signatories.update");
+Route::delete('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'destroy'])->name("signatories.destroy");

@@ -4,7 +4,7 @@
       <v-card flat>
         <v-card-title>User Form
 
-         </v-card-title>
+        </v-card-title>
         <v-card-text>
           <v-form ref="form">
             <v-text-field v-model="formData.first_name" label="First Name"
@@ -21,7 +21,8 @@
               :error-messages="formErrors.username"></v-text-field>
 
 
-            <v-select v-model="formData.office_id" label="Office" :items="offices" item-value="id" item-text="name" :error-messages="formErrors.office_id">
+            <v-select v-model="formData.office_id" label="Office" :items="offices" item-value="id" item-text="name"
+              :error-messages="formErrors.office_id">
 
               <template v-slot:selection="{ item }">
                 {{ getText(item) }}
@@ -74,14 +75,17 @@
 
     <v-col cols="12" sm="8">
       <v-card flat>
-        <v-card-title>User Table
-<v-spacer></v-spacer>
+        <v-card-title>
+
+          User Table
+          <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
-     
 
         </v-card-title>
         <v-card-text>
-          <v-data-table  :search="search" :headers="headers" :items="users" :items-per-page="5" :loading="loading" class="elevation-1">
+
+          <v-data-table items-per-page="10" :search="search" :headers="headers" :items="users" :items-per-page="5"
+            :loading="loading" class="elevation-1">
             <template v-slot:item.office="{ item }">
               <span>
                 {{ item.office ? item.office.name : "" }}
@@ -93,15 +97,11 @@
               </span>
             </template>
 
-
-
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editUser(item)"
-                v-if="hasRoles(['super-admin', 'admin'])">
+              <v-icon small class="mr-2" @click="editUser(item)" v-if="hasRoles(['super-admin', 'admin'])">
                 mdi-pencil
               </v-icon>
-              <v-icon small class="mr-2" @click="deleteUser(item)"
-                v-if="hasRoles(['super-admin', 'admin'])">
+              <v-icon small class="mr-2" @click="deleteUser(item)" v-if="hasRoles(['super-admin', 'admin'])">
                 mdi-delete
               </v-icon>
             </template>
@@ -186,6 +186,7 @@ export default {
     updateUser() {
       this.submit = true;
       this.formErrors = {};
+      console.log(this.formData);
       axios.patch(route('users.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;
@@ -206,17 +207,17 @@ export default {
     getUsers() {
       this.loading = true;
       axios.get(route('users.index'))
-      .then(res => {
-        this.loading = false;
-        this.users = res.data.users;
-        if(this.userData.role == "admin"){
-          this.users = this.users.filter(i => i.office_id == this.userData.office_id);
-        }
-      })
-      .catch(err => {
-        this.loading = false;
-      })
-      ;
+        .then(res => {
+          this.loading = false;
+          this.users = res.data.users;
+          if (this.userData.role == "admin") {
+            this.users = this.users.filter(i => i.office_id == this.userData.office_id);
+          }
+        })
+        .catch(err => {
+          this.loading = false;
+        })
+        ;
     },
     editUser(user) {
       this.formType = "Update";
@@ -236,7 +237,7 @@ export default {
     getOffices() {
       axios.get(route("api.offices.index")).then(response => {
         this.offices = response.data;
-        if(this.userData.role == "admin"){
+        if (this.userData.role == "admin") {
           this.offices = this.offices.filter(i => i.id == this.userData.office_id);
         }
       }).catch(error => console.log(error));

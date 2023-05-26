@@ -32,10 +32,12 @@ class CreateAicsAssistancesTable extends Migration
             $table->string("civil_status")->nullable();
             $table->string("occupation")->nullable();
             $table->string("monthly_salary")->nullable();
-            $table->string("mode_of_admission")->nullable();            
+            $table->string("mode_of_admission")->nullable();
             $table->date('schedule')->nullable();
             $table->string('status')->nullable();
-            $table->date('status_date')->nullable();           
+            $table->date('status_date')->nullable();
+            $table->longText("remarks")->nullable();
+
             $table->timestamps();
         });
     }
@@ -54,6 +56,7 @@ class CreateAicsAssistancesTable extends Migration
             $table->dropForeign(['aics_type_id']);
             $table->dropForeign(['office_id']);
             $table->dropForeign(['assessment_id']);
+            $table->dropForeign(['coe_id']);
         });
 
 

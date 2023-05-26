@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
 
-
+    
     <v-card-title v-if="hasRoles(['user'])">
 
 
@@ -15,7 +15,13 @@
     <v-card-text>
 
 
-      <!--<v-data-table dense flat :headers="headers" :items="assistances" @click:row="openAssistance">-->
+      <div class="row" v-if="!hasRoles(['user'])">
+
+        <div class="col-md-3">
+
+          <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
+        </div>
+      </div>
       <v-data-table :loading="isLoading" dense :headers="headers" :items="assistances">
 
 
@@ -27,8 +33,11 @@
           </span>
         </template>
 
+
+
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color(item.status)" dark small label> {{ item.status }} </v-chip>
+          <v-chip :color="status_color(item.status)" :outlined="item.status == 'Pending' ? true : false" dark small label>
+            {{item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -73,13 +82,15 @@
             <h5 v-if="dialog_data.aics_type">{{ dialog_data.aics_type.name }} </h5>
 
             <span> Status: {{ dialog_data.status }} <br></span>
-            <span> Date: {{ dialog_data.created_at | formatDate }} </span><br>
+            <span> Remarks: {{ dialog_data.remarks }} <br></span>
 
-            <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br> {{ dialog_data.office.address
-            }}
-            </span>
+            <span> Date Submitted: {{ dialog_data.created_at | formatDate }} </span><br>
 
-            <table class="table table-bordered " v-if="dialog_data.aics_documents">
+            <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br>
+              {{ dialog_data.office.address }}
+            </span><br>
+
+            <table class="table table-bordered mt-2" v-if="dialog_data.aics_documents">
               <thead>
                 <tr>
                   <td>Attachments:</td>
@@ -119,26 +130,52 @@ export default {
       headers: [
         { text: 'Date', value: 'created_at', width: "150px" },
         { text: 'Client', value: 'aics_client', },
+        { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
-        { text: 'Status', value: 'status', width: "100px" },
-        { text: 'Actions', value: 'actions',  width: "150px" },
+        { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },
+        { text: 'Actions', value: 'actions', width: "150px" },
       ],
       assistances: [],
       dialog_create: false,
       dialog_data: {},
       isLoading: false,
+      status_list: [
+        "",
+        "Pending",
+        "Verified",
+        "Serving",
+        "Served",
+        "Rejected",
+      ],
+      StatusFilterValue: ""
+    }
+
+  }, watch:
+  {
+    status(s)
+    {
+      console.log(s);
+      this.StatusFilterValue = s;
     }
   },
 
   methods: {
     status_color(c) {
+
+
       switch (c) {
         case "Rejected":
           return "red";
           break;
+        case "Served":
+          return "green darken-4";
+          break;
         case "Serving":
           return "green";
+          break;
+        case "Verified":
+          return "blue";
           break;
         default:
           return "blue";
@@ -166,11 +203,21 @@ export default {
     },
     setDialogCreate(value) {
       this.dialog_create = value;
+    },
+    StatusFilter(value) {
+
+      if (!this.StatusFilterValue) {
+        return true;
+      }
+
+      return value === this.StatusFilterValue;
     }
   },
   mounted() {
     this.getAssistances()
-
+    
+    
+    this.StatusFilterValue  = this.status
   }
 
 }

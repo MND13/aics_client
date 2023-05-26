@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AicsAssessment;
 use App\Models\AicsAssistance;
+use App\Models\CertOfEligibility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -44,11 +45,10 @@ class AicsAssessmentController extends Controller
                         'mode_of_admission' => 'required',
                         'assessment' => 'required',
                         'purpose' => 'required',
-                        'amount' => ['required', 'numeric'],
-                        'fund_source' => ['required', 'exists:fund_sources,id'],
+                        'amount' => 'required',
+                        'fund_source_id' => 'required',
                         'mode_of_assistance' => 'required',
-                        'interviewed_by' => 'required',
-                        'approved_by' => 'required',
+                        'approved_by_id' => 'required',
 
                     ]);
 
@@ -61,6 +61,8 @@ class AicsAssessmentController extends Controller
 
                     $assessment = new AicsAssessment();
                     $assessment->fill($request->toArray());
+                    $assessment->interviewed_by_id = Auth::id();
+                    $assessment->records = json_encode($request->records);
                     $assessment->save();
 
                     if ($assessment->id) {
@@ -69,7 +71,7 @@ class AicsAssessmentController extends Controller
 
                         $gis->assessment_id = $assessment->id;
                         $gis->mode_of_admission = $assessment->mode_of_admission;
-                        $gis->status = "Serving";
+                        $gis->status = "Served";
                         $gis->save();
 
                         DB::commit();
@@ -125,12 +127,11 @@ class AicsAssessmentController extends Controller
      */
     public function update(Request $request)
     {
-        if (Auth::check() &&   !Auth::user()->hasRole(['user'])) {
+        if (Auth::check() && !Auth::user()->hasRole(['user'])) {
 
 
             DB::beginTransaction();
             try {
-
 
                 $validator = Validator::make($request->all(), [
                     'category_id' => 'required',
@@ -138,10 +139,10 @@ class AicsAssessmentController extends Controller
                     'assessment' => 'required',
                     'purpose' => 'required',
                     'amount' => 'required',
-                    'fund_source' => 'required',
+                    'fund_source_id' => 'required',
                     'mode_of_assistance' => 'required',
                     'interviewed_by' => 'required',
-                    'approved_by' => 'required',
+                    'approved_by_id' => 'required',
 
                 ]);
 
@@ -154,11 +155,11 @@ class AicsAssessmentController extends Controller
 
                 if ($assessment) {
                     $assessment->fill($request->toArray());
+                    $assessment->records = json_encode($request->records);
                     $assessment->save();
-
+                    
                     DB::commit();
                     return ["message" => "Saved!"];
-                    
                 }
             } catch (\Throwable $th) {
                 DB::rollBack();

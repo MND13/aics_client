@@ -12,9 +12,12 @@
         </v-list-item-content>
       </v-list-item>
 
+    
       <v-list dense>
         <div v-for="(link, i) in links">
           <v-list-item v-if="!link.subLinks" :key="i" :to="link.to" class="v-list-item">
+            
+            
             <v-list-item-icon >
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
@@ -23,6 +26,7 @@
               <v-list-item-title>
                 {{ link.text }}
               </v-list-item-title>
+             
             </v-list-item-content>
           </v-list-item>
 
@@ -49,7 +53,7 @@
           <v-subheader inset>Libraries</v-subheader>
 
           <v-list-item v-for="(link, i) in lib_menu" :key="i" :to="link.to">
-            <v-list-item-icon >
+            <v-list-item-icon>
               <v-icon v-text="link.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
@@ -187,25 +191,25 @@ export default {
       ],
       admin_menu: [
         {
-          to: "/",
+          to: { name: 'home',  },
           text: "Home"
         },
 
         {
-          to: "/",
+          to: "/home/Pending",
           text: "Pending"
         },
         {
-          to: "/",
+          to: "/home/Serving",
           text: "Serving"
         },
 
         {
-          to: "/",
+          to: "/home/Served",
           text: "Served"
         },
         {
-          to: "/",
+          to: "/home/Rejected",
           text: "Rejected"
         },
 
@@ -217,12 +221,20 @@ export default {
             text: "Users",
           },
           {
+            to: "/offices",
+            text: "Offices",
+          },
+          {
             to: "/providers",
             text: "Providers",
           },
           {
             to: "/fund_source",
             text: "Fund Source",
+          },
+          {
+            to: "/signatories",
+            text: "Signatories",
           },
           {
             to: "/reports",

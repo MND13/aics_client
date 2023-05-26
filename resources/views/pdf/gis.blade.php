@@ -302,52 +302,64 @@
     <div id="aics-beneficiary-occupation" class="data-textbox">{{ strtoupper($assistance['occupation']) }}</div>
     <div id="aics-beneficiary-monthly-salary" class="data-textbox">{{ $assistance['monthly_salary'] }}</div>
 
-    @if (isset($assistance["aics_client"]['category']))
+    @if (isset($assistance["assessment"]['category']))
         <div class="data-textbox" style=" top:420pt; left:20pt; text-align:left; height:80pt; ">
-            {{ $assistance["aics_client"]['category']['category'] }}
+            {{ $assistance["assessment"]['category']['category'] }}
         </div>
     @endif
-
-    @if (isset($assistance["aics_client"]['subcategory']))
-        <div class="data-textbox" style=" top:420pt; left:110pt;  text-align:left; height:80pt; ">
-            {{ $assistance["aics_client"]['subcategory']['subcategory'] }}
-            @if ($assistance["aics_client"]['subcategory_others'])
-                <br> {{ $assistance["aics_client"]['subcategory_others'] }}
+   
+    @if (isset($assistance["assessment"]['subcategory']))
+        <div class="data-textbox" style=" top:420pt; left:105pt;  text-align:left; height:80pt; max-width:110px;">
+            {{ $assistance["assessment"]['subcategory']['subcategory'] }}
+            @if ($assistance["assessment"]['subcategory_others'])
+                <br> {{ $assistance["assessment"]['subcategory_others'] }}
             @endif
         </div>
     @endif
 
-    @if (isset($assistance["aics_client"]['assessment']))
-    <div class="data-textbox" style=" top:415pt; left:219pt; width: 300pt; text-align:left; height:80pt; ">
-       {{ $assistance["aics_client"]['assessment'] }}
+    @if (isset($assistance["assessment"]['assessment']))
+    <div class="data-textbox" style="line-height:1em; top:415pt; left:219pt; width: 300pt; text-align:left; height:80pt; ">
+       {{ $assistance["assessment"]['assessment'] }}
+       
     </div>
     @endif
 
-    @if (isset($assistance["aics_client"]['payroll_client']))
-    <div id="payroll-amount" class="data-textbox" style=" right:150pt; bottom:100pt">
-        {{ number_format($assistance["aics_client"]['payroll_client']['payroll']['amount'], 2) }}
+    @if (isset($assistance["assessment"]['purpose']))
+    <div id="amount" class="data-textbox" style=" left:20pt; bottom:100pt">
+        {{ $assistance["assessment"]['purpose'], 2 }}
     </div>
+    @endif
    
 
+    @if (isset($assistance["assessment"]['amount']))
+    <div id="amount" class="data-textbox" style=" right:150pt; bottom:100pt">
+        {{ number_format($assistance["assessment"]['amount'], 2) }}
+    </div>
 
-    <div id="payroll-amount" class="data-textbox"
-        style=" right:13pt; bottom:100pt; width: 69px; font-size:5pt; text-align:center;">
-        {{ $assistance["aics_client"]['payroll_client']['payroll']['source_of_fund'] }}
+    <div id="mode_of_assistance" class="data-textbox" style=" right:90pt; bottom:100pt">
+        {{ $assistance["assessment"]['mode_of_assistance'] }}
+    </div>
+    
+    <div id="fund_source" class="data-textbox"
+        style=" right:13pt; bottom:100pt; width: 69px;  text-align:center;">
+        {{ $assistance["assessment"]['fund_source']["name"] }}
     </div>
     @endif
 
     <div id="bene-full-name" class="data-textbox"
-        style="width: 180pt;text-align:center; bottom:20pt; left:16pt; font-size:6pt; ">
+        style="width: 180pt;text-align:center; bottom:20pt; left:16pt; font-size:10pt; ">
         {{ strtoupper($assistance["aics_client"]['first_name']) }}
         {{ strtoupper($assistance["aics_client"]['middle_name']) }}
         {{ strtoupper($assistance["aics_client"]['last_name']) }}
         {{ strtoupper($assistance["aics_client"]['ext_name']) }}
     </div>
-
-    @if (isset($assistance["aics_client"]['interviewed_by']))
+    @if (isset($assistance["assessment"]['interviewed_by']))
     <div id="bene-full-name" class="data-textbox"
         style="width: 125pt;text-align:center; bottom:30pt; right:143pt; font-size:6pt; ">
-        {{ strtoupper($assistance["aics_client"]['interviewed_by']) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["first_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["middle_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["last_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["ext_name"]) }}
 
     </div>
     @endif  

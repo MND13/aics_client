@@ -10,6 +10,7 @@ use App\Models\AicsBeneficiary;
 use App\Models\AicsClient;
 use App\Models\AicsDocument;
 use App\Models\AicsRequrement;
+use App\Models\CertOfEligibility;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -80,11 +81,7 @@ class AicsAssistanceController extends Controller
                     }
                 }
 
-               
-
                 $aics_assistance->aics_documents()->saveMany($documents);
-
-
 
                 DB::commit();
                 return ["message"=> "Saved"];
@@ -201,11 +198,12 @@ class AicsAssistanceController extends Controller
                  "office:id,name,address",
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment"
+                 "assessment",
+                
                
                  ])
                  ->where("uuid","=",$uuid)
-                 ->whereRelation("office","office_id","=",Auth::user()->office_id )->first();
+                 ->whereRelation("office","office_id","=",Auth::user()->office_id )->firstOrFail();
                
          }
 
@@ -219,11 +217,12 @@ class AicsAssistanceController extends Controller
                  "office:id,name,address",
                  "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment"
+                 "assessment",
+                
                
                  ])
                  ->where("uuid","=",$uuid)
-                 ->first();
+                 ->firstOrFail();
               
          }
  
@@ -251,13 +250,7 @@ class AicsAssistanceController extends Controller
 
       }
 
-    public function pdf(Request $request, $uuid)
-    {
-        $aics_assistance = $this->show($request, $uuid);
-
-        $pdf = Pdf::loadView('pdf.gis', $aics_assistance->toArray());
-        return $pdf->stream('invoice.pdf');
-    }
+   
 
     public function index()
     {   
@@ -271,7 +264,7 @@ class AicsAssistanceController extends Controller
                 "aics_documents",
                 "aics_documents.requirement:id,name",
                 "office:id,name,address",
-                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment"
               
@@ -310,7 +303,7 @@ class AicsAssistanceController extends Controller
                  "aics_documents",
                  "aics_documents.requirement:id,name",
                  "office:id,name,address",
-                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                  "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                  "assessment"
                
@@ -333,6 +326,15 @@ class AicsAssistanceController extends Controller
             if ($a) {
 
                 $a->status = $request->status;
+                
+                if($request->remarks) 
+                {$a->remarks = $request->remarks;}
+
+                if($request->schedule) 
+                {$a->schedule = $request->schedule;}
+                
+
+                
                 $a->status_date = Carbon::now();
                 $a->save();
                 return ["message" => "saved"];
@@ -343,4 +345,6 @@ class AicsAssistanceController extends Controller
             return ["message" => $th];
         }
     }
+
+   
 }

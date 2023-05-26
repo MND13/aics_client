@@ -1,7 +1,9 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12" v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
+
+      <div class="col-md-12"
+        v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark>Print CAV</v-btn>
@@ -9,51 +11,56 @@
         <v-btn dark>Print GL</v-btn>
       </div>
     </div>
-    <div class="row">
+    <div class="row g-2">
       <div class="col-md-3">
 
         <div class="card">
           <div class="card-title">SUBMISSION DATA</div>
-          <div class="card-body">
 
-            <table class="table table-bordered mt-2">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td> <label for=""> Status:</label> {{ gis_data.status }} </td>
+              </tr>
+              <tr>
+                <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
+              </tr>
+              <tr>
+                <td> <label for=""> Schedule for Interview: </label>
 
-              <tbody>
-                <tr>
-                  <td> <label for=""> Status:</label> {{ gis_data.status }} </td>
-                </tr>
-                <tr>
-                  <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
-                </tr>
-                <tr>
-                  <td> <label for=""> Requested Schedule:</label> {{ gis_data.schedule | formatDate }} </td>
-                </tr>
-                <tr>
-                  <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
-                    {{ gis_data.office.address }}</td>
-                </tr>
-              </tbody>
-            </table>
+                  <span v-if="gis_data.status == 'Pending'">
+                    <!--<input type="date" v-model="schedule" class="form-control">-->
+
+                    <v-text-field type="date" v-model="schedule" :error-messages="schedule_error"></v-text-field>
 
 
-          </div>
+                  </span>
+                  <span v-else>{{ gis_data.schedule | formatDate }}</span>
+
+                </td>
+              </tr>
+              <tr>
+                <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
+                  {{ gis_data.office.address }}</td>
+              </tr>
+              <tr>
+                <td> <label for=""> Remarks:</label> {{ gis_data.remarks }} </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div v-if="gis_data.id">
-
-
-
-
-
-
           <table class="table table-bordered mt-2">
             <tbody v-if="gis_data.aics_documents">
               <tr class="card-title">
                 <td><label for="">Attachments:</label></td>
               </tr>
               <tr v-for="(e, i) in gis_data.aics_documents" :key="i">
-                <td> <a :href="e.file_directory" target="_blank">
-                    {{ e.requirement.name }}</a></td>
+                <td> <span class="mdi mdi-file-document-outline"></span>
+                  <a :href="e.file_directory" target="_blank">
+                    {{ e.requirement.name }}</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -76,6 +83,8 @@
             </div>
             <div class="card-body">
               <p v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </p>
+              <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+
 
             </div>
           </div>
@@ -219,7 +228,8 @@
           </div>
 
 
-          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
+
+          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
             <div class="col-md-4">
               <div class="card">
                 <div class="card-title">Beneficiary Category</div>
@@ -283,7 +293,8 @@
 
           <br />
 
-          <div class="card mt-2"  v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
+          <div class="card mt-2"
+            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
             <div class="card-title">
               ASSESSMENT INFORMATION
 
@@ -292,11 +303,11 @@
 
               <div class="row">
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                   Mode of Admission
                   <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control"
                     :class="{ 'is-invalid': validationErrors.mode_of_admission }">
-                    <option :value="e" v-for="(e, i) in ['Walk-in']" :key="i">
+                    <option :value="e" v-for="(e, i) in ['Walk-in', 'Referral']" :key="i">
                       {{ e }}
                     </option>
                   </select>
@@ -310,10 +321,8 @@
 
 
                 </div>
-              </div>
-              <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-8">
                   Purpose
                   <input type="text" v-model="form.purpose" class="form-control "
                     :class="{ 'is-invalid': validationErrors.purpose }">
@@ -327,19 +336,7 @@
 
                 </div>
 
-                <div class="col-md-2">
-                  Amount
-                  <input type="text" v-model="form.amount" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.amount }">
-
-                  <div class="invalid-feedback" v-if="validationErrors.amount">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.amount" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="col-md-2">
+                <div class="col-md-4">
                   Mode of Assistance
                   <select name="" id="" class="form-control" v-model="form.mode_of_assistance"
                     :class="{ 'is-invalid': validationErrors.mode_of_assistance }">
@@ -354,12 +351,27 @@
 
                 </div>
 
-                <div class="col-md-2">
-                  Fund Source
-                  <!--<input type="text" v-model="form.fund_source" class="form-control"
-              :class="{ 'is-invalid': validationErrors.fund_source }">-->
+                <div class="col-md-4">
+                  Amount
+                  <input type="text" v-model="form.amount" class="form-control"
+                    :class="{ 'is-invalid': validationErrors.amount }">
 
-                  <select v-model="form.fund_source" name="" id="" class="form-control"
+                  <div class="invalid-feedback" v-if="validationErrors.amount">
+                    <ul>
+                      <li v-for="(e, i) in validationErrors.amount" :key="i">{{ e }}</li>
+                    </ul>
+                  </div>
+                </div>
+
+
+
+
+
+                <div class="col-md-4">
+                  Fund Source
+
+
+                  <select v-model="form.fund_source_id" name="" id="" class="form-control"
                     :class="{ 'is-invalid': validationErrors.fund_source }">
                     <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">{{
                       fund_source.name }}</option>
@@ -372,11 +384,13 @@
                   </div>
 
                 </div>
+
+
               </div>
 
               <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                   Interviewed by
                   <input type="text" class="form-control" v-model="form.interviewed_by"
                     :class="{ 'is-invalid': validationErrors.interviewed_by }" />
@@ -388,15 +402,35 @@
                   </div>
 
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   Approved by
-                  <input type="text" class="form-control" v-model="form.approved_by"
-                    :class="{ 'is-invalid': validationErrors.approved_by }" />
+
+
+                  <select v-model="form.approved_by_id" class="form-control"
+                    :class="{ 'is-invalid': validationErrors.approved_by }">
+                    <option></option>
+                    <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }}</option>
+
+                  </select>
+
                   <div class="invalid-feedback" v-if="validationErrors.approved_by">
                     <ul>
                       <li v-for="(e, i) in validationErrors.approved_by" :key="i">{{ e }}</li>
                     </ul>
                   </div>
+                </div>
+                <div class="col-md-4">
+                  Special Disbursing Officer (SDO)
+
+                  <input type="text" v-model="form.sdo" class="form-control"
+                    :class="{ 'is-invalid': validationErrors.sdo }">
+
+                  <div class="invalid-feedback" v-if="validationErrors.sdo">
+                    <ul>
+                      <li v-for="(e, i) in validationErrors.sdo" :key="i">{{ e }}</li>
+                    </ul>
+                  </div>
+
                 </div>
               </div>
 
@@ -408,12 +442,72 @@
 
           </div>
 
+          <div class="card mt-2"
+            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
+            <div class="card-title">
+              RECORDS IN FILE
+            </div>
+            <div class="card-body">
+
+              <div class="row">
+
+                <div class="col-md-12 " style="display: block; column-count: 4;">
+                  <template v-for="e in records_opts">
+                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
+                  </template>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <div class="card mt-2"
+            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending' && form.mode_of_assistance == 'GL'">
+            <div class="card-title">
+              GL
+            </div>
+            <div class="card-body">
+
+              Provider
+              <select name="" id="" v-model="selected_provider" class="form-control">
+                <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name }} | {{ e.company_address }}
+                </option>
+              </select>
+
+              Signatory
+              <select name="" id="" v-model="form.gl_signatory_id" class="form-control">
+                <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
+              </select>
+
+
+
+              <hr>
+
+              <div class="mt-2" v-if="selected_provider">
+
+                {{ selected_provider.addressee_name }} <br />
+                {{ selected_provider.addressee_position }}<br />
+                {{ selected_provider.company_name }}<br />
+                {{ selected_provider.company_address }}<br />
+
+              </div>
+
+
+
+
+            </div>
+          </div>
+
+
 
           <div class="text-center col-md-12" style="padding: 10px 0px">
-            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['encoder', 'social-worker']) && gis_data.status == 'Pending'">
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
+              v-if="hasRoles(['encoder']) && gis_data.status == 'Pending'">
               VERIFY
             </v-btn>
-            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified'">
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
+              v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified' || gis_data.status == 'Serving'">
               SUBMIT
             </v-btn>
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
@@ -421,15 +515,16 @@
             </v-btn>
             <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
 
-            <v-btn v-if="gis_data.status == 'Pending'" large class="--white-text" color="error"
+            <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
               @click="dialog_reject = true" :disabled="submit">
               REJECT
             </v-btn>
 
-            <v-btn v-if="gis_data.status == 'Serving'" :to="{ name: 'coe', params: { 'uuid': gis_data.uuid } }" outlined
-              large class="--white-text" color="primary" :disabled="submit">
+            <!--<v-btn v-if="gis_data.status == 'Serving'"
+              :to="{ name: 'coe', params: { 'uuid': gis_data.uuid, 'coe_id': gis_data.coe_id } }" outlined large
+              class="--white-text" color="primary" :disabled="submit">
               Certificate Of Eligibility (COE)
-            </v-btn>
+            </v-btn>-->
           </div>
 
           <v-dialog v-model="dialog_reject" width="50%">
@@ -437,11 +532,11 @@
               <v-card-title>Reject GIS</v-card-title>
               <v-card-text>
                 Reason
-                <select class="form-control">
-                  <option value="" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
+                <select class="form-control" v-model="rejectform.reason">
+                  <option :value="e" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
                 </select>
                 Message
-                <textarea v-model="rejectform.message" id="" cols="10" rows="5" class="form-control"></textarea>
+                <textarea v-model="rejectform.remarks" id="" cols="10" rows="5" class="form-control"></textarea>
 
                 <v-btn @click="RejectGIS" dark color="red">
                   Reject
@@ -450,14 +545,10 @@
 
             </v-card>
           </v-dialog>
-
-
-
-
-
-
-
         </form>
+
+
+
       </div>
 
     </div>
@@ -487,7 +578,9 @@ export default {
     return {
       gis_data: {},
       form: {
-        mode_of_admission: "Walk-in"
+        mode_of_admission: "Walk-in",
+        interviewed_by: this.user.first_name + " " + this.user.middle_name + " " + this.user.last_name,
+        records: [],
       },
       assistance_types: {},
       psgc: {},
@@ -508,6 +601,46 @@ export default {
       fund_sources: [],
       formType: "Create",
 
+      records_opts: [
+        "Referral Letter",
+        "Social Case Study Report",
+        "Justification",
+        "Valid ID Presented",
+        "4PS DSWD ID",
+        "Medical Certificate/Abstract",
+        "Prescriptions",
+        "Statement of Account",
+        "Treatment Protocol",
+        "Quotation",
+        "Discharge Summary",
+        "Laboratory Request",
+        "Charge Slip",
+        "Funeral Contract",
+        "Death Certificate",
+        "Death Summary",
+        "Others",
+      ],
+
+      id_options: ["School-ID",
+        "Voter's ID",
+        "PhilHealth ID",
+        "Postal ID",
+        "Driver's License",
+        "Senior Citizen ID",
+        "OFW ID",
+        "Philippine Passport",
+        "SSS UMID Card",
+        "TIN Card",
+        "PRC ID"],
+      providers: [],
+      selected_provider: {},
+      signatories: {},
+      selected_gl_signatory: "",
+      schedule: '',
+      schedule_error: ''
+
+
+
     };
   },
   watch: {
@@ -515,6 +648,9 @@ export default {
       if (newVal != 8) {
         this.form.subcategory_others = "";
       }
+    },
+    "form.mode_of_assistance": function (newVal, oldVal) {
+
     },
 
     selected_assessment_option(val) {
@@ -533,60 +669,81 @@ export default {
       if (this.form.id) { //UPDATE
         this.updateAssessment();
       } else { //CREATE 
-        if(this.gis_data.status == "Pending"){
+        if (this.gis_data.status == "Pending") {
           this.verifyGis();
-        }else{
+        } else {
+          if (this.form.mode_of_assistance == "GL") {
+            this.form.provider_id = this.selected_provider.id;
+
+          }
           this.createAssessment();
         }
       }
 
     }, 250),
 
-    updateAssessment(){
+    updateAssessment() {
       axios
-      .post(route("api.assessment.update", this.form.id), this.form)
-      .then((response) => {
-        this.submit = false;
-        alert(response.data.message);
-      })
-      .catch((error) => {
-        this.submit = false;
-        if (error.response && error.response.status == 422) {
-          alert("Kumpletohin ang form. \nPlease complete the form.");
-          this.validationErrors = error.response.data.errors[0];
-        }
-      });
+        .post(route("api.assessment.update", this.form.id), this.form)
+        .then((response) => {
+          this.submit = false;
+          alert(response.data.message);
+        })
+        .catch((error) => {
+          this.submit = false;
+          if (error.response && error.response.status == 422) {
+            alert("Kumpletohin ang form. \nPlease complete the form.");
+            this.validationErrors = error.response.data.errors[0];
+          }
+        });
     },
 
-    createAssessment(){
+    createAssessment() {
       axios
-      .post(route("api.assessment.create"), this.form)
-      .then((response) => {
-        this.submit = false;
-        this.getGISData();
-        alert(response.data.message);
-      })
-      .catch((error) => {
-        this.submit = false;
-        if (error.response && error.response.status == 422) {
-          alert("Kumpletohin ang form. \nPlease complete the form.");
-          this.validationErrors = error.response.data.errors[0];
-        }
-      });
+        .post(route("api.assessment.create"), this.form)
+        .then((response) => {
+          this.submit = false;
+          this.getGISData();
+          alert(response.data.message);
+        })
+        .catch((error) => {
+          this.submit = false;
+          if (error.response && error.response.status == 422) {
+            alert("Kumpletohin ang form. \nPlease complete the form.");
+            this.validationErrors = error.response.data.errors[0];
+          }
+        });
     },
 
-    verifyGis(){
-      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified" }).then(response => {
+    verifyGis() {
 
-      alert(response.data.message);
-      this.dialog_reject = false;
-      this.$router.push({ path: '/' })
+      if (this.schedule) {
 
-      }).catch(error => console.log(error));
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule }).then(response => {
+
+          alert(response.data.message);
+          this.dialog_reject = false;
+          this.$router.push({ path: '/' })
+
+        }).catch(error => console.log(error));
+      }
+      else {
+
+        this.schedule_error = "Enter Schedule";
+        this.submit = false;
+
+
+      }
+
     },
 
     resetForm() {
-      this.form = {};
+      this.form = {
+        mode_of_admission: "Walk-in",
+        records: [],
+
+
+      };
     },
 
     isEmpty(value) {
@@ -613,8 +770,11 @@ export default {
     },
     RejectGIS() {
 
+      this.rejectform.uuid = this.gis_data.uuid;
+      this.rejectform.status = "Rejected";
+      this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
 
-      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Rejected" }).then(response => {
+      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
 
         alert(response.data.message);
         this.dialog_reject = false;
@@ -627,33 +787,70 @@ export default {
       // console.log({ "assistance": this.$route.params.uuid });
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
-          // console.log(response.data);
+
           this.gis_data = response.data;
-          if (this.gis_data.assessment) { this.form = this.gis_data.assessment; }
+
+          if (this.gis_data.assessment) {
+            this.form = this.gis_data.assessment;
+
+            if (!this.form.records) {
+              this.form.records = [];
+            };
+
+            this.form.records = JSON.parse(this.gis_data.assessment.records);
+
+            if (this.form.provider_id) {
+
+              this.selected_provider = this.providers.find(el => el.id === this.form.provider_id);
+
+            }
+
+
+          }
+        }).catch(error => {
+          console.log("error");
+          console.log(error);
+
+          if (error.response.status === 404) {
+
+            this.$router.push({ name: 'NotFound' });
+          }
         })
     },
     getFundSrc() {
 
       axios.get(route("api.fund_src")).then(response => {
         this.fund_sources = response.data;
-
-
       }).catch(error => console.log(error))
     },
     PrintGIS() {
-      window.open("/gis/print/" + this.gis_data.uuid)
-    }
+      window.open("/api/gis/" + this.gis_data.uuid)
+    },
+    getProviders() {
+      axios.get(route("api.providers")).then(response => {
+        this.providers = response.data.sort();
+        console.log(this.providers);
+      }).catch(error => console.log(error))
+    },
+    getSignatories() {
+
+      axios.get(route("api.signatories")).then(response => {
+        this.signatories = response.data.sort();
+      }).catch(error => console.log(error))
+    },
 
 
   },
   mounted() {
 
-    this.getGISData();
+
     this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
     this.getFundSrc();
-
+    this.getProviders();
+    this.getSignatories();
+    this.getGISData();
 
   },
 };
