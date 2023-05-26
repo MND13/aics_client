@@ -36,6 +36,8 @@ class CreateAicsAssistancesTable extends Migration
             $table->date('schedule')->nullable();
             $table->string('status')->nullable();
             $table->date('status_date')->nullable();
+            $table->longText("remarks")->nullable();
+
             $table->timestamps();
         });
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="row g-2">
+    <div class="row">
 
       <div class="col-md-12"
         v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
@@ -11,34 +11,42 @@
         <v-btn dark>Print GL</v-btn>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-2">
+    <div class="row g-2">
+      <div class="col-md-3">
 
         <div class="card">
           <div class="card-title">SUBMISSION DATA</div>
-          <div class="card-body">
 
-            <table class="table">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td> <label for=""> Status:</label> {{ gis_data.status }} </td>
+              </tr>
+              <tr>
+                <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
+              </tr>
+              <tr>
+                <td> <label for=""> Schedule for Interview: </label>
 
-              <tbody>
-                <tr>
-                  <td> <label for=""> Status:</label> {{ gis_data.status }} </td>
-                </tr>
-                <tr>
-                  <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
-                </tr>
-                <tr>
-                  <td> <label for=""> Requested Schedule:</label> {{ gis_data.schedule | formatDate }} </td>
-                </tr>
-                <tr>
-                  <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
-                    {{ gis_data.office.address }}</td>
-                </tr>
-              </tbody>
-            </table>
+                  <span v-if="gis_data.status == 'Pending'">
+                    <input type="date" v-model="schedule" class="form-control">
+                  </span>
+                  <span v-else>{{ gis_data.schedule | formatDate }}</span>
+
+                </td>
+              </tr>
+              <tr>
+                <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
+                  {{ gis_data.office.address }}</td>
+              </tr>
+              <tr>
+                <td> <label for=""> Remarks:</label> {{ gis_data.remarks }} </td>
+              </tr>
+            </tbody>
+          </table>
 
 
-          </div>
+
         </div>
 
         <div v-if="gis_data.id">
@@ -69,7 +77,7 @@
         </div>
 
       </div>
-      <div class="col-md-10">
+      <div class="col-md-9">
         <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
           <div class="card">
@@ -222,7 +230,7 @@
             </div>
           </div>
 
-        
+
 
           <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
             <div class="col-md-4">
@@ -448,8 +456,7 @@
 
                 <div class="col-md-12 " style="display: block; column-count: 4;">
                   <template v-for="e in records_opts">
-                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"
-                    ></v-checkbox>
+                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                   </template>
                 </div>
 
@@ -472,8 +479,8 @@
               </select>
 
               Signatory
-              <select name="" id="" v-model="selected_gl_signatory" class="form-control">
-                <option :value="e" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
+              <select name="" id="" v-model="form.gl_signatory_id" class="form-control">
+                <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
               </select>
 
 
@@ -525,11 +532,11 @@
               <v-card-title>Reject GIS</v-card-title>
               <v-card-text>
                 Reason
-                <select class="form-control">
-                  <option value="" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
+                <select class="form-control" v-model="rejectform.reason">
+                  <option :value="e" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
                 </select>
                 Message
-                <textarea v-model="rejectform.message" id="" cols="10" rows="5" class="form-control"></textarea>
+                <textarea v-model="rejectform.remarks" id="" cols="10" rows="5" class="form-control"></textarea>
 
                 <v-btn @click="RejectGIS" dark color="red">
                   Reject
@@ -628,7 +635,8 @@ export default {
       providers: [],
       selected_provider: {},
       signatories: {},
-      selected_gl_signatory: ""
+      selected_gl_signatory: "",
+      schedule: '',
 
 
 
@@ -663,6 +671,10 @@ export default {
         if (this.gis_data.status == "Pending") {
           this.verifyGis();
         } else {
+          if (this.form.mode_of_assistance == "GL") {
+            this.form.provider_id = this.selected_provider.id;
+
+          }
           this.createAssessment();
         }
       }
@@ -703,7 +715,7 @@ export default {
     },
 
     verifyGis() {
-      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified" }).then(response => {
+      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule }).then(response => {
 
         alert(response.data.message);
         this.dialog_reject = false;
@@ -745,8 +757,11 @@ export default {
     },
     RejectGIS() {
 
+      this.rejectform.uuid = this.gis_data.uuid;
+      this.rejectform.status = "Rejected";
+      this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
 
-      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Rejected" }).then(response => {
+      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
 
         alert(response.data.message);
         this.dialog_reject = false;
@@ -759,19 +774,24 @@ export default {
       // console.log({ "assistance": this.$route.params.uuid });
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
-          // console.log(response.data);
+
           this.gis_data = response.data;
+
           if (this.gis_data.assessment) {
             this.form = this.gis_data.assessment;
+
             if (!this.form.records) {
               this.form.records = [];
-             
             };
+
             this.form.records = JSON.parse(this.gis_data.assessment.records);
 
-            console.log(this.form.records);
-            console.log(Array.isArray(this.form.records));
-            
+            if (this.form.provider_id) {
+
+              this.selected_provider = this.providers.find(el => el.id === this.form.provider_id);
+
+            }
+
 
           }
         }).catch(error => {
@@ -788,17 +808,15 @@ export default {
 
       axios.get(route("api.fund_src")).then(response => {
         this.fund_sources = response.data;
-
-
       }).catch(error => console.log(error))
     },
     PrintGIS() {
       window.open("/api/gis/" + this.gis_data.uuid)
     },
     getProviders() {
-
       axios.get(route("api.providers")).then(response => {
         this.providers = response.data.sort();
+        console.log(this.providers);
       }).catch(error => console.log(error))
     },
     getSignatories() {
@@ -812,14 +830,14 @@ export default {
   },
   mounted() {
 
-    this.getGISData();
+
     this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
     this.getFundSrc();
     this.getProviders();
     this.getSignatories();
-
+    this.getGISData();
 
   },
 };

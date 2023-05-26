@@ -14,7 +14,7 @@
             <v-divider></v-divider>
 
             <v-stepper-step step="3">
-                Prefferred Schedule & Office
+                Prefferred Office
             </v-stepper-step>
 
             <v-stepper-step step="4">
@@ -131,11 +131,13 @@
                                 <td><input type="text" name="" v-model="form.mobile_number" id="" class="form-control"></td>
                                 <td><input type="text" name="" v-model="form.occupation" id="" class="form-control"></td>
                                 <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
-                                    
+
                                 </td>
                                 <td>
-                                    <select v-model="form.civil_status" name="civil_status" id="civil_status" class="form-control">
-                                    <option :value="e" v-for="e in ['Single','Married','Widowed','Separated']" :key="e"> {{e}}</option>
+                                    <select v-model="form.civil_status" name="civil_status" id="civil_status"
+                                        class="form-control">
+                                        <option :value="e" v-for="e in ['Single', 'Married', 'Widowed', 'Separated']" :key="e">
+                                            {{ e }}</option>
                                     </select>
                                 </td>
 
@@ -160,23 +162,20 @@
             <v-stepper-content step="3">
                 <v-card class="mb-12" flat>
 
-                    <table class="table table-bordered">
+                    <table class="table ">
                         <tbody>
+
                             <tr>
-                                <td>Preferred Schedule
+                                <td>
 
-                                    <input type="date" v-model="form.schedule" name="" id="" class="form-control" max="">
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td>Select Office nearest to your convenience: <br>
-
+                                    <p class="mtb-2">   
+                                        PUMILI NG PINAKA MALAPIT NA OPISINA ( Select office nearest to your convenience )
+                                    </p>
 
                                     <ul style="    list-style: none; padding: 10px;">
                                         <li v-for="(e, i) in offices" :key="i">
                                             <input type="radio" name="" v-model="form.office_id" id="" v-bind:value="e.id">
-                                            <b>{{ e.name }} </b><br> {{ e.address }}
+                                            <b>{{ e.name }} <br> Located at:</b> {{ e.address }}
                                             <hr>
                                         </li>
                                     </ul>
@@ -189,7 +188,7 @@
 
                 </v-card>
 
-                <v-btn color="primary" :disabled="form.office_id > 0 && form.schedule ? false : true" @click="e1 = 4">
+                <v-btn color="primary" :disabled="form.office_id > 0 ? false: true " @click="e1 = 4">
                     Continue
                 </v-btn>
 
@@ -312,9 +311,8 @@ export default {
             axios.post(route("assistances.store"), formData).then(response => {
                 console.log(response.data);
                 alert(response.data.message);
-                if( response.data.message =="Saved")
-                {
-                    document.location.href="/";
+                if (response.data.message == "Saved") {
+                    document.location.href = "/";
                 }
             }).catch(error => console.log(error));
         },

@@ -250,13 +250,7 @@ class AicsAssistanceController extends Controller
 
       }
 
-    public function pdf(Request $request, $uuid)
-    {
-        $aics_assistance = $this->show($request, $uuid);
-
-        $pdf = Pdf::loadView('pdf.gis', $aics_assistance->toArray());
-        return $pdf->stream('invoice.pdf');
-    }
+   
 
     public function index()
     {   
@@ -332,6 +326,15 @@ class AicsAssistanceController extends Controller
             if ($a) {
 
                 $a->status = $request->status;
+                
+                if($request->remarks) 
+                {$a->remarks = $request->remarks;}
+
+                if($request->schedule) 
+                {$a->schedule = $request->schedule;}
+                
+
+                
                 $a->status_date = Carbon::now();
                 $a->save();
                 return ["message" => "saved"];

@@ -323,6 +323,12 @@
        
     </div>
     @endif
+
+    @if (isset($assistance["assessment"]['purpose']))
+    <div id="amount" class="data-textbox" style=" left:20pt; bottom:100pt">
+        {{ $assistance["assessment"]['purpose'], 2 }}
+    </div>
+    @endif
    
 
     @if (isset($assistance["assessment"]['amount']))
@@ -347,11 +353,13 @@
         {{ strtoupper($assistance["aics_client"]['last_name']) }}
         {{ strtoupper($assistance["aics_client"]['ext_name']) }}
     </div>
-
-    @if (isset($assistance["aics_client"]['interviewed_by']))
+    @if (isset($assistance["assessment"]['interviewed_by']))
     <div id="bene-full-name" class="data-textbox"
         style="width: 125pt;text-align:center; bottom:30pt; right:143pt; font-size:6pt; ">
-        {{ strtoupper($assistance["aics_client"]['interviewed_by']) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["first_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["middle_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["last_name"]) }}
+        {{ strtoupper($assistance["assessment"]['interviewed_by']["ext_name"]) }}
 
     </div>
     @endif  

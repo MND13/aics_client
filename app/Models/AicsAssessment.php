@@ -30,5 +30,12 @@ class AicsAssessment extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
+   public function interviewed_by()
+    {   
+        return $this->belongsTo(User::class,"interviewed_by_id");
+    }
+
+   
+
 
 }

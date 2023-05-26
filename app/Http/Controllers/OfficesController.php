@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Offices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class OfficesController extends Controller
 {
@@ -14,7 +16,7 @@ class OfficesController extends Controller
      */
     public function index()
     {
-        return offices::select("id","name","address")->get();
+        return offices::select("id", "name", "address", "contact_person", "contact_no")->get();
     }
 
     /**
@@ -24,7 +26,6 @@ class OfficesController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -35,7 +36,18 @@ class OfficesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $office = new Offices;
+            $office->fill($request->toArray());
+            $office->save();
+            DB::commit();
+            return ["message" => "Saved!"];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -67,9 +79,15 @@ class OfficesController extends Controller
      * @param  \App\Models\Offices  $offices
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Offices $offices)
+    public function update(Request $request)
     {
-        //
+        $office = Offices::findOrFail($request->id);
+        
+        if($office){
+            $office->fill($request->toArray());
+            $office->save();
+        }
+    
     }
 
     /**
@@ -78,8 +96,11 @@ class OfficesController extends Controller
      * @param  \App\Models\Offices  $offices
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Offices $offices)
-    {
-        //
+    public function destroy($id)
+    {   
+        $office = Offices::findOrFail($id);
+        $office->delete();
+      
+       
     }
 }

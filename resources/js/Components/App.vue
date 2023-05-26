@@ -217,6 +217,10 @@ export default {
             text: "Users",
           },
           {
+            to: "/offices",
+            text: "Offices",
+          },
+          {
             to: "/providers",
             text: "Providers",
           },

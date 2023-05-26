@@ -16,7 +16,7 @@
 
 
       <div class="row" v-if="!hasRoles(['user'])">
-        
+
         <div class="col-md-3">
 
           <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
@@ -33,10 +33,11 @@
           </span>
         </template>
 
-       
+
 
         <template v-slot:item.status="{ item }">
-          <v-chip :color="status_color(item.status)" :outlined="item.status=='Pending'? true: false" dark small label> {{ item.status }} </v-chip>
+          <v-chip :color="status_color(item.status)" :outlined="item.status == 'Pending' ? true : false" dark small label> {{
+            item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -81,13 +82,15 @@
             <h5 v-if="dialog_data.aics_type">{{ dialog_data.aics_type.name }} </h5>
 
             <span> Status: {{ dialog_data.status }} <br></span>
-            <span> Date: {{ dialog_data.created_at | formatDate }} </span><br>
+            <span> Remarks: {{ dialog_data.remarks }} <br></span>
 
-            <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br> {{ dialog_data.office.address
-            }}
-            </span>
+            <span> Date Submitted: {{ dialog_data.created_at | formatDate }} </span><br>
 
-            <table class="table table-bordered " v-if="dialog_data.aics_documents">
+            <span v-if="dialog_data.office"> Office: {{ dialog_data.office.name }} <br>
+              {{ dialog_data.office.address }}
+            </span><br>
+
+            <table class="table table-bordered mt-2" v-if="dialog_data.aics_documents">
               <thead>
                 <tr>
                   <td>Attachments:</td>

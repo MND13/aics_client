@@ -30,7 +30,7 @@ import COEComponent from "./Components/COE.vue"
 import Providers from "./Components/Providers.vue"
 import FundSource from "./Components/FundSource.vue"
 import NotFound from "./Components/NotFound.vue"
-
+import Offices from "./Components/Offices.vue"
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -85,17 +85,7 @@ const router = new VueRouter({
                 requiresRoles: ["super-admin", "admin", "encoder", "social-worker"]
             }
         },
-        {
-            path: "/assessment/:uuid/coe",
-            name: "coe",
-            component: COEComponent,
-            //component: COEComponent,
-            props: true,
-            meta: {
-                requiresAuth: true,
-                requiresRoles: ["super-admin", "admin", "social-worker"]
-            }
-        },
+        
         {
             path: "/users",
             name: "users",
@@ -123,6 +113,16 @@ const router = new VueRouter({
                 requiresRoles: ["super-admin", "admin"]
             }
         },
+        {   
+            path: "/offices",
+            name: "offices",
+            component: Offices,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin"]
+            }
+            
+        }
     ],
 });
 
