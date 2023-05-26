@@ -134,7 +134,7 @@ export default {
     },
     getSignatories() {
       this.loading = true;
-      axios.get(route('signatories.index'))
+      axios.get(route('api.signatories'))
         .then(res => {
           this.loading = false;
           this.signatories = res.data;

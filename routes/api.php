@@ -48,14 +48,12 @@ Route::post('provider', [\App\Http\Controllers\AicsProvidersController::class, '
 Route::put('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'update'])->name("api.providers.update");
 Route::delete('provider/{id}', [\App\Http\Controllers\AicsProvidersController::class, 'destroy'])->name("api.providers.delete");
 
-Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, 'index'])->name("api.signatories");
-
 Route::get('offices', [\App\Http\Controllers\OfficesController::class, 'index'])->name("api.offices.index");
 Route::post('offices', [\App\Http\Controllers\OfficesController::class, 'store'])->name("offices.store");
 Route::post('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'update'])->name("offices.update");
 Route::delete('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'destroy'])->name("offices.destroy");
 
-Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, 'index'])->name("signatories.index");
+Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, 'index'])->name("api.signatories");
 Route::post('signatories', [\App\Http\Controllers\SignatoriesController::class, 'store'])->name("signatories.store");
 Route::post('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'update'])->name("signatories.update");
 Route::delete('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'destroy'])->name("signatories.destroy");
