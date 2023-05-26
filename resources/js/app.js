@@ -31,6 +31,9 @@ import Providers from "./Components/Providers.vue"
 import FundSource from "./Components/FundSource.vue"
 import NotFound from "./Components/NotFound.vue"
 import Offices from "./Components/Offices.vue"
+import Signatories from "./Components/Signatories.vue"
+
+
 Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
@@ -120,9 +123,19 @@ const router = new VueRouter({
             meta: {
                 requiresAuth: true,
                 requiresRoles: ["super-admin"]
-            }
-            
+            }            
+        },
+        {   
+            path: "/signatories",
+            name: "signatories",
+            component:  Signatories,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin"]
+            }            
         }
+
+       
     ],
 });
 

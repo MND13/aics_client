@@ -35,7 +35,9 @@ class SignatoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $sig = new Signatories;
+        $sig->fill($request->toArray());
+        $sig->save();
     }
 
     /**
@@ -55,9 +57,13 @@ class SignatoriesController extends Controller
      * @param  \App\Models\Signatories  $signatories
      * @return \Illuminate\Http\Response
      */
-    public function edit(Signatories $signatories)
+    public function edit(request $request)
     {
-        //
+        /*$sig = Signatories::findOrFail($request->id);
+        if ($sig) {
+            $sig->fill($request->toArray());
+            $sig->save();
+        }*/
     }
 
     /**
@@ -69,7 +75,11 @@ class SignatoriesController extends Controller
      */
     public function update(Request $request, Signatories $signatories)
     {
-        //
+        $sig = Signatories::findOrFail($request->id);
+        if ($sig) {
+            $sig->fill($request->toArray());
+            $sig->save();
+        }
     }
 
     /**
@@ -78,8 +88,12 @@ class SignatoriesController extends Controller
      * @param  \App\Models\Signatories  $signatories
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Signatories $signatories)
+    public function destroy(request $request)
     {
-        //
+        $sig = Signatories::findOrFail($request->id);
+        if ($sig) {
+            $sig->delete();
+            
+        }
     }
 }

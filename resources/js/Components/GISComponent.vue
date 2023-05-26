@@ -29,7 +29,11 @@
                 <td> <label for=""> Schedule for Interview: </label>
 
                   <span v-if="gis_data.status == 'Pending'">
-                    <input type="date" v-model="schedule" class="form-control">
+                    <!--<input type="date" v-model="schedule" class="form-control">-->
+
+                    <v-text-field type="date" v-model="schedule" :error-messages="schedule_error"></v-text-field>
+
+
                   </span>
                   <span v-else>{{ gis_data.schedule | formatDate }}</span>
 
@@ -44,26 +48,19 @@
               </tr>
             </tbody>
           </table>
-
-
-
         </div>
 
         <div v-if="gis_data.id">
-
-
-
-
-
-
           <table class="table table-bordered mt-2">
             <tbody v-if="gis_data.aics_documents">
               <tr class="card-title">
                 <td><label for="">Attachments:</label></td>
               </tr>
               <tr v-for="(e, i) in gis_data.aics_documents" :key="i">
-                <td> <a :href="e.file_directory" target="_blank">
-                    {{ e.requirement.name }}</a></td>
+                <td> <span class="mdi mdi-file-document-outline"></span>
+                  <a :href="e.file_directory" target="_blank">
+                    {{ e.requirement.name }}</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -637,6 +634,7 @@ export default {
       signatories: {},
       selected_gl_signatory: "",
       schedule: '',
+      schedule_error: ''
 
 
 
@@ -715,13 +713,25 @@ export default {
     },
 
     verifyGis() {
-      axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule }).then(response => {
 
-        alert(response.data.message);
-        this.dialog_reject = false;
-        this.$router.push({ path: '/' })
+      if (this.schedule) {
 
-      }).catch(error => console.log(error));
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule }).then(response => {
+
+          alert(response.data.message);
+          this.dialog_reject = false;
+          this.$router.push({ path: '/' })
+
+        }).catch(error => console.log(error));
+      }
+      else {
+
+        this.schedule_error = "Enter Schedule";
+        this.submit = false;
+
+
+      }
+
     },
 
     resetForm() {

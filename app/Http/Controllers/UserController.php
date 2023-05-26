@@ -19,7 +19,7 @@ class UserController extends Controller
             'users' => User::with([
                 'roles',
                 'office'
-            ])->get()
+            ])->role(['admin','encoder','social-worker'])->get()
         ];
     }
 
@@ -81,6 +81,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->update($request->all());
+
+        $user->syncRoles([]);
         $user->assignRole($request->role);
 
         return $user;

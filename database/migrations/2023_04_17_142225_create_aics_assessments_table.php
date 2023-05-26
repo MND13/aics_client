@@ -28,6 +28,10 @@ class CreateAicsAssessmentsTable extends Migration
             $table->string("sdo")->nullable();
             $table->json("records")->nullable();
 
+            $table->foreignId('interviewed_by_id')->nullable()->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
             $table->foreignId('category_id')->constrained('categories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -48,8 +52,6 @@ class CreateAicsAssessmentsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-
-
             $table->timestamps();
         });
     }
@@ -68,7 +70,10 @@ class CreateAicsAssessmentsTable extends Migration
 
             $table->dropForeign(['gl_signatory_id']);
             $table->dropForeign(['provider_id']);
+            $table->dropForeign(['interviewed_by_id']);
         });
+
+        
 
         Schema::dropIfExists('aics_assessments');
     }

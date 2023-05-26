@@ -170,6 +170,9 @@ export default {
         case "Serving":
           return "green";
           break;
+        case "Verified":
+          return "blue";
+          break;
         default:
           return "blue";
           break;

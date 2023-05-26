@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AssessmentOptsSeeder::class);
         $this->call(FundSourceSeeder::class);
         $this->call(ProvidersSeeder::class);
+        $this->call(SignatoriesSeeder::class);
 
      
     }

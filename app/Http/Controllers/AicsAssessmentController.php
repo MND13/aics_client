@@ -48,7 +48,6 @@ class AicsAssessmentController extends Controller
                         'amount' => 'required',
                         'fund_source_id' => 'required',
                         'mode_of_assistance' => 'required',
-                        'interviewed_by' => 'required',
                         'approved_by_id' => 'required',
 
                     ]);

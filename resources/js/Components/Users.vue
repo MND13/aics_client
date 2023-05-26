@@ -186,6 +186,7 @@ export default {
     updateUser() {
       this.submit = true;
       this.formErrors = {};
+      console.log( this.formData);
       axios.patch(route('users.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;

@@ -54,3 +54,8 @@ Route::get('offices', [\App\Http\Controllers\OfficesController::class, 'index'])
 Route::post('offices', [\App\Http\Controllers\OfficesController::class, 'store'])->name("offices.store");
 Route::post('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'update'])->name("offices.update");
 Route::delete('offices/{id}', [\App\Http\Controllers\OfficesController::class, 'destroy'])->name("offices.destroy");
+
+Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, 'index'])->name("signatories.index");
+Route::post('signatories', [\App\Http\Controllers\SignatoriesController::class, 'store'])->name("signatories.store");
+Route::post('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'update'])->name("signatories.update");
+Route::delete('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'destroy'])->name("signatories.destroy");

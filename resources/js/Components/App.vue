@@ -229,6 +229,10 @@ export default {
             text: "Fund Source",
           },
           {
+            to: "/signatories",
+            text: "Signatories",
+          },
+          {
             to: "/reports",
             text: "Reports",
           },
