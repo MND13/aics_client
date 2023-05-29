@@ -57,3 +57,5 @@ Route::get('signatories', [\App\Http\Controllers\SignatoriesController::class, '
 Route::post('signatories', [\App\Http\Controllers\SignatoriesController::class, 'store'])->name("signatories.store");
 Route::post('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'update'])->name("signatories.update");
 Route::delete('signatories/{id}', [\App\Http\Controllers\SignatoriesController::class, 'destroy'])->name("signatories.destroy");
+
+Route::get('coe/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'coe'])->name("api.pdf.coe");

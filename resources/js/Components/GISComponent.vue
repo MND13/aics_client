@@ -3,11 +3,11 @@
     <div class="row">
 
       <div class="col-md-12"
-        v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+        v-if="hasRoles(['social-worker','admin','super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark>Print CAV</v-btn>
-        <v-btn dark>Print COE</v-btn>
+        <v-btn dark @click="PrintCOE()">Print COE</v-btn>
         <v-btn dark>Print GL</v-btn>
       </div>
     </div>
@@ -825,6 +825,10 @@ export default {
     },
     PrintGIS() {
       window.open("/api/gis/" + this.gis_data.uuid)
+    },
+    PrintCOE()
+    {
+      window.open("/api/coe/" + this.gis_data.uuid)
     },
     getProviders() {
       axios.get(route("api.providers")).then(response => {

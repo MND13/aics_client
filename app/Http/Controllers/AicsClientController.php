@@ -18,6 +18,9 @@ use Illuminate\Support\Str;
 use App\Models\DirtyList;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use \NumberFormatter;
+
+
 
 
 
@@ -123,4 +126,35 @@ class AicsClientController extends Controller
             return $pdf->stream('gis.pdf');
         }
     }
+
+    public function coe($uuid)
+    {
+        $assistance =  AicsAssistance::with(
+
+            "aics_type:id,name",
+            "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+            "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
+            "assessment.fund_source:id,name",
+            "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
+            
+        )->where("uuid", "=", $uuid)->first();
+
+        $res = $assistance->toArray();
+        $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
+
+        if ($assistance) {
+            $pdf = Pdf::loadView('pdf.coe', 
+                [
+                    "client" => $res["aics_client"],
+                    "assistance" => $res,
+                    "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
+                    "records"=> json_decode($res['assessment']['records']),
+                    "amount_in_words" => $f->format($res["assessment"]["amount"]),
+                ]
+            );
+            return $pdf->stream('coe.pdf');
+        }
+    }
+
 }

@@ -2,176 +2,250 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> -->
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <title>Document</title>
     <style>
-         @page {
-           /* size: 8.27in 11.69in;*/
-             size: 8.5in 13in; 
-            font-size: 8pt;
-            margin: 5%;
-            margin-bottom: 10%;
-            opacity: 0.75;
-            padding: 0 !important;
-            /* background: url("{{ public_path('images/watermark.png') }}") no-repeat 0 0; */
+        .text-center {
+            text-align: center
         }
+
+        h1 {
+            font-size: 22pt;
+
+        }
+
         body {
-            font-size: 8pt;
-            font-family: Tahoma, Arial, Verdana, sans-serif;
-
+            font-size: 10pt;
+            font-family: Arial, sans-serif
         }
 
-        table {
-            width: 100%;
-            font-size:8pt;
-        }
-
-        #payroll th,
-        #payroll td {
-            border: solid 1px #a0a0a0;
-        }
-
-        table tr.page {
-            page-break-before: always
-        }
-        
-        header {
-            position: fixed;
-            top: -60px;
-            left: 0px;
-            right: 0px;
-            height: 50px;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
-
-            height: auto;
-        }
-
-        footer table td {
-            vertical-align: top;
-        }
-
-        p {
-            page-break-after: always;
-        }
-
-        p:last-child {
-            page-break-after: never;
+        h1>small,
+        h2>small {
+            font-size: 13pt;
+            font-weight: normal;
         }
 
         .sig {
-            width: 80%;
+            width: 90%;
+            margin: 0 auto;
             border-bottom: solid 1px #000;
-            display: inline-block;
-            margin-top: 10px;
+        }
+
+        .table {
+            width: 100%;
+        }
+
+        .underline {
+            text-decoration: underline;
+            text-transform: uppercase;
+        }
+
+        @page {
+            size: 8.27in 11.69in;
+            margin: 5%;
+            opacity: 0.75;
+            padding: 0 !important;
+            font-size: 10pt;
+
+            font-family: Arial, sans-serif
+        }
+
+        .table-bordered {
+            border: solid 1px;
+        }
+
+        .col-md-6 {
+            width: 50%;
+            display: inline-block
+        }
+
+        .sig {
+            height: 30px;
+            vertical-align: bottom;
+            line-height: 30px;
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <!-- <div style="text-align: right; font-size:8pt">{ $clients->currentPage() }}</div>-->
 
-        <table id="payroll" cellpadding=3 cellspacing=0>
+    <table style="width:100%">
+        <tr>
+            <td><img src='{{ public_path('images/DSWD-DVO-LOGO.png') }}' style="width: 250px;">
+            </td>
+            <td style="text-align: right;">
+                <h2 style="color: darkblue">CRISIS INTERVENTION SECTION <br>
+                    <small style="font-size:12pt;">
+                        Cor. Suazo St. R. Magsaysay Ave. Davao City
+                    </small>
+                </h2>
+            </td>
+        </tr>
+    </table>
+
+
+    <div class="text-center">
+
+        <h2> CERTIFICATE OF ELIGIBILITY <br>
+            <small>
+                @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
+                    (Financial Assistance)
+                @else
+                    (Guarantee Letter)
+                @endif
+            </small>
+        </h2>
+    </div>
+
+    <table class="table" style="font-size: 10pt">
+        <tr>
+            <td></td>
+            <td></td>
+            <td  style="text-align:right">  Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}</td>
+        </tr>
+    </table>
+
+    
+
+
+    <p style="text-align: center; line-height:2em">
+
+        This is to certify that
+        <span class="underline">
+            {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}</span>,
+        <span class="underline">{{ $client['gender'] }}</span>, <span class="underline">{{ $age }}</span>
+        year/s
+        <br>
+        and presently residing at
+        <span class="underline">
+            {{ $client['street_number'] . ', BRGY ' . $client['psgc']['brgy_name'] . ', ' . $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
+        </span><br>
+        has been found eligible for assistance after assessment and validation conducted, for his/herself.
+
+    </p>
+
+    <table class="table table-bordered ">
+        <thead>
             <tr>
-                <td style="text-align:center; border: 0px;" colspan="7">Republic of the Philippines <br />
-                    DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT <br>
-                    Field Office XI, Davao City
-                    <h3> CERTIFICATE OF ELIGIBILITY </h3>
+                <td class="text-center">RECORDS OF THE CASE SUCH AS THE FOLLOWING ARE CONFIDENTIALLY FILED AT THE CRISIS
+                    INTERVENTION
+                    SECTION</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="column-count: 4">
+                    <ul>
+                        <li> General Intake Sheet</li>
+                        @foreach ($records as $record)
+                            <li>
+                                {{ $record }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="text-center" style="line-height:2em">
+        The client is hereby recommended to receive <span
+            class="underline">{{ $assistance['aics_type']['name'] }}</span> assistance <br>
+        in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
+            ONLY</span>,
+        PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'],2) }} </span>
+        CHARGABLE AGAINST: <span class="underline">{{ $assistance['assessment']['fund_source']['name'] }}</span>
+    </p>
+    <br>
+
+    <table class="table text-center">
+        <tbody>
+            <tr>
+                <td style="text-align: left;">Conforme:</td>
+                <td style="text-align: left;">Prepared by:</td>
+                <td style="text-align: left;">Approved by:</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="sig">
+                        {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
+                    </div>
+                </td>
+                <td>
+                    <div class="sig"></div>
+                </td>
+                <td>
+                    <div class="sig"></div>
                 </td>
             </tr>
             <tr>
-                <td colspan="7" style="text-align:left; border: 0px; font-weight:bold;">
-
-
-                    This is to certify that the 
-                    {{ $in_words }} ({{  number_format(sizeof($clients)) }}) names of Beneficiaries of
-                    {{$payroll["psgc"]["province_name"]}} 
-                    listed below are eligible to receive the FOOD ASSISTANCE from Assistance to Individuals in Crisis Situation
-                    PROGRAM.
-                    
-
-                </td>
+                <td><b>Beneficiary/Representative</b><br>Signature Over Printed Name</td>
+                <td><b>Social Worker</b><br>Signature Over Printed Name</td>
+                <td><b>SWADO</b><br>Signature Over Printed Name</td>
             </tr>
-            <tr style="text-transform:uppercase; background:#dedede; font-size:8pt;">
-                <th>No. </th>
-                <th>Brgy. </th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th style="width:50px">Ext </th>
-                <th>Amount</th>
-            </tr>
-            <span style="display:none;">{{ $sum = 0 }}</span>
-            @foreach ($clients as $key => $client)
+        </tbody>
+    </table>
+    <br><br>
+
+    @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
+        <div class="text-center" style="width: 100%; background: black; color: #fff;">
+            <b> Acknowledgement Receipt</b>
+        </div>
+        <br>
+        <div style="text-align:right">
+            Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
+        </div>
+
+
+       
+        Financial Assistance:
+
+        <span class="underline" style="text-transform:uppercase">
+            {{ $amount_in_words }} PESOS ONLY</span>,
+        PHP <span class="underline"> {{ number_format( $assistance['assessment']['amount'], "2") }} </span>
+
+        <br>
+
+        <ul>
+            <li>{{ $assistance['aics_type']['name'] }}</li>
+        </ul>
+        <br>
+
+        <table class="table  text-center">
+            <tbody>
                 <tr>
-                  
-                    <td style="text-align:center; width:20px;">
-                       <!-- { $client->sequence }-->
-                       {{$key+1}}
+                    <td style="text-align: left;">Accepted by:<br></td>
+                    <td style="text-align: left;">Paid by:<br></td>
+                    <td style="text-align: left;">Witnessed by:<br></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="sig">
+                            {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
+                        </div>
                     </td>
                     <td>
-                        {{ isset($client->aics_client->psgc->brgy_name)  ? $client->aics_client->psgc->brgy_name : "" }}
+                        <div class="sig">{{ $assistance['assessment']['sdo'] }}</div>
                     </td>
-
-                    <td>{{ $client->aics_client->last_name }}</td>
-                    <td>{{ $client->aics_client->first_name }}</td>
-                    <td>{{ $client->aics_client->middle_name }}</td>
-                    <td>{{ $client->aics_client->ext_name }}</td>
-                    <td style="width:100px; text-align:right;">{{ number_format($payroll->amount,2) }}</td>
-
+                    <td>
+                        <div class="sig"></div>
+                    </td>
                 </tr>
-            @endforeach
-
-
-            <tr>
-                <td colspan="7" style="text-align:center; font-size:8pt;">********** NOTHING FOLLOWS **********</td>
-            </tr>
+                <tr>
+                    <td><b>Beneficiary/Representative</b><br>Signature Over Printed Name</td>
+                    <td><b>Special Disbursing Officer</b><br>Signature Over Printed Name</td>
+                    <td><b>Social Worker</b><br>Signature Over Printed Name</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><br></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:right; border-top:solid 1px #000;"><small>*E.O 163 series
+                            2022</small></td>
+                </tr>
+            </tbody>
         </table>
-        <!--<div style="text-align: right; font-size:8pt">{ $clients->currentPage() }</div>-->
-
-        @if ($key == sizeof($clients)-1)
-            <!--<footer>-->
-                <table style="table-layout:fixed; font-size:8pt;" cellpadding=8>
-                    <tr>
-                        <td>Prepared by:  </td>
-                        <td>Recommended for Approval: </td>
-                        <td>Approved by:</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr style="text-align: center;">
-                        <td>
-                            <div class="sig">{{$payroll->sdo}} </div><br>SDO
-                        </td>
-                        <td>
-                            <div class="sig"></div><br>
-                        </td>
-                        <td>
-                            <div class="sig">ATTY. VANESSA B. GOC-ONG</div> <br>
-                            Regional Director		
-                        </td>
-
-                    </tr>
-                </table>
-           <!-- </footer>-->
-        @endif
-
-
-
-    </main>
-
-
+    @endif
 
 
 </body>
