@@ -136,12 +136,14 @@ class AicsClientController extends Controller
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
             "assessment.fund_source:id,name",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
+            "assessment.category:id,category",
+            "assessment.subcategory:id,subcategory",
+            "assessment.provider:id,company_name",
             
         )->where("uuid", "=", $uuid)->first();
 
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-
 
         if ($assistance) {
             $pdf = Pdf::loadView('pdf.coe', 

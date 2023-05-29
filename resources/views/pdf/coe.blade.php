@@ -64,6 +64,12 @@
             vertical-align: bottom;
             line-height: 30px;
         }
+
+
+
+        table.table-bordered td {
+            border: solid 1px #000
+        }
     </style>
 </head>
 
@@ -101,11 +107,12 @@
         <tr>
             <td></td>
             <td></td>
-            <td  style="text-align:right">  Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}</td>
+            <td style="text-align:right"> Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
+            </td>
         </tr>
     </table>
 
-    
+
 
 
     <p style="text-align: center; line-height:2em">
@@ -124,25 +131,31 @@
 
     </p>
 
-    <table class="table table-bordered ">
+    <table class="table table-bordered "  cellpadding=0 cellspacing=0>
         <thead>
             <tr>
-                <td class="text-center">RECORDS OF THE CASE SUCH AS THE FOLLOWING ARE CONFIDENTIALLY FILED AT THE CRISIS
-                    INTERVENTION
-                    SECTION</td>
+                <td class="text-center" style="font-size:8pt;">
+                    RECORDS OF THE CASE SUCH AS THE FOLLOWING
+                    ARE CONFIDENTIALLY FILED AT THE CRISIS INTERVENTION SECTION</td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td style="column-count: 4">
-                    <ul>
-                        <li> General Intake Sheet</li>
-                        @foreach ($records as $record)
-                            <li>
-                                {{ $record }}
-                            </li>
-                        @endforeach
-                    </ul>
+                <td>
+                    <div>
+                        <ul>
+                            <li>General Intake Sheet</li>
+                            @foreach ($records as $record)
+                                <li>
+                                    {{$record }}
+                                </li>
+                            @endforeach
+
+
+
+                        </ul>
+                    </div>
+
                 </td>
             </tr>
         </tbody>
@@ -153,8 +166,10 @@
             class="underline">{{ $assistance['aics_type']['name'] }}</span> assistance <br>
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
             ONLY</span>,
-        PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'],2) }} </span>
-        CHARGABLE AGAINST: <span class="underline">{{ $assistance['assessment']['fund_source']['name'] }}</span>
+        PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
+        @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
+            CHARGABLE AGAINST: <span class="underline">{{ $assistance['assessment']['fund_source']['name'] }}</span>
+        @endif
     </p>
     <br>
 
@@ -197,12 +212,12 @@
         </div>
 
 
-       
+
         Financial Assistance:
 
         <span class="underline" style="text-transform:uppercase">
             {{ $amount_in_words }} PESOS ONLY</span>,
-        PHP <span class="underline"> {{ number_format( $assistance['assessment']['amount'], "2") }} </span>
+        PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], '2') }} </span>
 
         <br>
 
@@ -245,8 +260,16 @@
                 </tr>
             </tbody>
         </table>
+    @else
+        CHARGABLE AGAINST : AICS FUND <br>
+        CLIENT CATEGORY : {{ $assistance['assessment']['category']['category'] }} <br>
+        PAYABLE TO : {{ $assistance['assessment']['provider']['company_name'] }}<br>
+        MODE OF ADMISSION: {{ $assistance['mode_of_admission'] }}<br>
+        <br>
+        <b> NOTE:
+        CASE STUDY REPORT
+        ON FILE</b>
     @endif
-
 
 </body>
 

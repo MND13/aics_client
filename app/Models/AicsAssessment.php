@@ -35,6 +35,12 @@ class AicsAssessment extends Model
         return $this->belongsTo(User::class,"interviewed_by_id");
     }
 
+    public function provider()
+    {   
+        return $this->belongsTo(AicsProviders::class,"provider_id");
+    }
+
+
    
 
 
