@@ -194,10 +194,13 @@ export default {
           to: { name: 'home',  },
           text: "Home"
         },
-
         {
           to: "/home/Pending",
           text: "Pending"
+        },
+        {
+          to: "/home/Verified",
+          text: "Verified"
         },
         {
           to: "/home/Serving",

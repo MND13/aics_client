@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="charset=utf-8" />
-    <title>Document</title>
+    <title>COE</title>
     <style>
         .text-center {
             text-align: center
@@ -131,7 +131,7 @@
 
     </p>
 
-    <table class="table table-bordered "  cellpadding=0 cellspacing=0>
+    <table class="table table-bordered " cellpadding=0 cellspacing=0>
         <thead>
             <tr>
                 <td class="text-center" style="font-size:8pt;">
@@ -147,7 +147,7 @@
                             <li>General Intake Sheet</li>
                             @foreach ($records as $record)
                                 <li>
-                                    {{$record }}
+                                    {{ $record }}
                                 </li>
                             @endforeach
 
@@ -267,8 +267,8 @@
         MODE OF ADMISSION: {{ $assistance['mode_of_admission'] }}<br>
         <br>
         <b> NOTE:
-        CASE STUDY REPORT
-        ON FILE</b>
+            CASE STUDY REPORT
+            ON FILE</b>
     @endif
 
 </body>

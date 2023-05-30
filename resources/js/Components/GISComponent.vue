@@ -6,9 +6,9 @@
         v-if="hasRoles(['social-worker','admin','super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
-        <v-btn dark>Print CAV</v-btn>
         <v-btn dark @click="PrintCOE()">Print COE</v-btn>
-        <v-btn dark>Print GL</v-btn>
+        <v-btn dark @click="PrintCAV()" v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance =='CAV' ">Print CAV</v-btn>
+        <v-btn dark @click="PrintGL()" v-else>Print GL</v-btn>
       </div>
     </div>
     <div class="row g-2">
@@ -829,6 +829,13 @@ export default {
     PrintCOE()
     {
       window.open("/api/coe/" + this.gis_data.uuid)
+    },
+    PrintCAV() {
+      window.open("/api/cav/" + this.gis_data.uuid)
+    },
+    PrintGL()
+    {
+      window.open("/api/gl/" + this.gis_data.uuid)
     },
     getProviders() {
       axios.get(route("api.providers")).then(response => {

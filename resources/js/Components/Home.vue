@@ -1,10 +1,8 @@
 <template>
   <v-card flat>
 
-    
+
     <v-card-title v-if="hasRoles(['user'])">
-
-
 
       WELCOME {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}! <br>
       USERNAME: {{ user.username }} <br>
@@ -37,7 +35,7 @@
 
         <template v-slot:item.status="{ item }">
           <v-chip :color="status_color(item.status)" :outlined="item.status == 'Pending' ? true : false" dark small label>
-            {{item.status }} </v-chip>
+            {{ item.status }} </v-chip>
         </template>
 
         <template v-slot:item.created_at="{ item }">
@@ -153,8 +151,7 @@ export default {
 
   }, watch:
   {
-    status(s)
-    {
+    status(s) {
       console.log(s);
       this.StatusFilterValue = s;
     }
@@ -215,9 +212,9 @@ export default {
   },
   mounted() {
     this.getAssistances()
-    
-    
-    this.StatusFilterValue  = this.status
+
+
+    this.StatusFilterValue = this.status
   }
 
 }
