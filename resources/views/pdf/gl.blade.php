@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GL</title>
     <style>
-    .text-center {
+        .text-center {
             text-align: center
         }
 
@@ -43,13 +44,15 @@
 
         @page {
             size: 8.27in 11.69in;
-            margin: 0.4in 0.9in ;
-           
+            margin: 0.4in 0.9in;
+
             opacity: 0.75;
             padding: 0 !important;
-            font-size: 10pt;
+            font-size: 12pt;
 
-            font-family: Arial, sans-serif
+            font-family: Arial, sans-serif;
+            line-height: 1em;
+            text-align: justify;
         }
 
         .table-bordered {
@@ -67,39 +70,120 @@
             line-height: 30px;
         }
 
+        .upper {
+            text-transform: uppercase
+        }
 
+        .bold {
+            font-weight: bold;
+        }
 
         table.table-bordered td {
             border: solid 1px #000
         }
     </style>
 </head>
+
 <body>
 
     <table style="width:100%">
         <tr>
-            <td><img src='{{ public_path('images/DSWD-DVO-LOGO.png') }}' style="width: 250px;">
+            <td>
+                <!--<img src='{ public_path('images/DSWD-DVO-LOGO.png') }}' style="width: 250px;">-->
             </td>
-            <td style="text-align: right;">
-                <h2 style="color: darkblue">CRISIS INTERVENTION SECTION <br>
-                    <small style="font-size:12pt;">
-                        Cor. Suazo St. R. Magsaysay Ave. Davao City
-                    </small>
-                </h2>
+            <td style="text-align: right; line-height:1em;">
+                <h2 style="color: darkblue; padding:0px; margin:0px;">CRISIS INTERVENTION SECTION</h2>
+                <small style="font-size:9pt;">
+                    Cor. Suazo St. R. Magsaysay Ave. Davao City
+                </small>
+
             </td>
         </tr>
     </table>
     <p style="text-align:right">
-        CONTROL NO:
+        CONTROL NO: {{ date('Y-m-dHis', strtotime($assistance['assessment']['created_at'])) }}
     </p>
 
     <p style="text-align:left">
-      <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
-                        
+        <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }} <br> <br>
+
+        <b>{{ $assistance['assessment']['provider']['addressee_name'] }} </b><br>
+        {{ $assistance['assessment']['provider']['addressee_position'] }}<br>
+        {{ $assistance['assessment']['provider']['company_name'] }}<br>
+        {{ $assistance['assessment']['provider']['company_address'] }}
+
+    </p><br>
+
+
+
+    <p>Dear <b> Sir/Madam</b>,</p><br>
+
+
+
+    <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> by herein client,
+        <span
+            class="upper bold">{{ trim($client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name']) }},
+        </span>
+        {{ $assistance['aics_client']['gender'] == 'Lalake' ? 'Male' : 'Female' }},
+        {{ $assistance['age'] }},
+        {{ $client['street_number'] }},
+        <span style="text-transform:capitalize;">
+            {{ 'Brgy ' . $client['psgc']['brgy_name'] . ', ' }}
+            {{ $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
+        </span>
+
+    <p>
+        The Department of Social Welfare and Development has assessed and validated the said
+        request for assistance through the Crisis Intervention Section. Thus, the Department is
+        using this letter to guarantee the payment of the bill in the amount of <span
+            style="font-weight:bold;text-transform:uppercase">
+            {{ $amount_in_words }} PESOS ONLY
+            (Php {{ number_format($assistance['assessment']['amount'], '2') }}) </span>. </p>
+    <p>
+        To facilitate the payment submit to the Crisis Intervention Section through
+        CIS Finance Unit the following documents for the preparation of Disbursement Voucher with one week
+        of service has been completed.</p>
+
+    <ul>
+        <li>Guarantee Letter (GL) from the DSWD with your company's 'received' stamp</li>
+        <li>Statement of Accounts (SOA) or Billing Statement addressed to DSWD</li>
+    </ul>
+
+
+    <p>
+        Please be informed that the payment will be directly deposited to your company's bank
+        account. Should you have any query, you may coordinate with DSWD FO XI Crisis
+        Intervention Section with the telephone number 227-1964 local 1133.
     </p>
-    
+    <p>
+        Thank you for your consideration.</p>
+
+    <p>
+        Very truly yours,
+    </p>
+
+    <br><br>
+
+    <b> {{ $assistance['assessment']['signatory']['name'] }}</b><br>
+    {{ $assistance['assessment']['signatory']['position'] }}
+
+    <br><br>
+
+    <p> Valid within 30 days upon receipt.</p>
+
+    <br>
+
+    <hr>
+    <p> <small> QR CODE IN LIEU OF SEAL. This letter is system generated.
+            Kindly scan the QR Code and crossmatch the contents of this document versus 
+            within the Official Website for its validity.
+            <br>
+            
+        </small> </p>
 
 
-    
+
+
 </body>
+
 </html>

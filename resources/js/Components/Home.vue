@@ -175,7 +175,7 @@ export default {
           return "blue";
           break;
         default:
-          return "blue";
+          return "gray";
           break;
       }
     },

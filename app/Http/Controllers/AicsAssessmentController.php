@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\AicsAssessmentFundSource;
 
 class AicsAssessmentController extends Controller
 {
@@ -46,10 +47,9 @@ class AicsAssessmentController extends Controller
                         'assessment' => 'required',
                         'purpose' => 'required',
                         'amount' => 'required',
-                        'fund_source_id' => 'required',
+                        'fund_sources' => 'required',
                         'mode_of_assistance' => 'required',
-                        'approved_by_id' => 'required',
-
+                        'signatory_id' => 'required',
                     ]);
 
                     if ($validator->fails()) {
@@ -74,6 +74,14 @@ class AicsAssessmentController extends Controller
                         $gis->status = "Served";
                         $gis->save();
 
+                        foreach ($request->fund_sources as $key => $value) {
+                           
+                            $fund_src = New AicsAssessmentFundSource;
+                            $fund_src->assessment_id = $assessment->id;
+                            $fund_src->fund_source_id = $value["fund_source"]["id"];
+                            $fund_src->amount = $value["amount"];
+                            $fund_src->save();                            
+                        }
                         DB::commit();
                         return ["message" => "Saved!"];
                     }
@@ -142,7 +150,7 @@ class AicsAssessmentController extends Controller
                     'fund_source_id' => 'required',
                     'mode_of_assistance' => 'required',
                     'interviewed_by' => 'required',
-                    'approved_by_id' => 'required',
+                    'signatory_id' => 'required',
 
                 ]);
 

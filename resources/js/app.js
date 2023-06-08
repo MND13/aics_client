@@ -32,7 +32,7 @@ import FundSource from "./Components/FundSource.vue"
 import NotFound from "./Components/NotFound.vue"
 import Offices from "./Components/Offices.vue"
 import Signatories from "./Components/Signatories.vue"
-
+import Charging from "./Components/Charging.vue"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -133,7 +133,18 @@ const router = new VueRouter({
                 requiresAuth: true,
                 requiresRoles: ["super-admin"]
             }            
+        },
+        {   
+            path: "/charging",
+            name: "charging",
+            component:  Charging,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin"]
+            }            
         }
+
+        
 
        
     ],

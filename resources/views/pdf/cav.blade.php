@@ -35,6 +35,7 @@
             margin: 0 auto;
             border-bottom: solid 1px #000;
             font-weight: bold;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -118,7 +119,9 @@
                     <td colspan="2" style="border-top:0px; ">
                         <br>
                         <div class="sig">
-                            {{ $assistance['assessment']['approved_by'] }}
+                            @if(isset($assistance['assessment']['signatory']["name"]))
+                            {{$assistance['assessment']['signatory']["name"]}}
+                            @endif
                         </div>
                         SIGNATURE OVER PRINTED NAME<br>
                         IMMEDIATE SUPERVISOR/AUTHORIZED<br>

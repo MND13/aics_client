@@ -113,7 +113,8 @@ class AicsClientController extends Controller
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-            "assessment.fund_source:id,name",
+            "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+            "assessment.fund_sources.fund_source:id,name",
             "assessment.category:id,category",
             "assessment.subcategory:id,subcategory",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
@@ -134,11 +135,14 @@ class AicsClientController extends Controller
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-            "assessment.fund_source:id,name",
+            "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+            "assessment.fund_sources.fund_source:id,name",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
             "assessment.category:id,category",
             "assessment.subcategory:id,subcategory",
             "assessment.provider:id,company_name",
+            "assessment.signatory:id,name,position",
+           
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
@@ -167,10 +171,12 @@ class AicsClientController extends Controller
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-            "assessment.fund_source:id,name",
+            "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+            "assessment.fund_sources.fund_source:id,name",
             "assessment.category:id,category",
             "assessment.subcategory:id,subcategory",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
+            "assessment.signatory:id,name",
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
@@ -189,16 +195,26 @@ class AicsClientController extends Controller
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-            "assessment.fund_source:id,name",
+            "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+            "assessment.fund_sources.fund_source:id,name",
             "assessment.category:id,category",
             "assessment.subcategory:id,subcategory",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
+            "assessment.provider",
+            "assessment.signatory:id,name,position",
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
         $res = $assistance->toArray();
+        $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
         if ($assistance) {
-            $pdf = Pdf::loadView('pdf.gl', ["assistance" =>   $assistance->toArray(),  "client" => $res["aics_client"]]);
+            $pdf = Pdf::loadView('pdf.gl', 
+            ["assistance" =>   $assistance->toArray(), 
+             "client" => $res["aics_client"],
+             "amount_in_words" => $f->format($res["assessment"]["amount"]),
+             ]
+            );
             return $pdf->stream('gl.pdf');
         }
     }

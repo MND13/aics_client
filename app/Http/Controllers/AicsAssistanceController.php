@@ -33,9 +33,7 @@ class AicsAssistanceController extends Controller
         $year = date("Y");
         $month = date("m");
 
-        if (Auth::check() &&   Auth::user()->hasRole('admin'))
-        {
-            
+        if (Auth::check() &&   Auth::user()->hasRole('admin')) {
         }
 
 
@@ -63,14 +61,14 @@ class AicsAssistanceController extends Controller
                 $documents = [];
                 $aics_type_id = request('assistance.aics_type_id');
                 $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
-               
+
                 $files = request('assistance.documents');
-               
-               
+
+
 
                 foreach ($requirements as $key => $requirement) {
 
-                  
+
                     if (isset($files[$requirement->id])) {
                         $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
                         $url = Storage::url($path);
@@ -84,7 +82,7 @@ class AicsAssistanceController extends Controller
                 $aics_assistance->aics_documents()->saveMany($documents);
 
                 DB::commit();
-                return ["message"=> "Saved"];
+                return ["message" => "Saved"];
             } catch (\Throwable $th) {
                 DB::rollBack();
                 throw $th;
@@ -186,80 +184,114 @@ class AicsAssistanceController extends Controller
 
     public function show(Request $request, $uuid)
     {
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
-            
-            #RESTRICTED TO OFFICE ID
+
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker'])) {
+
+            #RESTRICTED TO OFFICE ID 
+            # Super Admin not bound to office id
 
             return AicsAssistance::with([
-                
-                 "aics_type:id,name",
-                 "aics_documents",
-                 "aics_documents.requirement:id,name",
-                 "office:id,name,address",
-                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
-                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment",
-                
-               
-                 ])
-                 ->where("uuid","=",$uuid)
-                 ->whereRelation("office","office_id","=",Auth::user()->office_id )->firstOrFail();
-               
-         }
 
-         if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+                "assessment.fund_sources.fund_source:id,name",
+            ])
+                ->where("uuid", "=", $uuid)
+                ->whereRelation("office", "office_id", "=", Auth::user()->office_id)->first();
+        }
+
+        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
             return AicsAssistance::with([
-                
-                 "aics_type:id,name",
-                 "aics_documents",
-                 "aics_documents.requirement:id,name",
-                 "office:id,name,address",
-                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
-                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment",
-                
-               
-                 ])
-                 ->where("uuid","=",$uuid)
-                 ->firstOrFail();
-              
-         }
- 
- 
-         if (Auth::check() &&   Auth::user()->hasRole('user')) 
-         {
-             #RESTRICTED TO OWN SUBMISSIONS
- 
-             return AicsAssistance::with(
-                
-                 "aics_type:id,name",
-                 "aics_documents",
-                 "aics_documents.requirement:id,name",
-                 "office:id,name,address",
-                 "aics_client",
-                 "assessment"
-     
-     
-             )
-             ->where("uuid","=",$uuid)
-             ->where("user_id","=",Auth::id() )->first();
- 
-         }   
+
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
+                "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                "assessment",
+                "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+                "assessment.fund_sources.fund_source:id,name",
 
 
-      }
+            ])
+                ->where("uuid", "=", $uuid)
+                ->firstOrFail();
+        }
 
-   
+
+        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+            #RESTRICTED TO OWN SUBMISSIONS
+
+            return AicsAssistance::with(
+
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client",
+                "assessment"
+
+
+            )
+                ->where("uuid", "=", $uuid)
+                ->where("user_id", "=", Auth::id())->first();
+        }
+    }
+
+
 
     public function index()
-    {   
-        if (Auth::check() &&  Auth::user()->hasRole(['admin','encoder','social-worker'])) {
+    {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker'])) {
 
-           // var_dump(Auth::user());
+            // var_dump(Auth::user());
 
-           return AicsAssistance::with([
-               
+            return AicsAssistance::with([
+
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
+                "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                "assessment",
+
+
+            ])
+                //->whereRelation("office","user_id","=",Auth::id() )
+                ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
+                ->get();
+        }
+
+
+        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+
+            return AicsAssistance::with(
+
+                "aics_type:id,name",
+                "aics_documents",
+                "aics_documents.requirement:id,name",
+                "office:id,name,address",
+                "aics_client",
+                "assessment"
+
+
+            )->where("user_id", "=", Auth::id())->get();
+        }
+
+        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+
+            // var_dump(Auth::user());
+
+            return AicsAssistance::with([
+
                 "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
@@ -267,54 +299,12 @@ class AicsAssistanceController extends Controller
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment"
-              
-                ])
-                //->whereRelation("office","user_id","=",Auth::id() )
-                ->whereRelation("office","office_id","=",Auth::user()->office_id )
-                ->get();
 
-             
-        }
-
-
-        if (Auth::check() &&   Auth::user()->hasRole('user')) {
-
-            return AicsAssistance::with(
-               
-                "aics_type:id,name",
-                "aics_documents",
-                "aics_documents.requirement:id,name",
-                "office:id,name,address",
-                "aics_client",
-                "assessment"
-    
-    
-            )->where("user_id","=",Auth::id() )->get();
-
-        }
-        
-        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
-
-            // var_dump(Auth::user());
- 
-            return AicsAssistance::with([
-                
-                 "aics_type:id,name",
-                 "aics_documents",
-                 "aics_documents.requirement:id,name",
-                 "office:id,name,address",
-                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
-                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                 "assessment"
-               
-                 ])
+            ])
                 //->whereRelation("office","user_id","=",Auth::id() )
                 // ->whereRelation("office","office_id","=",Auth::user()->office_id )
-                 ->get();
-              
-         }
-
-       
+                ->get();
+        }
     }
 
     public function update(request $request)
@@ -326,15 +316,17 @@ class AicsAssistanceController extends Controller
             if ($a) {
 
                 $a->status = $request->status;
-                
-                if($request->remarks) 
-                {$a->remarks = $request->remarks;}
 
-                if($request->schedule) 
-                {$a->schedule = $request->schedule;}
-                
+                if ($request->remarks) {
+                    $a->remarks = $request->remarks;
+                }
 
-                
+                if ($request->schedule) {
+                    $a->schedule = $request->schedule;
+                }
+
+
+
                 $a->status_date = Carbon::now();
                 $a->save();
                 return ["message" => "saved"];
@@ -345,6 +337,4 @@ class AicsAssistanceController extends Controller
             return ["message" => $th];
         }
     }
-
-   
 }

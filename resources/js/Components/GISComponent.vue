@@ -3,11 +3,12 @@
     <div class="row">
 
       <div class="col-md-12"
-        v-if="hasRoles(['social-worker','admin','super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+        v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark @click="PrintCOE()">Print COE</v-btn>
-        <v-btn dark @click="PrintCAV()" v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance =='CAV' ">Print CAV</v-btn>
+        <v-btn dark @click="PrintCAV()"
+          v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">Print CAV</v-btn>
         <v-btn dark @click="PrintGL()" v-else>Print GL</v-btn>
       </div>
     </div>
@@ -351,37 +352,36 @@
 
                 </div>
 
-                <div class="col-md-4">
-                  Amount
-                  <input type="text" v-model="form.amount" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.amount }">
+                <div class="col-md-8">
+                  
+                  <v-btn icon @click="fundsrc_dialog = !fundsrc_dialog"> <v-icon
+                      class="mdi mdi-plus-box"></v-icon></v-btn> Fund Source
 
-                  <div class="invalid-feedback" v-if="validationErrors.amount">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.amount" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-                </div>
+                   
 
+                  <table class="table table-bordered" v-if="selected_fund_sources.length > 0">
+                    <tr v-for="(e, i) in selected_fund_sources" :key="i">
+                     
+                      <td style="width:10%">
+                        <v-btn color="red" icon @click="deleteFundSrc(i)">
+                          <v-icon class="mdi mdi-close-box"></v-icon>
+                        </v-btn>
+                        
+                      </td>
+                      <td> <div v-if="e.fund_source"> {{ e.fund_source.name }} </div></td>
+                      <td style="text-align:right">{{ e.amount }}
+                      </td>
 
+                    </tr>
 
+                    <tr>
+                      <td></td>
+                      <td>TOTAL</td>
+                      <td style="text-align:right"> {{ sumValue }}</td>
 
+                    </tr>
 
-                <div class="col-md-4">
-                  Fund Source
-
-
-                  <select v-model="form.fund_source_id" name="" id="" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.fund_source }">
-                    <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">{{
-                      fund_source.name }}</option>
-                  </select>
-
-                  <div class="invalid-feedback" v-if="validationErrors.fund_source">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.fund_source" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
+                  </table>
 
                 </div>
 
@@ -391,9 +391,10 @@
               <div class="row">
 
                 <div class="col-md-4">
-                  Interviewed by
+                  Interviewed by <br>
+
                   <input type="text" class="form-control" v-model="form.interviewed_by"
-                    :class="{ 'is-invalid': validationErrors.interviewed_by }" />
+                    :class="{ 'is-invalid': validationErrors.interviewed_by }" disabled="true" />
 
                   <div class="invalid-feedback" v-if="validationErrors.interviewed_by">
                     <ul>
@@ -403,11 +404,11 @@
 
                 </div>
                 <div class="col-md-4">
+
                   Approved by
 
-
-                  <select v-model="form.approved_by_id" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.approved_by }">
+                  <select v-model="form.signatory_id" class="form-control"
+                    :class="{ 'is-invalid': validationErrors.signatory_id }">
                     <option></option>
                     <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }}</option>
 
@@ -419,7 +420,7 @@
                     </ul>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" v-if="form.mode_of_assistance == 'CAV'">
                   Special Disbursing Officer (SDO)
 
                   <input type="text" v-model="form.sdo" class="form-control"
@@ -430,16 +431,9 @@
                       <li v-for="(e, i) in validationErrors.sdo" :key="i">{{ e }}</li>
                     </ul>
                   </div>
-
                 </div>
               </div>
-
-
-
             </div>
-
-
-
           </div>
 
           <div class="card mt-2"
@@ -448,17 +442,13 @@
               RECORDS IN FILE
             </div>
             <div class="card-body">
-
               <div class="row">
-
                 <div class="col-md-12 " style="display: block; column-count: 4;">
                   <template v-for="e in records_opts">
                     <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                   </template>
                 </div>
-
               </div>
-
             </div>
           </div>
 
@@ -480,8 +470,6 @@
                 <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
               </select>
 
-
-
               <hr>
 
               <div class="mt-2" v-if="selected_provider">
@@ -492,14 +480,8 @@
                 {{ selected_provider.company_address }}<br />
 
               </div>
-
-
-
-
             </div>
           </div>
-
-
 
           <div class="text-center col-md-12" style="padding: 10px 0px">
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
@@ -510,21 +492,17 @@
               v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified' || gis_data.status == 'Serving'">
               SUBMIT
             </v-btn>
-            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit" v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
+            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
+              v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
               UPDATE
             </v-btn>
-            <!-- class="btn btn-primary btn-lg btn-lg btn-block"-->
 
             <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
               @click="dialog_reject = true" :disabled="submit">
               REJECT
             </v-btn>
 
-            <!--<v-btn v-if="gis_data.status == 'Serving'"
-              :to="{ name: 'coe', params: { 'uuid': gis_data.uuid, 'coe_id': gis_data.coe_id } }" outlined large
-              class="--white-text" color="primary" :disabled="submit">
-              Certificate Of Eligibility (COE)
-            </v-btn>-->
+
           </div>
 
           <v-dialog v-model="dialog_reject" width="50%">
@@ -545,6 +523,30 @@
 
             </v-card>
           </v-dialog>
+
+          <v-dialog v-model="fundsrc_dialog" width="50%">
+            <v-card>
+              <v-card-title>Fund Source</v-card-title>
+              <v-card-text>
+
+                Fund Source
+                <select v-model="fsd.fs" name="" id="" class="form-control">
+                  <option :value="fund_source" v-for="fund_source in fund_sources" :key="fund_source.id">
+                    {{ fund_source.name }}
+                  </option>
+                </select>
+
+                Amount
+                <input v-model="fsd.amt" class="form-control" type="number">
+
+                <v-btn @click="AddFundSrc" dark color="red">
+                  Add Fund Source
+                </v-btn>
+              </v-card-text>
+
+            </v-card>
+          </v-dialog>
+
         </form>
 
 
@@ -560,7 +562,6 @@
   color: #ffffff;
   padding: 1pc;
   background: #283593;
-
   border-bottom: solid 1px #d2d2d2;
   font-size: 10pt;
 }
@@ -585,14 +586,11 @@ export default {
       assistance_types: {},
       psgc: {},
       regions: {},
-
       errors: {},
       validationErrors: {},
       max_date: new Date().toISOString().split("T")[0],
-
       categories: [],
       subcategories: [],
-
       submit: false,
       assessment_options: [],
       selected_assessment_option: {},
@@ -600,7 +598,6 @@ export default {
       rejectform: {},
       fund_sources: [],
       formType: "Create",
-
       records_opts: [
         "Referral Letter",
         "Social Case Study Report",
@@ -620,7 +617,6 @@ export default {
         "Death Summary",
         "Others",
       ],
-
       id_options: ["School-ID",
         "Voter's ID",
         "PhilHealth ID",
@@ -637,9 +633,10 @@ export default {
       signatories: {},
       selected_gl_signatory: "",
       schedule: '',
-      schedule_error: ''
-
-
+      schedule_error: '',
+      fundsrc_dialog: false,
+      fsd: [],
+      selected_fund_sources: []
 
     };
   },
@@ -660,11 +657,24 @@ export default {
     }
 
   },
+  computed: {
+    sumValue() {
+      if (this.selected_fund_sources.length > 0) {
+        return this.selected_fund_sources.reduce((acc, item) => {
+          return acc + parseFloat(item.amount);
+        }, 0);
+      }
+
+      return 0;
+    },
+  },
 
   methods: {
     submitForm: debounce(function () {
       this.submit = true;
       this.form.gis_id = this.gis_data.id; // FOREIGN KEY
+      this.form.fund_sources = this.selected_fund_sources;
+      this.form.amount = this.sumValue;
 
       if (this.form.id) { //UPDATE
         this.updateAssessment();
@@ -805,6 +815,11 @@ export default {
 
             }
 
+            if(this.gis_data.assessment.fund_sources)
+            {
+              this.selected_fund_sources = this.gis_data.assessment.fund_sources;
+            }
+
 
           }
         }).catch(error => {
@@ -826,21 +841,18 @@ export default {
     PrintGIS() {
       window.open("/api/gis/" + this.gis_data.uuid)
     },
-    PrintCOE()
-    {
+    PrintCOE() {
       window.open("/api/coe/" + this.gis_data.uuid)
     },
     PrintCAV() {
       window.open("/api/cav/" + this.gis_data.uuid)
     },
-    PrintGL()
-    {
+    PrintGL() {
       window.open("/api/gl/" + this.gis_data.uuid)
     },
     getProviders() {
       axios.get(route("api.providers")).then(response => {
         this.providers = response.data.sort();
-        console.log(this.providers);
       }).catch(error => console.log(error))
     },
     getSignatories() {
@@ -849,6 +861,21 @@ export default {
         this.signatories = response.data.sort();
       }).catch(error => console.log(error))
     },
+    AddFundSrc() {
+
+      this.selected_fund_sources.push({
+        "amount": this.fsd.amt,
+        "fund_source": this.fsd.fs,
+      });
+
+      this.fsd = {};
+      this.fundsrc_dialog = false;
+
+    },
+
+    deleteFundSrc(i) {
+      this.selected_fund_sources.splice(i, 1);
+    }
 
 
   },

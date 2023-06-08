@@ -341,8 +341,14 @@
     </div>
     
     <div id="fund_source" class="data-textbox"
-        style=" right:13pt; bottom:100pt; width: 69px;  text-align:center;">
-        {{ $assistance["assessment"]['fund_source']["name"] }}
+        style=" right:13pt; bottom:81pt; width: 69px;  text-align:center; font-size:7pt; line-height:8pt;">
+        
+
+        @if(isset($assistance["assessment"]['fund_sources']))
+            @foreach ($assistance["assessment"]['fund_sources'] as $fs)
+            {{$fs["fund_source"]["name"]}} =  {{ number_format($fs["amount"],2)}} <br>
+            @endforeach
+        @endif
     </div>
     @endif
 
@@ -363,6 +369,8 @@
 
     </div>
     @endif  
+
+    
 
 
     <!--

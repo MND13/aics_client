@@ -236,6 +236,10 @@ export default {
             text: "Fund Source",
           },
           {
+            to: "/charging",
+            text: "Charging",
+          },
+          {
             to: "/signatories",
             text: "Signatories",
           },
@@ -243,6 +247,7 @@ export default {
             to: "/reports",
             text: "Reports",
           },
+          
         ]
     };
   },

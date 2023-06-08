@@ -32,6 +32,11 @@ class CreateAicsAssessmentsTable extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
+           /* USE SIGNATORY ID
+           $table->foreignId('approved_by_id')->nullable()->constrained('signatories') 
+            ->onUpdate('cascade')
+            ->onDelete('cascade');*/
+
             $table->foreignId('category_id')->constrained('categories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -40,15 +45,15 @@ class CreateAicsAssessmentsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreignId('fund_source_id')->nullable()->constrained('fund_sources')
+            /*$table->foreignId('fund_source_id')->nullable()->constrained('fund_sources')
                 ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->onDelete('cascade');*/
 
             $table->foreignId('provider_id')->nullable()->constrained('aics_providers')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
                 
-            $table->foreignId('gl_signatory_id')->nullable()->constrained('signatories')
+            $table->foreignId('signatory_id')->nullable()->constrained('signatories')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
@@ -67,10 +72,12 @@ class CreateAicsAssessmentsTable extends Migration
             $table->dropForeign(['category_id']);
             $table->dropForeign(['subcategory_id']);
             $table->dropForeign(['fund_source_id']);
-
-            $table->dropForeign(['gl_signatory_id']);
+            $table->dropForeign(['signatory_id']);
             $table->dropForeign(['provider_id']);
             $table->dropForeign(['interviewed_by_id']);
+            $table->dropForeign(['approved_by_id']);
+
+            
         });
 
         

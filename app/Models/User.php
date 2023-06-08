@@ -35,7 +35,9 @@ class User extends Authenticatable
         'street_number',
         'username',
         'email',
-        'office_id'
+        'office_id',
+        'meta_full_name',
+        'full_name',
     ];
 
     public static function boot()

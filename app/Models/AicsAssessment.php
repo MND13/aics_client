@@ -15,9 +15,10 @@ class AicsAssessment extends Model
         return $this->hasOne(AicsAssistance::class);
     }
 
-    public function fund_source()
+    public function fund_sources()
     {
-        return $this->belongsTo(FundSource::class);
+        //return $this->belongsTo(FundSource::class);
+        return $this->hasMany(AicsAssessmentFundSource::class, "assessment_id");
     }
 
     public function category()
@@ -30,18 +31,18 @@ class AicsAssessment extends Model
         return $this->belongsTo(Subcategory::class);
     }
 
-   public function interviewed_by()
-    {   
-        return $this->belongsTo(User::class,"interviewed_by_id");
+    public function interviewed_by()
+    {
+        return $this->belongsTo(User::class, "interviewed_by_id");
     }
 
     public function provider()
-    {   
-        return $this->belongsTo(AicsProviders::class,"provider_id");
+    {
+        return $this->belongsTo(AicsProviders::class, "provider_id");
     }
 
-
-   
-
-
+    public function signatory()
+    {
+        return $this->belongsTo(Signatories::class, "signatory_id");
+    }
 }

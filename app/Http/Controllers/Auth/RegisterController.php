@@ -94,19 +94,27 @@ class RegisterController extends Controller
         $username = $this->generateUserName($usernametemp);
         $middle_name = isset($data['middle_name']) && $data['middle_name'] != "NMN" ?  strtoupper($data['middle_name']) : NULL;
 
+        $first_name = mb_strtoupper(trim($data['first_name'] ?? null));
+        $middle_name = mb_strtoupper(trim($middle_name));
+        $last_name = mb_strtoupper(trim($data['last_name'] ?? null));
+        $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
+
+
         $user =  User::create([
             'username' => strtoupper($username),
-            'first_name' => strtoupper($data['first_name']),
-            'middle_name' => $middle_name ,
-            'last_name' => strtoupper($data['last_name']),
-            'ext_name' => isset($data['ext_name']) ? strtoupper($data['ext_name']) : NULL,
+            'first_name' => $first_name,
+            'middle_name' => $middle_name,
+            'last_name' =>  $last_name,
+            'ext_name' => $ext_name,
             'birth_date' => $data['birth_date'],
             'psgc_id' => $data['psgc_id'],
             'gender' => $data['gender'],
             'mobile_number' => $data['mobile_number'],
             'email' => isset($data['email']) ?  $data['email'] : NULL,
             'password' => $data['password'],
-            'street_number' => isset($data['street_number']) ? $data['street_number'] : NULL,
+            'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
+            'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
+            'full_name' => trim($first_name. " ".$middle_name. " ".$last_name),
         ]);
 
         if ($user->id) {

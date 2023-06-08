@@ -29,6 +29,7 @@
             width: 90%;
             margin: 0 auto;
             border-bottom: solid 1px #000;
+            text-transform: uppercase;
         }
 
         .table {
@@ -167,9 +168,19 @@
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
             ONLY</span>,
         PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
-        @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
-            CHARGABLE AGAINST: <span class="underline">{{ $assistance['assessment']['fund_source']['name'] }}</span>
-        @endif
+        CHARGABLE AGAINST <span class="underline">AICS FUND  {{ date('Y', strtotime($assistance['assessment']['created_at'])) }} </span>
+        <!--if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
+            CHARGABLE AGAINST: <span class="underline">
+
+                if(isset($assistance["assessment"]['fund_sources']))
+                foreach ($assistance["assessment"]['fund_sources'] as $fs)
+                {$fs["fund_source"]["name"]}} <br>
+                endforeach
+            endif
+
+
+            </span>
+        endif-->
     </p>
     <br>
 
@@ -187,10 +198,22 @@
                     </div>
                 </td>
                 <td>
-                    <div class="sig"></div>
+                    <div class="sig">
+                        {{ $assistance['assessment']['interviewed_by']['first_name'] .
+                            ' ' .
+                            $assistance['assessment']['interviewed_by']['middle_name'] .
+                            ' ' .
+                            $assistance['assessment']['interviewed_by']['last_name'] .
+                            ' ' .
+                            $assistance['assessment']['interviewed_by']['ext_name'] }}
+                    </div>
                 </td>
                 <td>
-                    <div class="sig"></div>
+                    <div class="sig">
+                        {{$assistance['assessment']['signatory']["name"]}}
+                     
+                        
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -243,7 +266,15 @@
                         <div class="sig">{{ $assistance['assessment']['sdo'] }}</div>
                     </td>
                     <td>
-                        <div class="sig"></div>
+                        <div class="sig">
+                            {{ $assistance['assessment']['interviewed_by']['first_name'] .
+                                ' ' .
+                                $assistance['assessment']['interviewed_by']['middle_name'] .
+                                ' ' .
+                                $assistance['assessment']['interviewed_by']['last_name'] .
+                                ' ' .
+                                $assistance['assessment']['interviewed_by']['ext_name'] }}
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -270,6 +301,7 @@
             CASE STUDY REPORT
             ON FILE</b>
     @endif
+
 
 </body>
 
