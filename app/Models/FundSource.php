@@ -9,4 +9,15 @@ class FundSource extends Model
 {
     use HasFactory;
     protected $guarded = ["id"];
+
+    public function transactions()
+    {
+        $this->hasMany(AicsAssessmentFundSource::class);
+    }
+
+    public function balance()
+    {
+        
+    }
+   
 }

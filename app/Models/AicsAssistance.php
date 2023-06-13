@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+
 class AicsAssistance extends Model
 {
     use HasFactory;
@@ -16,7 +17,7 @@ class AicsAssistance extends Model
         'user_id',
         'aics_type_id',
         'status',
-        'status_date',        
+        'status_date',
         'age',
         'occupation',
         'monthly_salary',
@@ -25,7 +26,7 @@ class AicsAssistance extends Model
         'civil_status'
     ];
 
-    
+
     public static function boot()
     {
         parent::boot();
@@ -36,8 +37,7 @@ class AicsAssistance extends Model
             $model->user_id = Auth::id();
             $model->age =  Auth::user()->age();
         });
-        self::updating(function($model) {
-
+        self::updating(function ($model) {
         });
     }
 
@@ -73,7 +73,7 @@ class AicsAssistance extends Model
 
     public function assessment()
     {
-        return $this->belongsTo(AicsAssessment::class);
+        return $this->belongsTo(AicsAssessment::class,"assessment_id");
     }
 
     public function coe()
@@ -81,7 +81,9 @@ class AicsAssistance extends Model
         return $this->belongsTo(CertOfEligibility::class, "coe_id");
     }
 
-   
 
-    
+    public function verified_by()
+    {
+        return $this->belongsTo(User::class, "verified_by_id");
+    }
 }

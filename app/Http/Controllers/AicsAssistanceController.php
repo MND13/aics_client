@@ -200,6 +200,8 @@ class AicsAssistanceController extends Controller
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",
+                "verified_by:id,full_name",
+               
             ])
                 ->where("uuid", "=", $uuid)
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)->first();
@@ -309,32 +311,37 @@ class AicsAssistanceController extends Controller
 
     public function update(request $request)
     {
-
+        DB::beginTransaction();
         try {
             $a = AicsAssistance::where("uuid", "=", $request->uuid)->first();
 
             if ($a) {
 
-                $a->status = $request->status;
+                if ($request->task == "verify") {
+                    $a->status = $request->status;
 
-                if ($request->remarks) {
-                    $a->remarks = $request->remarks;
+                    if ($request->remarks) {
+                        $a->remarks = $request->remarks;
+                    }
+
+                    if ($request->schedule) {
+                        $a->schedule = $request->schedule;
+                    }
+                    $a->status_date = Carbon::now();
+                    $a->verified_by_id = Auth::id();
+
+                    $a->save();
+                    DB::commit();
+                    return ["message" => "saved"];
                 }
 
-                if ($request->schedule) {
-                    $a->schedule = $request->schedule;
-                }
-
-
-
-                $a->status_date = Carbon::now();
-                $a->save();
-                return ["message" => "saved"];
+                
             } else {
                 return ["message" => "Assistance Request Not Found"];
             }
         } catch (\Throwable $th) {
-            return ["message" => $th];
+            DB::rollBack();
+            throw $th;
         }
     }
 }

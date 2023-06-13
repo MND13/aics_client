@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AicsAssessmentFundSource;
 use App\Models\FundSource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -136,11 +137,11 @@ class FundSourceController extends Controller
     {
         try {
 
-            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) 
-            {
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+                DB::beginTransaction();
                 $f = FundSource::findOrFail($request->id);
                 $f->delete();
-
+                DB::commit();
             }
         } catch (\Throwable $th) {
             DB::rollBack();

@@ -61,3 +61,6 @@ Route::delete('signatories/{id}', [\App\Http\Controllers\SignatoriesController::
 Route::get('coe/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'coe'])->name("api.pdf.coe");
 Route::get('cav/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'cav'])->name("api.pdf.cav");
 Route::get('gl/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gl'])->name("api.pdf.gl");
+
+Route::post('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'create'])->name("charging.create");
+Route::get('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'index'])->name("charging.index");

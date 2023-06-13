@@ -12,7 +12,7 @@ class AicsAssessment extends Model
 
     public function assistance()
     {
-        return $this->hasOne(AicsAssistance::class);
+        return $this->hasOne(AicsAssistance::class, "assessment_id");
     }
 
     public function fund_sources()
@@ -45,4 +45,6 @@ class AicsAssessment extends Model
     {
         return $this->belongsTo(Signatories::class, "signatory_id");
     }
+
+   
 }

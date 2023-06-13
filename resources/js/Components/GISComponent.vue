@@ -47,6 +47,20 @@
               <tr>
                 <td> <label for=""> Remarks:</label> {{ gis_data.remarks }} </td>
               </tr>
+              <tr>
+                <td> <label for=""> Verified by:</label>
+                  <span v-if="gis_data.verified_by">
+                    {{ gis_data.verified_by.full_name }}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>Interviewed by:</label>
+                  <span v-if="form.interviewed_by"> {{ form.interviewed_by }}</span>
+                </td>
+              </tr>
+
             </tbody>
           </table>
         </div>
@@ -353,22 +367,24 @@
                 </div>
 
                 <div class="col-md-8">
-                  
+
                   <v-btn icon @click="fundsrc_dialog = !fundsrc_dialog"> <v-icon
                       class="mdi mdi-plus-box"></v-icon></v-btn> Fund Source
 
-                   
+
 
                   <table class="table table-bordered" v-if="selected_fund_sources.length > 0">
                     <tr v-for="(e, i) in selected_fund_sources" :key="i">
-                     
+
                       <td style="width:10%">
                         <v-btn color="red" icon @click="deleteFundSrc(i)">
                           <v-icon class="mdi mdi-close-box"></v-icon>
                         </v-btn>
-                        
+
                       </td>
-                      <td> <div v-if="e.fund_source"> {{ e.fund_source.name }} </div></td>
+                      <td>
+                        <div v-if="e.fund_source"> {{ e.fund_source.name }} </div>
+                      </td>
                       <td style="text-align:right">{{ e.amount }}
                       </td>
 
@@ -729,11 +745,12 @@ export default {
 
       if (this.schedule) {
 
-        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule }).then(response => {
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule, "task": "verify" }).then(response => {
 
           alert(response.data.message);
           this.dialog_reject = false;
-          this.$router.push({ path: '/' })
+          // this.$router.push({ path: '/' })
+          this.$router.go(-1)
 
         }).catch(error => console.log(error));
       }
@@ -774,7 +791,7 @@ export default {
     },
     getAssessmentOpts() {
       axios.get(route("api.assessment_opts")).then((response) => {
-        //console.log( response.data);
+
         this.assessment_options = response.data;
       });
     },
@@ -815,8 +832,7 @@ export default {
 
             }
 
-            if(this.gis_data.assessment.fund_sources)
-            {
+            if (this.gis_data.assessment.fund_sources) {
               this.selected_fund_sources = this.gis_data.assessment.fund_sources;
             }
 
