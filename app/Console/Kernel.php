@@ -16,6 +16,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        /*$schedule->call(function () {
+
+            DB::raw("SELECT sum(amount * movement) as closing_balance, fund_source_id,  date(created_at)
+            from aics_assessments_fund_sources
+            group by fund_source_id, date(created_at)  
+            ORDER BY `date(created_at)` DESC")
+
+        })->daily();*/
     }
 
     /**
@@ -25,7 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

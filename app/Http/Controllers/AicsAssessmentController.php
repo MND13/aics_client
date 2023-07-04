@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AicsAssessmentFundSource;
+use App\Models\FundSource;
 
 class AicsAssessmentController extends Controller
 {
@@ -75,13 +76,38 @@ class AicsAssessmentController extends Controller
                         $gis->save();
 
                         foreach ($request->fund_sources as $key => $value) {
-                           
-                            $fund_src = New AicsAssessmentFundSource;
+
+                            $fund_src = new AicsAssessmentFundSource;
                             $fund_src->assessment_id = $assessment->id;
                             $fund_src->fund_source_id = $value["fund_source"]["id"];
                             $fund_src->amount = $value["amount"];
-                            $fund_src->save();                            
+                            $fund_src->save();
+
+                            $fs = FundSource::findOrFail($value["fund_source"]["id"]);
+
+                            if ($fs) {
+                                $txn = new AicsAssessmentFundSource();
+                                $txn->fund_source_id = $request->fund_source_id;
+                                $txn->movement = $request->movement;
+                                $txn->amount = $request->amount;
+                                $txn->remarks =  $request->remarks;
+                                $txn->save();
+                            }
+
+                            $memo = $request->mode_of_payment;
+
+                            if ($request->movement > 0) {
+                                $transaction_1 = $fs->journal->creditDollars($request->amount, $memo);
+                                $transaction_1->referencesObject($gis);
+                            } else {
+
+                                $transaction_1 = $fs->journal->debitDollars($request->amount,  $memo);
+                                $transaction_1->referencesObject($gis);
+                            }
                         }
+
+
+
                         DB::commit();
                         return ["message" => "Saved!"];
                     }
@@ -165,7 +191,7 @@ class AicsAssessmentController extends Controller
                     $assessment->fill($request->toArray());
                     $assessment->records = json_encode($request->records);
                     $assessment->save();
-                    
+
                     DB::commit();
                     return ["message" => "Saved!"];
                 }

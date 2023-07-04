@@ -18,7 +18,17 @@ class FundSourceController extends Controller
      */
     public function index()
     {
-        return FundSource::all();
+     
+        $fundsources =  FundSource::with("journal")->get();
+        $results = array();
+        foreach ($fundsources as $key => $value) {
+            $results[$key] = $value;
+            $results[$key]["current_balance"] = $value->journal->getCurrentBalanceInDollars();
+           unset( $results[$key]["journal"]);           
+            
+        }
+
+        return  $results;
     }
 
     /**

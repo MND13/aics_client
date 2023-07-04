@@ -64,3 +64,6 @@ Route::get('gl/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gl'
 
 Route::post('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'create'])->name("charging.create");
 Route::get('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'index'])->name("charging.index");
+
+
+Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");

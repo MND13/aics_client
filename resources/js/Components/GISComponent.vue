@@ -57,7 +57,7 @@
               <tr>
                 <td>
                   <label>Interviewed by:</label>
-                  <span v-if="form.interviewed_by"> {{ form.interviewed_by }}</span>
+                  <span v-if="gis_data.interviewed_by"> {{ gis_data.interviewed_by }}</span>
                 </td>
               </tr>
 
@@ -553,7 +553,10 @@
                 </select>
 
                 Amount
-                <input v-model="fsd.amt" class="form-control" type="number">
+                <!--<input v-model="fsd.amt" class="form-control" type="number">-->
+
+                <CurrencyInput v-model="fsd.amt" :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
+
 
                 <v-btn @click="AddFundSrc" dark color="red">
                   Add Fund Source
@@ -586,10 +589,12 @@
 <script>
 import userMixin from './../Mixin/userMixin.js'
 import authMixin from './../Mixin/authMixin.js'
+import CurrencyInput from './CurrencyInput'
 
 import { debounce, cloneDeep } from 'lodash'
 export default {
   mixins: [userMixin, authMixin],
+  components: { CurrencyInput },
   // props: ["gis_data", "getList", "userData", "setDialogCreate"],
   data() {
     return {

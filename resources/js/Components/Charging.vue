@@ -13,7 +13,10 @@
                             </option>
                         </select>
                         Amount
-                        <input type="text" name="" id="" v-model="form.amount" class="form-control">
+
+                        <CurrencyInput v-model="form.amount" :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
+
+                        <!--  <input type="text" name="" id="" v-model="form.amount" class="form-control">-->
 
                         Txn Type
                         <select name="" id="" v-model="form.movement" class="form-control">
@@ -35,7 +38,8 @@
         </div>
         <div class="col-md-8">
 
-            <v-data-table dense items-per-page="-1" :headers="headers" :items="data" :loading="loading" class="elevation-1">
+            <v-data-table dense :items-per-page="10" :headers="headers" :items="data" :loading="loading"
+                class="elevation-1">
 
                 <template v-slot:item.created_at="{ item }">
                     {{ item.created_at | formatDate }}
@@ -76,10 +80,14 @@
 
 import userMixin from './../Mixin/userMixin.js'
 import authMixin from './../Mixin/authMixin.js'
+import CurrencyInput from './CurrencyInput'
+
 
 import { debounce, cloneDeep } from 'lodash'
 export default {
     mixins: [userMixin, authMixin],
+    components: { CurrencyInput },
+
     data() {
         return {
             fund_sources: [],
@@ -123,14 +131,22 @@ export default {
         }, 250),
         getLogs() {
             axios.get(route("charging.index")).then(res => {
-                console.log(res.data);
+
                 this.data = res.data;
             }).catch(err => console.log(res));
         },
 
-        getAmount(item) { return item.amount * item.movement },
+        getAmount(item) {
+            let x = item.amount * item.movement;
+            return x.toLocaleString();
+        },
 
+        getBalance() {
+            axios.get(route()).then(res => {
+                console.log(res);
+            }).catch(err => console.log(err));
 
+        }
 
     },
     mounted() {

@@ -105,6 +105,7 @@ export default {
                 { text: 'Description', value: 'description' },
                 { text: 'Legislators', value: 'legislators' },
                 { text: 'Type', value: 'type' },
+                { text: 'Current Balance', value: 'current_balance' },
                 { text: 'Actions', value: 'actions' },
 
             ],
@@ -154,7 +155,7 @@ export default {
                     this.formErrors = err.response.data.errors
                 })
         },
-       
+
         editFsrc(fsrc) {
             this.formType = "Update";
             this.formData = cloneDeep(fsrc);
