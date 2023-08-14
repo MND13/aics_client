@@ -38,7 +38,7 @@
         </div>
         <div class="col-md-8">
 
-            <v-data-table dense :items-per-page="10" :headers="headers" :items="data" :loading="loading"
+            <!--<v-data-table dense :items-per-page="10" :headers="headers" :items="data" :loading="loading"
                 class="elevation-1">
 
                 <template v-slot:item.created_at="{ item }">
@@ -71,7 +71,7 @@
 
 
 
-            </v-data-table>
+            </v-data-table>-->
         </div>
     </div>
 </template>
@@ -124,14 +124,14 @@ export default {
         submitForm: debounce(function () {
 
             axios.post(route("charging.create"), this.form).then(response => {
-
+                alert(response.data.message);
                 this.getLogs();
             });
 
         }, 250),
         getLogs() {
             axios.get(route("charging.index")).then(res => {
-
+                console.log(res);
                 this.data = res.data;
             }).catch(err => console.log(res));
         },

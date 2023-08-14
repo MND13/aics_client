@@ -179,11 +179,11 @@ export default {
           text: "Request Assistance",
 
         },
-        {
+       /* {
           to: "/profile",
           text: "Profile",
 
-        },
+        },*/
         {
           to: "/contact",
           text: "Contact Us",
@@ -206,7 +206,6 @@ export default {
           to: "/home/Serving",
           text: "Serving"
         },
-
         {
           to: "/home/Served",
           text: "Served"

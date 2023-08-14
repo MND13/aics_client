@@ -14,7 +14,8 @@ class AssessmentOptionsController extends Controller
      */
     public function index()
     {
-        return AssessmentOptions::all();
+        #return AssessmentOptions::all();
+        return AssessmentOptions::where("id","=",2)->get();
     }
 
     /**

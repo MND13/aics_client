@@ -20,13 +20,10 @@ import Home from "./components/Home.vue";
 import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
-//import ImportFile from './Components/ImportFile.vue'
 import GISComponent from "./Components/GISComponent.vue"
 import Users from "./Components/Users"
 import Assistance from "./Components/Assistance.vue"
 import Contact from "./Components/Contact.vue"
-//import Assessment from "./Components/Assessment.vue"
-import COEComponent from "./Components/COE.vue"
 import Providers from "./Components/Providers.vue"
 import FundSource from "./Components/FundSource.vue"
 import NotFound from "./Components/NotFound.vue"
@@ -80,7 +77,7 @@ const router = new VueRouter({
         {
             path: "/assessment/:uuid",
             name: "assessment",
-            //component: Assessment,
+            
             component: GISComponent,
             props: true,
             meta: {
@@ -152,7 +149,7 @@ const router = new VueRouter({
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MMMM DD, YYYY");
+        return moment(String(value)).format("MMM. DD, YY");
     }
 });
 
@@ -171,7 +168,9 @@ const app = new Vue({
     components: { App },
     router,
     vuetify: new Vuetify(),
-
 });
 
 //console.log(process.env.MIX_BASE_NAME);
+console.log(process.env.SMS_API_KEY);
+console.log(process.env.SMS_CLIENT_ID);
+

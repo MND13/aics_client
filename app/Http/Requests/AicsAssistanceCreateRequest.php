@@ -28,21 +28,26 @@ class AicsAssistanceCreateRequest extends FormRequest
     {
         return [
             'aics_type_id' => ['required'],
-           // 'documents.*' => 'file|max:20480|mimetypes:application/pdf,image/jpeg,image/png'
+            'office_id' => ['required'],
+            'civil_status' => ['required'],
+            'documents.*' => 'file|max:20480|mimetypes:application/pdf,image/jpeg,image/png'
         ];
     }
 
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
+      $validator->after(function ($validator) {
             $this->validateDocuments($validator);
         });
     }
 
     public function validateDocuments($validator)
-    {
+    {   
         $aics_type_id = request('assistance.aics_type_id');
-        $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
+        $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)
+            ->where('is_required', 1)
+            ->where('is_required',"=","1")
+            ->get();
         $files = request('assistance.documents');
         
         foreach ($requirements as $key => $requirement) {

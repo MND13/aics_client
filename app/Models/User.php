@@ -93,5 +93,12 @@ class User extends Authenticatable
         return $this->belongsTo(Offices::class);
     }
 
+    public function profile_docs()
+    {
+        return $this->hasMany(ProfileDocuments::class);
+    }
+
+    
+
    
 }

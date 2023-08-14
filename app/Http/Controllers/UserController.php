@@ -18,7 +18,8 @@ class UserController extends Controller
         return [
             'users' => User::with([
                 'roles',
-                'office'
+                'office',
+                'profile_docs'
             ])->role(['admin','encoder','social-worker'])->get()
         ];
     }

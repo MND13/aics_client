@@ -12,8 +12,11 @@ use App\Models\Psgc;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AicsDocument;
+use App\Models\ProfileDocuments;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Validation\Rule;
+
 
 
 
@@ -68,18 +71,56 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'first_name' => ['required', 'string', 'max:255'],
+        if (!isset($data['middle_name'])) {
+            $data['middle_name'] = NULL;
+        }
+        $middle_name = isset($data['middle_name']) && $data['middle_name'] != "NMN" ?  strtoupper($data['middle_name']) : NULL;
+        $first_name = mb_strtoupper(trim($data['first_name'] ?? null));
+        $middle_name = mb_strtoupper(trim($middle_name));
+        $last_name = mb_strtoupper(trim($data['last_name'] ?? null));
+        $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
+        $data["full_name"] = trim($first_name . " " . $middle_name . " " . $last_name . " " . $ext_name);
+
+        $validator = Validator::make($data, [
+            'first_name' => ['bail', 'required', 'string', 'max:255'],
             'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['bail', 'required', 'string', 'max:255'],
             'ext_name' => ['sometimes', 'string', 'max:255'],
-            'birth_date' => ['date'],
-            'psgc_id' => ['exists:psgcs,id'],
+            'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
+            'full_name' => ['unique:users'],
+            #'full_name' => ['bail', 'required', Rule::unique('users', 'full_name')->where(function ($query) use ($data) {
+            #   if(isset($data['birth_date'])) return $query->where('birth_date', '=',  $data['birth_date']);
+            #})],
+            'gender' => ['required'],
+            'psgc_id' => ['required','exists:psgcs,id'],
             'mobile_number' => ['required', 'numeric', 'digits:11'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
-            'street_number' => ['sometimes', 'required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
+            'street_number' => ['required', 'string', 'max:255'],
+            #'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'valid_id' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
+            'client_photo' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
+
         ]);
+
+        $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
+            if (isset($data['birth_date'])) {
+                $user_check = User::where("first_name", "=", $first_name)
+                    ->where("last_name", "=", $last_name)
+                    ->where("birth_date", "=", $data['birth_date']);
+
+                if ($middle_name) {
+                    $user_check->where("middle_name", "=", $middle_name);
+                }
+
+                if ($user_check->first()) {
+                    $validator->errors()->add("full_name", "User already exists.");
+                }
+            }
+        });
+
+
+
+        return  $validator;
     }
 
     /**
@@ -99,7 +140,6 @@ class RegisterController extends Controller
         $last_name = mb_strtoupper(trim($data['last_name'] ?? null));
         $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
 
-
         $user =  User::create([
             'username' => strtoupper($username),
             'first_name' => $first_name,
@@ -111,23 +151,34 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'mobile_number' => $data['mobile_number'],
             'email' => isset($data['email']) ?  $data['email'] : NULL,
-            'password' => $data['password'],
+            #'password' => $data['password'],
+            'password' =>  Str::lower(Str::slug($last_name)),
             'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
             'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
-            'full_name' => trim($first_name. " ".$middle_name. " ".$last_name),
+            'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
         ]);
 
         if ($user->id) {
             $year = date("Y");
             $month = date("m");
 
-            $files = request('file');
+            $files = request('valid_id');
             $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $user->uuid, $files);
             $url = Storage::url($path);
-            $doc = new AicsDocument([
+            $doc = new ProfileDocuments([
                 'file_directory' => $url,
-                'aics_requrement_id' => 1,
-                'aics_assistance_id' => 0,
+                'user_id' => $user->id,
+                'name' => "valid_id",
+            ]);
+            $doc->save();
+
+            $files = request('client_photo');
+            $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $user->uuid, $files);
+            $url = Storage::url($path);
+            $doc = new ProfileDocuments([
+                'file_directory' => $url,
+                'user_id' => $user->id,
+                'name' => "client_photo",
             ]);
             $doc->save();
             $user->assignRole('user');
@@ -150,9 +201,16 @@ class RegisterController extends Controller
 
     public function generateUserName($name)
     {
-        $username = Str::lower(Str::slug($name));
+        /* $username = Str::lower(Str::slug($name));
         if (User::where('username', '=', $username)->exists()) {
             $uniqueUserName = $username . '-' . mt_rand(0000, 9999);
+            $username = $this->generateUserName($uniqueUserName);
+        }
+        return $username;*/
+
+        $username = Str::random(8);
+        if (User::where('username', '=', $username)->exists()) {
+            $uniqueUserName = Str::random(8);
             $username = $this->generateUserName($uniqueUserName);
         }
         return $username;

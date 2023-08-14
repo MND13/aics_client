@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfileDocuments;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,13 +27,19 @@ class HomeController extends Controller
     public function index()
     {
         $user = User::with([
-            'roles'
+            'roles',
         ])->findOrFail(Auth::user()->id);
+
+
+        $user->profile_pic = ProfileDocuments::select("file_directory")
+            ->where("user_id", "=", Auth::user()->id)->where("name", "=", "client_photo")->first();
+        $user->valid_id = ProfileDocuments::select("file_directory")
+            ->where("user_id", "=", Auth::user()->id)->where("name", "=", "valid_id")->first();
+
+
         $data = [
             'user' => $user,
         ];
         return view('home', $data);
     }
-
-   
 }

@@ -218,4 +218,6 @@ class AicsClientController extends Controller
             return $pdf->stream('gl.pdf');
         }
     }
+
+
 }

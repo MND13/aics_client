@@ -101,34 +101,39 @@
         </tr>
     </table>
     <p style="text-align:right">
-        CONTROL NO: {{ date('Y-m-dHis', strtotime($assistance['assessment']['created_at'])) }}
+       <small> CONTROL NO: {{ $assistance["assessment"]["control_no"]}}</small> 
     </p>
 
     <p style="text-align:left">
         <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }} <br> <br>
-
+        
         <b>{{ $assistance['assessment']['provider']['addressee_name'] }} </b><br>
-        {{ $assistance['assessment']['provider']['addressee_position'] }}<br>
+        @if (
+            $assistance['assessment']['provider']['addressee_name'] !=
+                $assistance['assessment']['provider']['addressee_position']
+        )
+            {{ $assistance['assessment']['provider']['addressee_position'] }}<br>
+        @endif
         {{ $assistance['assessment']['provider']['company_name'] }}<br>
         {{ $assistance['assessment']['provider']['company_address'] }}
+        <br><br>
+    </p>
 
-    </p><br>
-
-
-
-    <p>Dear <b> Sir/Madam</b>,</p><br>
-
-
-
-    <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> by herein client,
+    <p>Dear <b> Sir/Madam</b>,<br><br></p>
+    
+    <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
         <span
             class="upper bold">{{ trim($client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name']) }},
         </span>
         {{ $assistance['aics_client']['gender'] == 'Lalake' ? 'Male' : 'Female' }},
         {{ $assistance['age'] }},
-        {{ $client['street_number'] }},
+        
+        @if (isset($client['street_number']) && $client['street_number'] != '')
+            {{ $client['street_number'] }},
+        @endif
+        
         <span style="text-transform:capitalize;">
-            {{ 'Brgy ' . $client['psgc']['brgy_name'] . ', ' }}
+            {{ 'BRGY. ' . $client['psgc']['brgy_name'] . ', ' }}
             {{ $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
         </span>
 
@@ -174,12 +179,12 @@
     <br>
 
     <hr>
-    <p> <small> QR CODE IN LIEU OF SEAL. This letter is system generated.
-            Kindly scan the QR Code and crossmatch the contents of this document versus 
-            within the Official Website for its validity.
-            <br>
-            
-        </small> </p>
+    <small style="font-size:8pt"> QR CODE IN LIEU OF SEAL. This letter is system generated.
+        Kindly scan the QR Code and crossmatch the contents of this document versus
+        within the Official Website for its validity.
+        <br>
+
+    </small>
 
 
 

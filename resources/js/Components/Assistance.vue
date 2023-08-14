@@ -1,241 +1,280 @@
 <template>
-    <v-stepper v-model="e1">
-        <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1">
-                Assistance Type
-            </v-stepper-step>
+    <v-card flat>
+        <v-alert v-for="(el, index) in formErrors " :key="index" type="error">
+           <ul> 
+            <li v-for="(e,i) in el" :key="i">
+           {{e}}
+            </li></ul>
+        </v-alert>
 
-            <v-divider></v-divider>
 
-            <v-stepper-step :complete="e1 > 2" step="2">
-                Intake Sheet
-            </v-stepper-step>
+        <v-stepper v-model="e1">
+            <v-stepper-header>
+                <v-stepper-step :complete="e1 > 1" step="1">
+                    Assistance Type
+                </v-stepper-step>
 
-            <v-divider></v-divider>
+                <v-divider></v-divider>
 
-            <v-stepper-step step="3">
-                Prefferred Office
-            </v-stepper-step>
+                <v-stepper-step :complete="e1 > 2" step="2">
+                    Intake Sheet
+                </v-stepper-step>
 
-            <v-stepper-step step="4">
-                Document Upload
-            </v-stepper-step>
-        </v-stepper-header>
+                <v-divider></v-divider>
 
-        <v-stepper-items>
-            <v-stepper-content step="1">
-                <v-card flat class="mb-12">
+                <v-stepper-step  :complete="e1 > 3"  step="3">
+                    Prefferred Office
+                </v-stepper-step>
 
-                    NAIS HINGIIN NA TULONG (Assistance Requested)
+                <v-divider></v-divider>
 
-                    <select name="assistance_type" v-model="form.aics_type_id" class="form-control"
-                        @change="GetRequirements()">
-                        <option :value="e.id" v-for="e in assistance_types" :key="e.id">
-                            {{ e.name }}
-                        </option>
-                    </select>
+                <v-stepper-step step="4">
+                    Document Upload
+                </v-stepper-step>
+            </v-stepper-header>
 
-                    <br>
+            <v-stepper-items>
+                <v-stepper-content step="1">
+                    <v-card flat class="mb-12">
 
-                    <v-alert v-if="requirements.length > 0" icon="mdi mdi-alert-outline" prominent text type="info">
+                        NAIS HINGIIN NA TULONG (Assistance Requested)
 
-                        <h6>PLEASE PREPARE THE FOLLOWING REQUIREMENTS: </h6>
-                        <ul>
+                        <select name="assistance_type" v-model="form.aics_type_id" class="form-control"
+                            @change="GetRequirements()">
+                            <option :value="e.id" v-for="e in assistance_types" :key="e.id">
+                                {{ e.name }}
+                            </option>
+                        </select>
+
+                        <br>
+
+                        <v-alert v-if="requirements.length > 0" icon="mdi mdi-alert-outline" prominent text type="info">
+
+                            <h6>PLEASE PREPARE THE FOLLOWING REQUIREMENTS: </h6>
+                            <ul>
+                                <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
+                                    <span v-if="r.is_required">(REQUIRED)</span>
+                                    <span v-else>(OPTIONAL)</span>
+                                    {{ r.name }}
+                                </li>
+                            </ul>
+
+
+                        </v-alert>
+
+
+
+
+                    </v-card>
+
+                    <v-btn color="primary" :disabled="form.aics_type_id && form.aics_type_id > 0 ? false : true"
+                        @click="e1 = 2">
+                        Continue
+                    </v-btn>
+
+
+                </v-stepper-content>
+
+                <v-stepper-content step="2">
+                    <v-card class="mb-12" flat>
+                        <b> IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)</b>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Last name </th>
+                                    <th>First name </th>
+                                    <th>Middle name </th>
+                                    <th>Ext name </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ user.last_name }}</td>
+                                    <td>{{ user.first_name }}</td>
+                                    <td>{{ user.middle_name }}</td>
+                                    <td>{{ user.ext_name }}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Street Address</th>
+                                    <th>Region</th>
+                                    <th>Province</th>
+                                    <th>City/Muni</th>
+                                    <th>Barangay</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ user.street_number }}</td>
+                                    <td>{{ psgc_data.region_name }}</td>
+                                    <td>{{ psgc_data.province_name }}</td>
+                                    <td>{{ psgc_data.city_name }}</td>
+                                    <td>{{ psgc_data.brgy_name }}</td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+
+                                    <th>Birthdate</th>
+                                    <th>Gender</th>
+                                    <th>Telephone/Mobile No.</th>
+                                    <th>Trabaho</th>
+                                    <th>Buwanang Kita</th>
+                                    <th>Civil Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ user.birth_date }}</td>
+                                    <td>{{ user.gender }}</td>
+                                    <td>{{ user.mobile_number }}
+                                       
+                                    </td>
+                                    <td><input type="text" name="" v-model="form.occupation" id="" class="form-control">
+                                    </td>
+                                    <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
+
+                                    </td>
+                                    <td>
+                                        <select v-model="form.civil_status" name="civil_status" id="civil_status"
+                                            class="form-control">
+                                            <option :value="e" v-for="e in ['Single', 'Married', 'Widowed', 'Separated']"
+                                                :key="e">
+                                                {{ e }}</option>
+                                        </select>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+
+                    </v-card>
+
+                    <v-btn color="primary" @click="e1 = 3">
+                        Continue
+                    </v-btn>
+
+                    <v-btn text @click="e1 = 1">
+                        Back
+                    </v-btn>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                    <v-card class="mb-12" flat>
+
+                        <table class="table ">
+                            <tbody>
+
+                                <tr>
+                                    <td>
+
+                                        <p class="mtb-2">
+                                            PUMILI NG PINAKA MALAPIT NA OPISINA ( Select office nearest to your convenience
+                                            )
+                                        </p>
+
+                                        <v-radio-group v-model="form.office_id">
+                                            <v-radio v-for="(e, i) in offices" :key="i" :value="e.id" :disabled="e.id > 1">
+                                                <template v-slot:label>
+
+                                                    <v-list-item two-line :disabled="e.id > 1">
+                                                        <v-list-item-content>
+                                                            <v-list-item-title color="grey"> <b>{{ e.name
+                                                            }}</b></v-list-item-title>
+                                                            <v-list-item-subtitle>Located at: {{ e.address
+                                                            }}</v-list-item-subtitle>
+                                                        </v-list-item-content>
+                                                    </v-list-item>
+
+                                                </template>
+                                            </v-radio>
+                                        </v-radio-group>
+
+                                        <!--<ul style="    list-style: none; padding: 10px;">
+                                        <li v-for="(e, i) in offices" :key="i">
+                                            <input type="radio" name="" v-model="form.office_id" id="" v-bind:value="e.id"
+                                                :disabled="e.id > 1">
+                                            <b>{{ e.name }} <br> Located at:</b> {{ e.address }}
+                                            <hr>
+                                        </li>
+                                    </ul>-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+                    </v-card>
+
+                    <v-btn color="primary" :disabled="form.office_id > 0 ? false : true" @click="e1 = 4">
+                        Continue
+                    </v-btn>
+
+                    <v-btn text @click="e1 = 2">
+                        Back
+                    </v-btn>
+
+
+                </v-stepper-content>
+
+                <v-stepper-content step="4">
+                    <v-card class="mb-12" flat>
+                        Upload Files
+
+                        <ul v-if="requirements.length > 0">
                             <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
-                                <span v-if="r.is_required">(REQUIRED)</span>
-                                <span v-else>(OPTIONAL)</span>
-                                {{ r.name }}
+                                <label for="" class="form-label">
+
+
+                                    <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
+                                    <span v-else>(OPTIONAL)</span>
+
+                                    {{ r.name }}
+                                </label><br>
+
+                                <input type="file" @input="onFileChange(r.id, $event)"
+                                    accept="application/pdf,image/jpeg,image/png" :required="r.is_required" />
+                                <hr>
                             </li>
                         </ul>
 
 
-                    </v-alert>
+                        <div class="row">
+                            <ul></ul>
+                        </div>
+
+                    </v-card>
+
+                    <v-btn color="primary" @click="submit">
+                        SUBMIT
+                    </v-btn>
+
+                    <v-btn text @click="e1 = 3">
+                        Back
+                    </v-btn>
 
 
+                </v-stepper-content>
 
-
-                </v-card>
-
-                <v-btn color="primary" :disabled="form.aics_type_id && form.aics_type_id > 0 ? false : true"
-                    @click="e1 = 2">
-                    Continue
-                </v-btn>
-
-
-            </v-stepper-content>
-
-            <v-stepper-content step="2">
-                <v-card class="mb-12" flat>
-                    <b> IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)</b>
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Last name </th>
-                                <th>First name </th>
-                                <th>Middle name </th>
-                                <th>Ext name </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ user.last_name }}</td>
-                                <td>{{ user.first_name }}</td>
-                                <td>{{ user.middle_name }}</td>
-                                <td>{{ user.ext_name }}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Street Address</th>
-                                <th>Region</th>
-                                <th>Province</th>
-                                <th>City/Muni</th>
-                                <th>Barangay</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ user.street_number }}</td>
-                                <td>{{ psgc_data.region_name }}</td>
-                                <td>{{ psgc_data.province_name }}</td>
-                                <td>{{ psgc_data.city_name }}</td>
-                                <td>{{ psgc_data.brgy_name }}</td>
-
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-
-                                <th>Birthdate</th>
-                                <th>Gender</th>
-                                <th>Telephone/Mobile No.</th>
-                                <th>Trabaho</th>
-                                <th>Buwanang Kita</th>
-                                <th>Civil Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ user.birth_date }}</td>
-                                <td>{{ user.gender }}</td>
-                                <td><input type="text" name="" v-model="form.mobile_number" id="" class="form-control"></td>
-                                <td><input type="text" name="" v-model="form.occupation" id="" class="form-control"></td>
-                                <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
-
-                                </td>
-                                <td>
-                                    <select v-model="form.civil_status" name="civil_status" id="civil_status"
-                                        class="form-control">
-                                        <option :value="e" v-for="e in ['Single', 'Married', 'Widowed', 'Separated']" :key="e">
-                                            {{ e }}</option>
-                                    </select>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-
-
-                </v-card>
-
-                <v-btn color="primary" @click="e1 = 3">
-                    Continue
-                </v-btn>
-
-                <v-btn text @click="e1 = 1">
-                    Cancel
-                </v-btn>
-            </v-stepper-content>
-
-            <v-stepper-content step="3">
-                <v-card class="mb-12" flat>
-
-                    <table class="table ">
-                        <tbody>
-
-                            <tr>
-                                <td>
-
-                                    <p class="mtb-2">   
-                                        PUMILI NG PINAKA MALAPIT NA OPISINA ( Select office nearest to your convenience )
-                                    </p>
-
-                                    <ul style="    list-style: none; padding: 10px;">
-                                        <li v-for="(e, i) in offices" :key="i">
-                                            <input type="radio" name="" v-model="form.office_id" id="" v-bind:value="e.id">
-                                            <b>{{ e.name }} <br> Located at:</b> {{ e.address }}
-                                            <hr>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-
-                </v-card>
-
-                <v-btn color="primary" :disabled="form.office_id > 0 ? false: true " @click="e1 = 4">
-                    Continue
-                </v-btn>
-
-                <v-btn text @click="e1 = 2">
-                    Cancel
-                </v-btn>
-
-
-            </v-stepper-content>
-
-            <v-stepper-content step="4">
-                <v-card class="mb-12" flat>
-                    Upload Files
-
-                    <ul v-if="requirements.length > 0">
-                        <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
-                            <label for="" class="form-label">
-
-
-                                <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
-                                <span v-else>(OPTIONAL)</span>
-
-                                {{ r.name }}
-                            </label><br>
-
-                            <input type="file" @input="onFileChange(r.id, $event)"
-                                accept="application/pdf,image/jpeg,image/png" :required="r.is_required" />
-                            <hr>
-                        </li>
-                    </ul>
-
-
-                </v-card>
-
-                <v-btn color="primary" @click="submit">
-                    SUBMIT
-                </v-btn>
-
-                <v-btn text @click="e1 = 3">
-                    Cancel
-                </v-btn>
-
-
-            </v-stepper-content>
-
-        </v-stepper-items>
-    </v-stepper>
+            </v-stepper-items>
+        </v-stepper>
+    </v-card>
 </template>
 <script>
 import userMixin from './../Mixin/userMixin.js'
@@ -262,6 +301,7 @@ export default {
             psgc_data: {},
             file: [],
             offices: [],
+            formErrors: {},
         }
     },
     methods:
@@ -309,12 +349,16 @@ export default {
             });
 
             axios.post(route("assistances.store"), formData).then(response => {
-                console.log(response.data);
+
                 alert(response.data.message);
                 if (response.data.message == "Saved") {
                     document.location.href = "/";
                 }
-            }).catch(error => console.log(error));
+            }).catch(error => {
+                console.log(error);
+                this.formErrors = error.response.data.errors;
+
+            });
         },
 
         onFileChange(i, e) {
@@ -328,7 +372,7 @@ export default {
         getOffices() {
             axios.get(route("api.offices.index")).then(response => {
                 this.offices = response.data;
-                console.log(response.data);
+                //console.log(response.data);
             }).catch(error => console.log(error));
         }
 
@@ -341,8 +385,9 @@ export default {
 }
 </script>
   
-<style>
+
+
+<style scoped>
 table {
     table-layout: fixed;
-}
-</style>
+}</style>

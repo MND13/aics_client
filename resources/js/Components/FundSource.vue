@@ -66,13 +66,18 @@
                 <v-data-table dense :items-per-page="20" :loading="isLoading" :headers="headers" :items="data"
                     :search="search">
 
+
+
                     <template v-slot:item.actions="{ item }">
                         <v-icon small class="mr-2" @click="editFsrc(item)" v-if="hasRoles(['super-admin'])">
                             mdi-pencil
                         </v-icon>
-                        <v-icon small class="mr-2" @click="deleteFsrc(item)" v-if="hasRoles(['super-admin'])">
-                            mdi-delete
+                        <v-icon small class="mr-2" @click="viewTxn(item)" v-if="hasRoles(['super-admin'])">
+                            mdi-eye
                         </v-icon>
+                        <!--<v-icon small class="mr-2" @click="deleteFsrc(item)" v-if="hasRoles(['super-admin'])">
+                            mdi-delete
+                        </v-icon>-->
                     </template>
 
                 </v-data-table>
@@ -193,6 +198,10 @@ export default {
                     ;
             }
         },
+        viewTxn(item)
+        {
+            console.log("c")
+        }
 
 
     },

@@ -18,34 +18,46 @@
         <div class="card">
           <div class="card-title">SUBMISSION DATA</div>
 
+
+
           <table class="table">
             <tbody>
               <tr>
-                <td> <label for=""> Status:</label> {{ gis_data.status }} </td>
+                <td> <label for=""> Status:</label>
+
+                  <v-chip :color="status_color(gis_data.status)" dark small label>
+                    {{ gis_data.status }} </v-chip>
+
+
+                </td>
               </tr>
               <tr>
                 <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
-              </tr>
-              <tr>
-                <td> <label for=""> Schedule for Interview: </label>
-
-                  <span v-if="gis_data.status == 'Pending'">
-                    <!--<input type="date" v-model="schedule" class="form-control">-->
-
-                    <v-text-field type="date" v-model="schedule" :error-messages="schedule_error"></v-text-field>
-
-
-                  </span>
-                  <span v-else>{{ gis_data.schedule | formatDate }}</span>
-
-                </td>
               </tr>
               <tr>
                 <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
                   {{ gis_data.office.address }}</td>
               </tr>
               <tr>
-                <td> <label for=""> Remarks:</label> {{ gis_data.remarks }} </td>
+                <td> <label for=""> Schedule for Interview: </label>
+
+                  <span v-if="gis_data.status == 'Pending'">
+                    <v-text-field type="date" v-model="schedule" :error-messages="schedule_error"></v-text-field>
+                  </span>
+                  <span v-else>{{ gis_data.schedule | formatDate }}</span>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td> <label for=""> Remarks:</label>
+
+                  <span v-if="gis_data.status == 'Pending'">
+                    <v-text-field v-model="remarks"></v-text-field>
+                  </span>
+                  <span v-else> {{ gis_data.remarks }} </span>
+
+                </td>
               </tr>
               <tr>
                 <td> <label for=""> Verified by:</label>
@@ -57,7 +69,7 @@
               <tr>
                 <td>
                   <label>Interviewed by:</label>
-                  <span v-if="gis_data.interviewed_by"> {{ gis_data.interviewed_by }}</span>
+                  <span v-if="gis_data.assessment"> {{ gis_data.assessment.interviewed_by }}</span>
                 </td>
               </tr>
 
@@ -97,7 +109,7 @@
               NAIS HINGIIN NA TULONG (Assistance Requested)
             </div>
             <div class="card-body">
-              <p v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </p>
+              <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </h5>
               <v-skeleton-loader v-else type="article"></v-skeleton-loader>
 
 
@@ -504,14 +516,25 @@
               v-if="hasRoles(['encoder']) && gis_data.status == 'Pending'">
               VERIFY
             </v-btn>
+
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
               v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified' || gis_data.status == 'Serving'">
-              SUBMIT
+
+              <span v-if="form.id">UPDATE</span>
+              <span v-else>SUBMIT</span>
+
             </v-btn>
-            <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
+
+            <v-btn @click="MarkServed" dark large class="--white-text" color="red" :disabled="submit"
+              v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
+              Mark as Served
+            </v-btn>
+
+
+            <!--<v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
               v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
               UPDATE
-            </v-btn>
+            </v-btn>-->
 
             <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
               @click="dialog_reject = true" :disabled="submit">
@@ -555,7 +578,8 @@
                 Amount
                 <!--<input v-model="fsd.amt" class="form-control" type="number">-->
 
-                <CurrencyInput v-model="fsd.amt" :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
+                <CurrencyInput v-model="fsd.amt"
+                  :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
 
 
                 <v-btn @click="AddFundSrc" dark color="red">
@@ -657,7 +681,8 @@ export default {
       schedule_error: '',
       fundsrc_dialog: false,
       fsd: [],
-      selected_fund_sources: []
+      selected_fund_sources: [],
+      remarks: "",
 
     };
   },
@@ -750,7 +775,7 @@ export default {
 
       if (this.schedule) {
 
-        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule, "task": "verify" }).then(response => {
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule, "remarks": this.remarks, "task": "verify" }).then(response => {
 
           alert(response.data.message);
           this.dialog_reject = false;
@@ -796,7 +821,6 @@ export default {
     },
     getAssessmentOpts() {
       axios.get(route("api.assessment_opts")).then((response) => {
-
         this.assessment_options = response.data;
       });
     },
@@ -805,9 +829,12 @@ export default {
       this.rejectform.uuid = this.gis_data.uuid;
       this.rejectform.status = "Rejected";
       this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
+      this.rejectform.task = "verify";
+
 
       axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
 
+        console.log(response);
         alert(response.data.message);
         this.dialog_reject = false;
         this.$router.push({ path: '/' })
@@ -889,13 +916,57 @@ export default {
         "fund_source": this.fsd.fs,
       });
 
-      this.fsd = {};
+      this.fsd = { amount: 0 };
       this.fundsrc_dialog = false;
 
     },
 
     deleteFundSrc(i) {
       this.selected_fund_sources.splice(i, 1);
+    },
+    status_color(c) {
+
+
+      switch (c) {
+        case "Rejected":
+          return "red";
+          break;
+        case "Served":
+          return "gray";
+          break;
+        case "Serving":
+          return "green";
+          break;
+        case "Verified":
+          return "blue";
+          break;
+        case "Pending":
+          return "orange"
+          break;
+        default:
+          return "gray";
+          break;
+      }
+    },
+    MarkServed() {
+
+      let x = confirm("Are you sure to close this transaction?");
+
+      if (x) {
+        let tempform = {};
+        tempform.uuid = this.gis_data.uuid;
+        tempform.status = "Served";
+        tempform.task = "verify";
+
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), tempform).then(response => {
+
+          console.log(response);
+          alert(response.data.message);
+          //this.dialog_reject = false;
+          //this.$router.push({ path: '/' })
+
+        }).catch(error => console.log(error));
+      }
     }
 
 

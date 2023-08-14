@@ -7,8 +7,13 @@
                 <div class="card">
 
 
-                    <div class="card-body">
-                        <h5 class="text-center m-5 ">Assistance to Individuals in Crisis (AICS)</h5>
+                    <div class="card-body "> <br>
+                        <h5 class="text-center mb-5">
+                            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain
+                                alt="DSWD" /> <br><br>
+
+                            Assistance to Individuals in Crisis (AICS)
+                        </h5>
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf

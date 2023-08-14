@@ -13,14 +13,16 @@ class AicsAssessmentFundSourceController extends Controller
 {
     public function index()
     {
-       /* return AicsAssessmentFundSource::orderBy("created_at", "desc")
+        /*$collection =  AicsAssessmentFundSource::orderBy("created_at", "desc")
             ->with([
                 "fund_source:id,name",
                 "assessment.assistance.aics_client:id,full_name",
                 "assessment.provider"
             ])
-            ->get();
-        */
+            ->get();  
+            
+            $collection = Accouunt*/
+        return FundSource::with("journal", "journal.transactions")->get();
     }
 
     public function create(Request $request)
@@ -44,6 +46,7 @@ class AicsAssessmentFundSourceController extends Controller
             $fs = FundSource::findOrFail($request->fund_source_id);
 
             if ($fs) {
+                /* BACKUP RECORD */
                 $txn = new AicsAssessmentFundSource();
                 $txn->fund_source_id = $request->fund_source_id;
                 $txn->movement = $request->movement;
@@ -51,20 +54,23 @@ class AicsAssessmentFundSourceController extends Controller
                 $txn->remarks = $request->remarks;
                 $txn->save();
                 $t = AicsAssessmentFundSource::find($txn->id);
+
+
+
+                /* MAIN RECORD */
+                if ($request->movement > 0) {
+                    $transaction_1 = $fs->journal->creditDollars($request->amount);
+                    $transaction_1->referencesObject($t);
+                } else {
+
+                    $transaction_1 = $fs->journal->debitDollars($request->amount);
+                    $transaction_1->referencesObject($t);
+                }
+                $balance = $fs->journal->getCurrentBalance();
+
+                DB::commit();
+                return ["message" => "saved"];
             }
-
-            if ($request->movement > 0) {
-                $transaction_1 = $fs->journal->creditDollars($request->amount);
-                $transaction_1->referencesObject($t);
-            } else {
-
-                $transaction_1 = $fs->journal->debitDollars($request->amount);
-                $transaction_1->referencesObject($t);
-                
-            }
-            $balance = $fs->journal->getCurrentBalance();
-
-            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

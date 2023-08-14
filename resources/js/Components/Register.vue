@@ -1,252 +1,291 @@
 <template>
-  <div class="container">
+  <v-card flat>
 
-    <div class="alert alert-danger col-md-10 offset-md-1" role="alert" v-if="Object.keys(errors).length > 0">
 
-      {{ errors.message }}
-
-      <ul>
-        <li v-for="(e, i) in errors.errors" :key="i">{{ e[0] }}</li>
-      </ul>
-    </div>
-
-    <form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">
-      <!-- <form method="POST"  enctype="multipart/form-data" action="">-->
-
-      <input type="hidden" name="_token" :value="csrf">
-
+    <v-card-title class="text-center">
       <div class="row">
-        <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
-      </div>
-      <div class="row g-2">
-
-
-        <div class="offset-md-1  col-md-3">
-          <label for="">First Name</label>
-          <input type="text" v-model="form.first_name" name="first_name" class="form-control" required>
-
-
-        </div>
-
-        <div class="col-md-3">
-          <label for="">Middle Name</label>
-          <input type="text" v-model="form.middle_name" name="middle_name" class="form-control ">
-          <v-checkbox label="I have No Middle Name (NMN)" v-model="nmn" ></v-checkbox>
-
-
-        </div>
-
-        <div class="col-md-3">
-          <label for="">Last Name</label>
-          <input type="text" v-model="form.last_name" name="last_name" class="form-control">
-
-
-        </div>
-
-        <div class="col-md-1">
-          <label for="">Ext Name</label>
-          <select v-model="form.ext_name" name="" class="form-control">
-            <option value=""></option>
-            <option value="JR">JR</option>
-            <option value="SR">SR</option>
-            <option value="I">I</option>
-            <option value="II">II</option>
-            <option value="III">III</option>
-            <option value="IV">IV</option>
-            <option value="V">V</option>
-            <option value="VI">VI</option>
-            <option value="VII">VII</option>
-            <option value="VIII">VIII</option>
-            <option value="IX">IX</option>
-            <option value="X">X</option>
-          </select>
-        </div>
-
-      </div>
-
-
-      <div class="row">
-        <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
-      </div>
-
-      <div class="row g-2">
-        <div class=" offset-md-1  col-md-10">
-          <label for="">House No./Street/Purok</label>
-          <input v-model="form.street_number" type="text" name="street_number" class="form-control">
-
-
-
+        <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" />
+          Assistance to Individuals In Crisis (AICS) - Register
         </div>
       </div>
-
-      <div class="row g-2">
-
-        <div class="offset-md-1  col-md-1">
-          <label for="">Region</label>
-          <select class="form-control">
-            <option selected>XI</option>
-          </select>
+    </v-card-title>
+    <v-card-text>
+      <!--<form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">-->
+      <v-form ref="form">
+        <input type="hidden" name="_token" :value="csrf">
+        <div class="row">
+          <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
         </div>
-        <div class="col-md-3">
-          <label for="">Province</label>
-          <select class="form-control" v-model="province_name" @change="getCities()" id="provinces">
-            <option selected></option>
-            <option v-for="(e, i) in provinces" :key="i">{{ e.province_name }}</option>
+        <div class="row g-2">
 
-            <!-- @foreach ($provinces as $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
-                                @endforeach-->
+          <div class="offset-md-1  col-md-3">
 
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label for="">City/Municipality</label>
-          <select class="form-control" id="cities" v-model="city_name" @change="getBrgys()">
-            <option selected></option>
-            <option v-for="(e, i) in cities" :key="i">{{ e.city_name }}</option>
+            <v-text-field v-model="form.first_name" label="First Name*" outlined dense
+              :error-messages="formErrors.first_name"></v-text-field>
+
+          </div>
+
+          <div class="col-md-3">
+
+            <v-text-field class="mb-0" v-model="form.middle_name" label="Middle Name" outlined dense
+              :error-messages="formErrors.middle_name"></v-text-field>
+
+            <v-checkbox class="mt-0" label="I have No Middle Name (NMN)" v-model="nmn"></v-checkbox>
 
 
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label for="">Barangay</label>
-          <select v-model="form.psgc_id" class="form-control" id="barangays">
-            <option></option>
-            <option v-for="(e, i) in brgys" :key="i" :value="e.id">{{ e.brgy_name }}</option>
+          </div>
 
-          </select>
-        </div>
-      </div>
+          <div class="col-md-3">
 
-      <div class="row">
-        <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
-      </div>
-
-      <div class="row g-2">
-
-        <div class="offset-md-1  col-md-3">
-          <label for="">Birthday</label>
-          <input id="birth_date" v-model="form.birth_date" type="date" class="form-control" :max="max_date"
-            @input="calculateAge" required />
-
-        </div>
-        <div class="col-md-1">
-          <label for="">Age</label>
-          <input id="age" type="text" class="form-control" :value="form.age" readonly />
-
-        </div>
+            <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
+              :error-messages="formErrors.last_name"></v-text-field>
 
 
+          </div>
 
-        <div class="col-md-3">
-          <label for="">Gender</label>
-          <select class="form-control" v-model="form.gender">
-            <option value="Lalake">Lalake</option>
-            <option value="Babae">Babae</option>
-          </select>
-        </div>
-
-        <div class=" col-md-3">
-          <label for="">Mobile No.</label>
-          <input v-model="form.mobile_number" type="text" class="form-control">
-        </div>
-      </div>
+          <div class="col-md-1">
 
 
-
-
-      <div class="row g-2">
-        <div class="offset-md-1 col-md-3">
-          <label for="">Email</label>
-          <input type="email" v-model="form.email" name="email" class="form-control">
-        </div>
-
-        <div class=" col-md-3">
-          <label for="">Confirm Password</label>
-          <input type="password" v-model="form.password" name="password" class="form-control">
-        </div>
-
-        <div class=" col-md-3">
-          <label for="">Password</label>
-          <input type="password" v-model="form.password_confirmation" name="password_confirmation" class="form-control">
-        </div>
-      </div>
-
-
-      <div class="row">
-        <div class="col-md-12 offset-md-1">
-          <b>PROOF OF IDENTIFICATION </b> <br>
-
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 offset-md-1 ">
-          <p>Upload a clear copy of your valid ID</p>
-
-          <p> Accepted valid IDS:</p>
-          <ul style=" column-count: 2;">
-            <li>National ID</li>
-            <li>Driver's License</li>
-            <li>Senior Citizen ID</li>
-            <li>Voter's ID/Certificate</li>
-            <li>Person’s With Disability (PWD) ID</li>
-            <li>Phil-health ID</li>
-            <li>NBI Clearance</li>
-            <li>BIR (TIN)</li>
-            <li>Pag-ibig ID</li>
-            <li>Any Government Issued IDs</li>
-
-          </ul>
-
-
-        </div>
-        <div class="col-md-6">
-          <input name="documents" class="form-control" @change="uploadFile" ref="file" type="file"
-            accept="image/png, image/jpeg, application/pdf" required>
-
-          <div class="preview">
-
-            <img v-if="url" :src="url" style="max-width: 300px;" />
+            <v-select v-model="form.ext_name" label="Ext Name" outlined dense :items="suffixes" item-value="id"
+              item-text="name" :error-messages="formErrors.ext_name">
+            </v-select>
 
           </div>
 
         </div>
 
-      </div>
 
-      <div class="row">
-        <div class="col-md-10 offset-md-1 ">
+        <div class="row">
+          <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
+        </div>
+
+        <div class="row g-2">
+          <div class=" offset-md-1  col-md-10">
+
+            <v-text-field v-model="form.street_number" label="House No./Street/Purok*" outlined dense
+              :error-messages="formErrors.street_number"></v-text-field>
+
+          </div>
+        </div>
+
+        <div class="row g-2">
+
+          <div class="offset-md-1  col-md-1">
+
+
+            <v-select label="Region" outlined dense :items="['XI']">
+            </v-select>
+
+
+          </div>
+          <div class="col-md-3">
+            <!--<label for="">Province</label>-->
+
+            <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
+              cache-items hide-no-data hide-details label="Province" outlined item-text="province_name" item-value="id"
+              dense></v-autocomplete>
+
+            <!--<select class="form-control" v-model="province_name" @change="getCities()" id="provinces">
+            <option selected></option>
+            <option v-for="(e, i) in provinces" :key="i">{{ e.province_name }}</option>
+          </select>-->
+          </div>
+          <div class="col-md-3">
+            <!--<label for="">City/Municipality</label>
+          <select class="form-control" id="cities" v-model="city_name" @change="getBrgys()">
+            <option selected></option>
+            <option v-for="(e, i) in cities" :key="i">{{ e.city_name }}</option>
+
+
+          </select>-->
+
+            <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities" @change="getBrgys()" hide-no-data
+              hide-details label="City/Municipality" outlined item-text="city_name" item-value="id"
+              dense></v-autocomplete>
+
+
+          </div>
+          <div class="col-md-3">
+            <!-- <label for="">Barangay</label>
+          <select v-model="form.psgc_id" class="form-control" id="barangays">
+            <option></option>
+            <option v-for="(e, i) in brgys" :key="i" :value="e.id">{{ e.brgy_name }}</option>
+          </select>-->
+
+            <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data hide-details
+              label="Barangay" outlined item-text="brgy_name" item-value="id" dense  :error-messages="formErrors.psgc_id"></v-autocomplete>
+
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
+        </div>
+
+        <div class="row g-2">
+
+          <div class="offset-md-1  col-md-3">
+            <v-text-field type="date" v-model="form.birth_date" label="Birthday*" outlined dense
+              :error-messages="formErrors.birth_date" @input="calculateAge"></v-text-field>
+          </div>
+          <div class="col-md-1">
+
+            <v-text-field v-model="form.age" label="Age" outlined dense :error-messages="formErrors.age"
+              readonly></v-text-field>
+          </div>
 
 
 
+          <div class="col-md-3">
+            <v-select v-model="form.gender" label="Gender*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
+              item-text="name" :error-messages="formErrors.gender">
+            </v-select>
+
+          </div>
+          <div class=" col-md-3">
+
+
+            <v-text-field v-model="form.mobile_number" label="Mobile Number*" outlined dense
+              :error-messages="formErrors.mobile_number" counter></v-text-field>
+
+          </div>
         </div>
 
 
 
 
-      </div>
+        <!-- <div class="row g-2">
+          <div class="offset-md-1 col-md-3">
 
-      <div class="row ">
-        <div class="offset-md-1  col-md-10">
 
-          <button type="submit" class="btn btn-primary col-md-12">
-            REGISTER
-          </button>
+           <v-text-field  type="email" v-model="form.email" label="E-mail" outlined dense
+              :error-messages="formErrors.email"></v-text-field>
+
+          </div>
+
+          <div class=" col-md-3">
+
+           <v-text-field  type="password" v-model="form.password" label="Password" outlined dense
+              :error-messages="formErrors.password"></v-text-field>
+
+
+          </div>
+
+          <div class=" col-md-3">
+
+
+           <v-text-field  type="password" v-model="form.password_confirmation" label="Confirm Password" outlined dense
+              :error-messages="formErrors.password_confirmation"></v-text-field>
+
+
+
+          </div>
+        </div>-->
+        <div class="row">
+          <div class="col-md-12 offset-md-1">
+            <b>PROOF OF IDENTIFICATION </b> <br>
+
+          </div>
         </div>
-      </div>
-    </form>
+        <div class="row">
+          <div class="col-md-4 offset-md-1 ">
+            <p>Upload a clear copy of your valid ID</p>
 
-  </div>
+            <p> Accepted valid IDS:</p>
+            <ul style=" column-count: 2;">
+              <li>National ID</li>
+              <li>Driver's License</li>
+              <li>Senior Citizen ID</li>
+              <li>Voter's ID/Certificate</li>
+              <li>Person’s With Disability (PWD) ID</li>
+              <li>Phil-health ID</li>
+              <li>NBI Clearance</li>
+              <li>BIR (TIN)</li>
+              <li>Pag-ibig ID</li>
+              <li>Any Government Issued IDs</li>
+            </ul>
+
+          </div>
+          <div class="col-md-6">
+            <v-file-input ref="valid_id" label="Upload a clear copy of your valid ID"
+              accept="image/png, image/jpeg, application/pdf" capture="camera" :error-messages="formErrors.valid_id"
+              v-model="valid_id"></v-file-input>
+
+            <div class="preview">
+              <v-img v-if="url" :src="url" tyle="max-width: 300px;" />
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 offset-md-1 ">
+            <p>Upload/Take a picture of yourself</p>
+          </div>
+          <div class="col-md-6">
+            <v-file-input ref="file_selfie" label="Upload/Take a picture of yourself" accept="image/*" capture="camera"
+              :error-messages="formErrors.client_photo" v-model="client_photo"></v-file-input>
+
+            <div class="preview">
+              <v-img v-if="url_selfie" :src="url_selfie" tyle="max-width: 300px;" />
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-10 offset-md-1 " v-if="formErrors && formErrors.full_name">
+
+
+            <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
+              {{ e }}
+            </v-alert>
+
+
+          </div>
+
+        </div>
+
+        <div class="row ">
+          <div class="offset-md-1  col-md-10">
+
+            <v-btn color="primary" @click="submitForm" :disabled="submit" :loading="submit" block>
+              REGISTER
+            </v-btn>
+
+            <div class="m-5 text-center">
+              Already have an account? Please <a href="/login">Login</a>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </v-form>
+
+      <v-dialog v-model="is_registered">
+        <v-card>
+          aloha
+        </v-card>
+      </v-dialog>
+
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
+import { debounce, cloneDeep, isEmpty } from 'lodash'
+
 export default
   {
     props: ["provinces"],
     data() {
       return {
-        form: {
-        },
+        form: {},
+        formErrors: {},
         max_date: new Date().toISOString().split("T")[0],
         province_name: "",
         city_name: "",
@@ -254,9 +293,25 @@ export default
         brgys: [],
         csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         errors: {},
-        file: null,
-        url: "",
-        nmn: false
+        valid_id: null,
+        client_photo: null,
+
+        nmn: false,
+        suffixes: ["", "JR",
+          "SR",
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+          "X"],
+        loading: false,
+        submit: false,
+
       }
     },
     watch: {
@@ -269,6 +324,16 @@ export default
 
         }
 
+      }
+    },
+    computed: {
+      url() {
+        if (!this.valid_id) return;
+        return URL.createObjectURL(this.valid_id);
+      },
+      url_selfie() {
+        if (!this.client_photo) return;
+        return URL.createObjectURL(this.client_photo);
       }
     },
     methods:
@@ -288,55 +353,56 @@ export default
       getCities() {
         this.cities = [];
         this.brgys = [];
+        this.loading = true;
         axios.get(route("api.psgc.show", { type: "cities", field: "province_name", value: this.province_name })).then(response => {
           this.cities = response.data;
-        }).catch(error => console.log(error));
+          this.loading = false;
+        }).catch(error => { console.log(error); this.loading = false; });
       },
 
       getBrgys() {
-
+        this.loading = true;
         axios.get(route("api.psgc.show", { type: "brgy", field: "city_name", value: this.city_name })).then(response => {
           this.brgys = response.data;
-        }).catch(error => console.log(error));
+          this.loading = false;
+        }).catch(error => { console.log(error); this.loading = false; });
       },
 
-      submit() {
+      submitForm: debounce(function () {
+
 
         let formData = new FormData();
-        formData.append('file', this.file);
+        formData.append('valid_id', this.valid_id);
+        formData.append('client_photo', this.client_photo);
 
-        if(this.form.ext_name == "") 
-        {
-          delete this.form["ext_name"];
-        }
+        if (this.form.ext_name == "") { delete this.form["ext_name"]; }
 
         const entries = Object.entries(this.form);
 
         entries.forEach(element => {
           formData.append(element[0], element[1]);
         });
-
-      
+        this.submit = true;
 
         axios.post("register", formData).then(response => {
-          //console.log(response.data);
-          alert("Registered");
+          this.submit = false;
           location.reload();
         }).catch(error => {
-          console.log(error.response.data);
-          if (error.response.data) {
-            this.errors = error.response.data;
-            window.scrollTo(0, 0);
-
-          }
+          this.submit = false;
+          this.formErrors = error.response.data.errors;
         });
 
 
-      },
-      uploadFile() {
+      }, 250),
+      /*uploadFile(event) {
+
+        console.log(event);
         this.file = this.$refs.file.files[0];
         this.url = URL.createObjectURL(this.file);
-      }
+
+        console.log(this.file);
+        console.log(this.url);
+      }*/
     }
   }
 </script>
