@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-
       <div class="col-md-12"
         v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
@@ -14,6 +13,17 @@
     </div>
     <div class="row g-2">
       <div class="col-md-3">
+
+        <div v-if="gis_data.aics_client">
+        <v-card  class="mb-2" outlined v-for="(images, i) in gis_data.aics_client.profile_docs" :key="i">
+         
+          <v-avatar class="ma-3" size="125" rounded="0">
+            <v-img :src="images.file_directory"></v-img>
+          </v-avatar>
+
+        </v-card>
+      </div>
+
 
         <div class="card">
           <div class="card-title">SUBMISSION DATA</div>

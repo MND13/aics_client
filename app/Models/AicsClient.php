@@ -83,4 +83,8 @@ class AicsClient extends Model
         return $this->hasOne(PayrollClient::class, 'aics_client_id');
     }
     
+    public function profile_docs(): HasManyThrough
+    {
+        return $this->hasManyThrough(ProfileDocuments::class, User::class);
+    }
 }

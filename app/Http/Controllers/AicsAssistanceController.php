@@ -204,6 +204,7 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+                "aics_client.profile_docs:id,user_id,name,file_directory",
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",
                 "verified_by:id,full_name",
@@ -223,6 +224,7 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
+               
                 "assessment",
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",

@@ -3,9 +3,8 @@
 
     <v-card-title v-if="hasRoles(['user'])">
 
-      <v-card theme="dark" outlined>
+      <v-card outlined>
         <div class="d-flex flex-no-wrap justify-space-between">
-
           <v-avatar class="ma-3" size="125" rounded="0">
             <v-img :src="user.profile_pic.file_directory"></v-img>
           </v-avatar>
@@ -18,12 +17,8 @@
               {{ user.mobile_number }}
              </v-card-subtitle>
 
-            <v-card-actions>
-
-            </v-card-actions>
+            <v-card-actions></v-card-actions>
           </div>
-
-
         </div>
       </v-card>
 
