@@ -1,10 +1,11 @@
 <template>
     <v-card flat>
         <v-alert v-for="(el, index) in formErrors " :key="index" type="error">
-           <ul> 
-            <li v-for="(e,i) in el" :key="i">
-           {{e}}
-            </li></ul>
+            <ul>
+                <li v-for="(e, i) in el" :key="i">
+                    {{ e }}
+                </li>
+            </ul>
         </v-alert>
 
 
@@ -22,7 +23,7 @@
 
                 <v-divider></v-divider>
 
-                <v-stepper-step  :complete="e1 > 3"  step="3">
+                <v-stepper-step :complete="e1 > 3" step="3">
                     Prefferred Office
                 </v-stepper-step>
 
@@ -82,17 +83,27 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Last name </th>
-                                    <th>First name </th>
-                                    <th>Middle name </th>
-                                    <th>Ext name </th>
+
+
+
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <th>Last name </th>
                                     <td>{{ user.last_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>First name </th>
                                     <td>{{ user.first_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Middle name </th>
                                     <td>{{ user.middle_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Ext name </th>
                                     <td>{{ user.ext_name }}</td>
 
                                 </tr>
@@ -102,22 +113,35 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Street Address</th>
-                                    <th>Region</th>
-                                    <th>Province</th>
-                                    <th>City/Muni</th>
-                                    <th>Barangay</th>
+                                    
+                                    
+                                    
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <th>Street Address</th>
                                     <td>{{ user.street_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Region</th>
                                     <td>{{ psgc_data.region_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Province</th>
                                     <td>{{ psgc_data.province_name }}</td>
+                                </tr>
+
+                                <tr>
+                                    <th>City/Muni</th>
                                     <td>{{ psgc_data.city_name }}</td>
+                                    
+
+
+                                </tr>
+                                <tr><th>Barangay</th>
                                     <td>{{ psgc_data.brgy_name }}</td>
-
-
                                 </tr>
                             </tbody>
                         </table>
@@ -127,26 +151,37 @@
                             <thead>
                                 <tr>
 
-                                    <th>Birthdate</th>
-                                    <th>Gender</th>
-                                    <th>Telephone/Mobile No.</th>
-                                    <th>Trabaho</th>
-                                    <th>Buwanang Kita</th>
-                                    <th>Civil Status</th>
+
+
+
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <th>Birthdate</th>
                                     <td>{{ user.birth_date }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
                                     <td>{{ user.gender }}</td>
-                                    <td>{{ user.mobile_number }}
-                                       
-                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Telephone/Mobile No.</th>
+                                    <td>{{ user.mobile_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Trabaho</th>
                                     <td><input type="text" name="" v-model="form.occupation" id="" class="form-control">
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>Buwanang Kita</th>
                                     <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
-
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>Civil Status</th>
                                     <td>
                                         <select v-model="form.civil_status" name="civil_status" id="civil_status"
                                             class="form-control">
@@ -155,8 +190,11 @@
                                                 {{ e }}</option>
                                         </select>
                                     </td>
-
                                 </tr>
+
+
+
+
                             </tbody>
                         </table>
 
@@ -387,7 +425,6 @@ export default {
   
 
 
-<style scoped>
-table {
+<style scoped>table {
     table-layout: fixed;
 }</style>
