@@ -138,7 +138,7 @@
 
 
           <div class="col-md-3">
-            <v-select v-model="form.gender" label="Gender*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
+            <v-select v-model="form.gender" label="Sex*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
               item-text="name" :error-messages="formErrors.gender">
             </v-select>
 
@@ -266,11 +266,7 @@
         </div>
       </v-form>
 
-      <v-dialog v-model="is_registered">
-        <v-card>
-          aloha
-        </v-card>
-      </v-dialog>
+      
 
     </v-card-text>
   </v-card>

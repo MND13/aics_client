@@ -113,10 +113,10 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    
-                                    
-                                    
-                                    
+
+
+
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,11 +136,12 @@
                                 <tr>
                                     <th>City/Muni</th>
                                     <td>{{ psgc_data.city_name }}</td>
-                                    
+
 
 
                                 </tr>
-                                <tr><th>Barangay</th>
+                                <tr>
+                                    <th>Barangay</th>
                                     <td>{{ psgc_data.brgy_name }}</td>
                                 </tr>
                             </tbody>
@@ -172,23 +173,35 @@
                                 </tr>
                                 <tr>
                                     <th>Trabaho</th>
-                                    <td><input type="text" name="" v-model="form.occupation" id="" class="form-control">
+                                    <td>
+                                        <v-text-field v-model="form.occupation" label="Trabaho" class="mx-0" outlined dense
+                                            :error-messages="formErrors.occupation"></v-text-field>
+                                        <!-- <input type="text" name="" v-model="form.occupation" id="" class="form-control">-->
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Buwanang Kita</th>
-                                    <td><input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">
+                                    <th>Buwanang Kita ng Pamilya</th>
+                                    <td>
+                                        <v-text-field v-model="form.monthly_salary" label="Buwanang Kita ng Pamilya"
+                                            outlined dense :error-messages="formErrors.monthly_salary"></v-text-field>
+
+                                        <!--<input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">-->
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>Civil Status</th>
                                     <td>
-                                        <select v-model="form.civil_status" name="civil_status" id="civil_status"
+                                        <v-select v-model="form.civil_status" label="Civil Status" outlined dense
+                                            :items="['Single', 'Married', 'Widowed', 'Separated']"
+                                            :error-messages="formErrors.civil_status">
+                                        </v-select>
+
+                                        <!--<select v-model="form.civil_status" name="civil_status" id="civil_status"
                                             class="form-control">
                                             <option :value="e" v-for="e in ['Single', 'Married', 'Widowed', 'Separated']"
                                                 :key="e">
                                                 {{ e }}</option>
-                                        </select>
+                                        </select>-->
                                     </td>
                                 </tr>
 
@@ -203,7 +216,8 @@
 
                     </v-card>
 
-                    <v-btn color="primary" @click="e1 = 3">
+                    <v-btn color="primary" @click="e1 = 3"
+                        :disabled="form.civil_status && form.monthly_salary && form.occupation ? false : true">
                         Continue
                     </v-btn>
 
@@ -242,15 +256,6 @@
                                                 </template>
                                             </v-radio>
                                         </v-radio-group>
-
-                                        <!--<ul style="    list-style: none; padding: 10px;">
-                                        <li v-for="(e, i) in offices" :key="i">
-                                            <input type="radio" name="" v-model="form.office_id" id="" v-bind:value="e.id"
-                                                :disabled="e.id > 1">
-                                            <b>{{ e.name }} <br> Located at:</b> {{ e.address }}
-                                            <hr>
-                                        </li>
-                                    </ul>-->
                                     </td>
                                 </tr>
                             </tbody>
@@ -275,10 +280,9 @@
                     <v-card class="mb-12" flat>
                         Upload Files
 
-                        <ul v-if="requirements.length > 0">
+                        <!--<ul v-if="requirements.length > 0">
                             <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
                                 <label for="" class="form-label">
-
 
                                     <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
                                     <span v-else>(OPTIONAL)</span>
@@ -290,8 +294,44 @@
                                     accept="application/pdf,image/jpeg,image/png" :required="r.is_required" />
                                 <hr>
                             </li>
-                        </ul>
+                        </ul>-->
 
+                        <template v-if="requirements.length > 0">
+                            <v-list-item two-line v-for="r in requirements[0].requirements" :key="r.id">
+                                <v-list-item-content>
+                                    <v-list-item-title>
+
+                                        <v-list-item-subtitle> <span v-if="r.is_required"
+                                                style="color:red">(REQUIRED)</span>
+                                            <span v-else>(OPTIONAL)</span>
+                                            {{ r.name }}</v-list-item-subtitle>
+                                    </v-list-item-title>
+                                    <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
+                                        capture="camera" :error-messages="formErrors.valid_id" v-model="form.documents[r.id]">
+                                    </v-file-input>
+                                    <!--<v-progress-linear v-if="form.documents" :value="15" indeterminate></v-progress-linear>-->
+
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+
+
+                        <!--<ul v-if="requirements.length > 0">
+                            <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
+                                <label for="" class="form-label">
+
+                                    <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
+                                    <span v-else>(OPTIONAL)</span>
+
+                                    {{ r.name }}
+                                </label><br>
+
+                                <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
+                                    capture="camera" :error-messages="formErrors.valid_id"
+                                    v-model="valid_id"></v-file-input>
+                            </li>
+                        </ul>
+-->
 
                         <div class="row">
                             <ul></ul>
@@ -425,6 +465,8 @@ export default {
   
 
 
-<style scoped>table {
+<style scoped>
+table {
     table-layout: fixed;
-}</style>
+}
+</style>

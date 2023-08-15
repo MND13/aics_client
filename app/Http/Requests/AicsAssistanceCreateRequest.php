@@ -36,25 +36,27 @@ class AicsAssistanceCreateRequest extends FormRequest
 
     public function withValidator($validator)
     {
-      $validator->after(function ($validator) {
+        $validator->after(function ($validator) {
             $this->validateDocuments($validator);
         });
     }
 
     public function validateDocuments($validator)
-    {   
+    {
         $aics_type_id = request('assistance.aics_type_id');
         $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)
             ->where('is_required', 1)
-            ->where('is_required',"=","1")
+            ->where('is_required', "=", "1")
             ->get();
         $files = request('assistance.documents');
-        
+
+
         foreach ($requirements as $key => $requirement) {
-            if(!isset($files[$key])){
-                $validator->errors()->add("documents_".$key, $requirement->name." is required.");
+
+            //  if(!isset($files[$key])){
+            if (!isset($files[$requirement->id])) {
+                $validator->errors()->add("documents_" . $key, $requirement->name . " is required.");
             }
         }
-
     }
 }

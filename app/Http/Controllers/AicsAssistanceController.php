@@ -22,9 +22,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 
-
-
-
 class AicsAssistanceController extends Controller
 {
 
@@ -50,9 +47,9 @@ class AicsAssistanceController extends Controller
 
                 $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
 
-                /*$assistance_validator->after(function ($validator) {
+                $assistance_validator->after(function ($validator) {
                     (new AicsAssistanceCreateRequest())->validateDocuments($validator);
-                });*/
+                });
 
                 if ($assistance_validator->fails()) {
                     $errors['assistance'] = $assistance_validator->errors();
@@ -70,7 +67,7 @@ class AicsAssistanceController extends Controller
                 //Uploaded Documents
                 $documents = [];
                 $aics_type_id = request('assistance.aics_type_id');
-                $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
+                $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->get();
 
                 $files = request('assistance.documents');
 

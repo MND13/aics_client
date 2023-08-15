@@ -149,7 +149,7 @@ const router = new VueRouter({
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MMM. DD, YY");
+        return moment(String(value)).format("MMM. DD, YYYY");
     }
 });
 
@@ -169,8 +169,4 @@ const app = new Vue({
     router,
     vuetify: new Vuetify(),
 });
-
-//console.log(process.env.MIX_BASE_NAME);
-console.log(process.env.SMS_API_KEY);
-console.log(process.env.SMS_CLIENT_ID);
 
