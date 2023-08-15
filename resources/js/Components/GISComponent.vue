@@ -16,10 +16,11 @@
 
         <div v-if="gis_data.aics_client">
         <v-card  class="mb-2" outlined v-for="(images, i) in gis_data.aics_client.profile_docs" :key="i">
-         
+          <a :href="images.file_directory" target="_blank">
           <v-avatar class="ma-3" size="125" rounded="0">
             <v-img :src="images.file_directory"></v-img>
           </v-avatar>
+          </a>
 
         </v-card>
       </div>
