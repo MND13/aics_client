@@ -309,7 +309,7 @@
                                     <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
                                         capture="camera" :error-messages="formErrors.valid_id" v-model="form.documents[r.id]">
                                     </v-file-input>
-                                    <!--<v-progress-linear v-if="form.documents" :value="15" indeterminate></v-progress-linear>-->
+                                    <v-progress-linear v-if="form.documents[r.id]" :value="uploadProgress "></v-progress-linear>
 
                                 </v-list-item-content>
                             </v-list-item>
@@ -380,8 +380,21 @@ export default {
             file: [],
             offices: [],
             formErrors: {},
+            uploadProgress: 0
+            
         }
     },
+    computed: {
+  config () {
+    return {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: progressEvent => {
+        this.uploadProgress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+      }
+    };
+  },
+},
+
     methods:
     {
 
@@ -426,7 +439,7 @@ export default {
                 }
             });
 
-            axios.post(route("assistances.store"), formData).then(response => {
+            axios.post(route("assistances.store"), formData, this.config).then(response => {
 
                 alert(response.data.message);
                 if (response.data.message == "Saved") {
