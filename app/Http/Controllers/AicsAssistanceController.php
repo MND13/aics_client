@@ -47,13 +47,13 @@ class AicsAssistanceController extends Controller
 
 
                 $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
-             
+
                 $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
 
                 /*$assistance_validator->after(function ($validator) {
                     (new AicsAssistanceCreateRequest())->validateDocuments($validator);
                 });*/
-                
+
                 if ($assistance_validator->fails()) {
                     $errors['assistance'] = $assistance_validator->errors();
                 }
@@ -224,7 +224,7 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-               
+
                 "assessment",
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",
@@ -265,7 +265,7 @@ class AicsAssistanceController extends Controller
 
             return AicsAssistance::with([
 
-                "aics_type:id,name",    
+                "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
                 "office:id,name,address",
@@ -322,7 +322,7 @@ class AicsAssistanceController extends Controller
     public function update(request $request)
     {
         DB::beginTransaction();
-       
+
         try {
             $a = AicsAssistance::where("uuid", "=", $request->uuid)->with("aics_client")->first();
 
@@ -342,16 +342,15 @@ class AicsAssistanceController extends Controller
                     $a->status_date = Carbon::now();
                     $a->verified_by_id = Auth::id();
 
-                   $a->save();
-                   DB::commit();
-                   $sms_response = $this->sms($a) ;
-                    return ["message" => "saved", "sms_response"=> $sms_response];
+                    $a->save();
+                    DB::commit();
+                    if ($a->status != "Rejected" || $a->status != "Served") {
+                        $sms_response = $this->sms($a);
+                    }
+                    return ["message" => "saved", "sms_response" => $sms_response];
                 }
-
-
-
             } else {
-                return ["message" => "Assistance Request Not Found", ];
+                return ["message" => "Assistance Request Not Found",];
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -361,23 +360,23 @@ class AicsAssistanceController extends Controller
 
 
     public function sms($request)
-    {          
+    {
         switch ($request->status) {
             case 'Rejected':
-                $msg = $request->status. " " . $request->remarks;
+                $msg = "";
+                // $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office. Ang status ng iyong request ay " . $request->status. ": " . $request->remarks;
                 break;
             case 'Served':
-                $msg = $request->status;
-            break;
+                $msg = "";
+                break;
             default:
-            #Ayaw usaba ang spacing kai madaot pg view sa phone;
-            $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa MEDICINE ASSISTANCE. Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " . $request->schedule. " Daghang Salamat!";
-            if($request->remarks && $request->remarks !="" ) $msg .=" Pahabol na Mensahe: " .  $request->remarks ;
-            break;
+                #Ayaw usaba ang spacing kai madaot pg view sa phone;
+                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa MEDICINE ASSISTANCE. Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " . $request->schedule . " Daghang Salamat!";
+                if ($request->remarks && $request->remarks != "") $msg .= " Pahabol na Mensahe: " .  $request->remarks;
+                break;
         }
-        
-        $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message='. $msg .'&MobileNumbers=63'.substr($request->aics_client->mobile_number, 1));
+
+        $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
         return $response->collect();
     }
-
 }
