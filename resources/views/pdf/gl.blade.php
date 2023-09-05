@@ -85,14 +85,14 @@
 </head>
 
 <body>
-
+ <br><br>
     <table style="width:100%">
         <tr>
             <td>
                 <!--<img src='{ public_path('images/DSWD-DVO-LOGO.png') }}' style="width: 250px;">-->
             </td>
             <td style="text-align: right; line-height:1em;">
-                <h2 style="color: darkblue; padding:0px; margin:0px;">CRISIS INTERVENTION SECTION</h2>
+                <b style="font-size:14pt;color: darkblue; padding:0px; margin:0px;">CRISIS INTERVENTION SECTION</b> <br/>
                 <small style="font-size:9pt;">
                     Cor. Suazo St. R. Magsaysay Ave. Davao City
                 </small>
@@ -100,6 +100,7 @@
             </td>
         </tr>
     </table>
+	
     <p style="text-align:right">
        <small> CONTROL NO: {{ $assistance["assessment"]["control_no"]}}</small> 
     </p>
@@ -179,12 +180,12 @@
     <br>
 
     <hr>
-    <small style="font-size:8pt"> QR CODE IN LIEU OF SEAL. This letter is system generated.
+    <!--<small style="font-size:8pt"> QR CODE IN LIEU OF SEAL. This letter is system generated.
         Kindly scan the QR Code and crossmatch the contents of this document versus
         within the Official Website for its validity.
         <br>
 
-    </small>
+    </small>-->
 
 
 

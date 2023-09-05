@@ -23,7 +23,9 @@ class AicsAssistance extends Model
         'monthly_salary',
         'office_id',
         'schedule',
-        'civil_status'
+        'civil_status',
+        'rel_beneficiary',
+        'aics_beneficiary_id'
     ];
 
 
@@ -46,10 +48,10 @@ class AicsAssistance extends Model
         return $this->belongsTo(User::class, "user_id");
     }
 
-    /*public function aics_beneficiary()
+    public function aics_beneficiary()
     {
         return $this->belongsTo(AicsBeneficiary::class);
-    }*/
+    }
 
     public function aics_type()
     {

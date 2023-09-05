@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AicsProvidersController extends Controller
 {
@@ -17,7 +18,7 @@ class AicsProvidersController extends Controller
      */
     public function index()
     {
-        return AicsProviders::all();
+        return AicsProviders::orderBy("company_name")->get();
     }
 
     /**

@@ -34,9 +34,16 @@ class Psgc extends Model
             ->get();
     }
 
-    public static function getBrgys($field, $value)
+    /*public static function getBrgys($fields)
     {
         $instance = new static;
-        return $instance->where($field, $value) ->orderBy("brgy_name")->distinct()->get();
-    }
+         
+        foreach ($fields as $f) 
+        {
+            $instance->where($f["field"], $f["value"]);
+        }
+        
+        $instance->where("region_psgc", "110000000")->orderBy("brgy_name");
+        return $instance->toSql();
+    }*/
 }

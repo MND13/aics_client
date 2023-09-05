@@ -99,9 +99,9 @@
 
           </select>-->
 
-            <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities" @change="getBrgys()" hide-no-data
-              hide-details label="City/Municipality" outlined item-text="city_name" item-value="id"
-              dense></v-autocomplete>
+            <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
+              @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined item-text="city_name"
+              item-value="id" dense></v-autocomplete>
 
 
           </div>
@@ -112,8 +112,9 @@
             <option v-for="(e, i) in brgys" :key="i" :value="e.id">{{ e.brgy_name }}</option>
           </select>-->
 
-            <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data hide-details
-              label="Barangay" outlined item-text="brgy_name" item-value="id" dense  :error-messages="formErrors.psgc_id"></v-autocomplete>
+            <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
+              hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
+              :error-messages="formErrors.psgc_id"></v-autocomplete>
 
 
           </div>
@@ -266,7 +267,7 @@
         </div>
       </v-form>
 
-      
+
 
     </v-card-text>
   </v-card>
@@ -291,7 +292,6 @@ export default
         errors: {},
         valid_id: null,
         client_photo: null,
-
         nmn: false,
         suffixes: ["", "JR",
           "SR",
@@ -358,10 +358,18 @@ export default
 
       getBrgys() {
         this.loading = true;
-        axios.get(route("api.psgc.show", { type: "brgy", field: "city_name", value: this.city_name })).then(response => {
+        let fields = [{ field: "city_name", value: this.city_name }, { field: "province_name", value: this.province_name, }];
+      
+        axios.get(route("api.psgc.show", { type: "brgy", fields })).then(response => {
           this.brgys = response.data;
           this.loading = false;
         }).catch(error => { console.log(error); this.loading = false; });
+
+        /*this.loading = true;
+        axios.get(route("api.psgc.show", { type: "brgy", field: "city_name", value: this.city_name })).then(response => {
+          this.brgys = response.data;
+          this.loading = false;
+        }).catch(error => { console.log(error); this.loading = false; });*/
       },
 
       submitForm: debounce(function () {

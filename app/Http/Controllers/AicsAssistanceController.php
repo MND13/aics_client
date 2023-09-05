@@ -41,12 +41,8 @@ class AicsAssistanceController extends Controller
                 $form_data = $request->all();
                 $errors = ["assistance" => []];
 
-
-
                 $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
-
                 $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
-
                 $assistance_validator->after(function ($validator) {
                     (new AicsAssistanceCreateRequest())->validateDocuments($validator);
                 });
@@ -62,7 +58,20 @@ class AicsAssistanceController extends Controller
                 }
 
 
-                $aics_assistance = AicsAssistance::create($form_data["assistance"]);
+
+                if (isset($form_data['beneficiary'])) {
+                    $beneficiary = AicsBeneficiary::create($form_data['beneficiary']);
+                }
+
+                #$aics_assistance = AicsAssistance::create($form_data["assistance"]);
+                $aics_assistance = new AicsAssistance;
+                $aics_assistance->fill($form_data["assistance"]);
+
+                if (isset($form_data['beneficiary'])) {
+                    $aics_assistance->aics_beneficiary_id  =  $beneficiary->id;
+                }
+
+                $aics_assistance->save();
 
                 //Uploaded Documents
                 $documents = [];
@@ -86,6 +95,9 @@ class AicsAssistanceController extends Controller
                 }
 
                 $aics_assistance->aics_documents()->saveMany($documents);
+
+
+
 
                 DB::commit();
                 return ["message" => "Saved"];
@@ -205,7 +217,8 @@ class AicsAssistanceController extends Controller
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",
                 "verified_by:id,full_name",
-
+                "aics_beneficiary",
+                "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
             ])
                 ->where("uuid", "=", $uuid)
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)->first();
@@ -221,12 +234,10 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-
                 "assessment",
                 "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
                 "assessment.fund_sources.fund_source:id,name",
-
-
+                "aics_beneficiary"
             ])
                 ->where("uuid", "=", $uuid)
                 ->firstOrFail();
@@ -243,7 +254,8 @@ class AicsAssistanceController extends Controller
                 "aics_documents.requirement:id,name",
                 "office:id,name,address",
                 "aics_client",
-                "assessment"
+                "assessment",
+                "aics_beneficiary"
 
 
             )

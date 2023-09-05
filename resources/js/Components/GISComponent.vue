@@ -15,15 +15,15 @@
       <div class="col-md-3">
 
         <div v-if="gis_data.aics_client">
-        <v-card  class="mb-2" outlined v-for="(images, i) in gis_data.aics_client.profile_docs" :key="i">
-          <a :href="images.file_directory" target="_blank">
-          <v-avatar class="ma-3" size="125" rounded="0">
-            <v-img :src="images.file_directory"></v-img>
-          </v-avatar>
-          </a>
+          <v-card class="mb-2" outlined v-for="(images, i) in gis_data.aics_client.profile_docs" :key="i">
+            <a :href="images.file_directory" target="_blank">
+              <v-avatar class="ma-3" size="125" rounded="0">
+                <v-img :src="images.file_directory"></v-img>
+              </v-avatar>
+            </a>
 
-        </v-card>
-      </div>
+          </v-card>
+        </div>
 
 
         <div class="card">
@@ -127,9 +127,109 @@
             </div>
           </div>
 
+          <v-card class="mt-2" v-if="gis_data.aics_beneficiary" outlined>
+            <v-card-title>
+              IMPORMASYON NG BENEPISYARYO
+            </v-card-title>
+            <v-card-subtitle>
+              (Beneficiary's Identifying Information)
+            </v-card-subtitle>
+            <v-card-text>
+              
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label>
+                    Apelyido <small>(Last name) </small>
+                  </label>
+                  {{ gis_data.aics_beneficiary.last_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Unang Pangalan <small>(First name) </small>
+                  </label>
+                  {{ gis_data.aics_beneficiary.first_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Gitnang Pangalan <small>(Middle name) </small>
+                  </label>
+                  {{ gis_data.aics_beneficiary.middle_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Ext <small>(Sr.,Jr., II, III) </small>
+                  </label>
+                  {{ gis_data.aics_beneficiary.ext_name }}
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="12">
+                  <label>House No./Street/Purok <small>(Ex. 123 Sun St.) </small> </label>
+                  {{ gis_data.aics_beneficiary.street_number}}
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label for="">Region <small>(Ex. NCR)</small></label>
+                  {{ gis_data.aics_beneficiary.psgc.region_name}}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Province/District <small>(Ex. Dis. III)</small></label>
+                  {{ gis_data.aics_beneficiary.psgc.province_name}}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">City/Municipality <small>(Ex. Quezon City)</small></label>
+                  {{ gis_data.aics_beneficiary.psgc.city_name}}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Barangay <small>(Ex. Batasan Hills)</small></label>
+                  {{ gis_data.aics_beneficiary.psgc.brgy_name}}
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label for="">Telepono <small>(Mobile Number) </small></label>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Kapanganakan <small>(Birthdate)</small></label>
+                  {{ gis_data.aics_beneficiary.birth_date }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Edad <small>(Age)</small></label>
+                  {{ gis_data.aics_beneficiary.age }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Kasarian <small>(gender)</small></label>
+                  {{ gis_data.aics_beneficiary.gender }}
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label for="">Trabaho <small>(Occupation) </small></label>
+                  {{ gis_data.aics_beneficiary.occupation }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Buwanang Kita <small>(Monthly Salary)</small></label>
+                  {{ gis_data.aics_beneficiary.monthly_salary }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Civil Status</label>
+                  {{ gis_data.aics_beneficiary.civil_status }}
+                </v-col>
+
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+
           <div class="card mt-2" v-if="gis_data.aics_client">
-            <div class="card-title">
-              IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)
+            <div class="card-title"   >
+              <span v-if="gis_data.aics_beneficiary">
+                IMPORMASYON NG KINATAWAN (Representative's Identifying Information)
+              </span>
+              <span v-else>
+                IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)
+              </span>
             </div>
             <div class="card-body">
               <div class="container-fluid">
@@ -258,12 +358,18 @@
                     <label for="civil_status">Civil Status</label>
                     {{ gis_data.civil_status }}
                   </div>
+                  <div class="col-md-3">
+                    <label for="civil_status">Relasyon</label>
+                    {{ gis_data.rel_beneficiary }}
+                  </div>
 
 
                 </div>
               </div>
             </div>
           </div>
+
+          
 
 
 
@@ -273,7 +379,6 @@
                 <div class="card-title">Beneficiary Category</div>
                 <div class="card-body">
                   Target Sector
-
                   <select v-model="form.category_id" class="form-control"
                     :class="{ 'is-invalid': validationErrors.category_id }">
                     <option></option>
@@ -282,11 +387,16 @@
                     </option>
                   </select>
 
-                  <div class="invalid-feedback" v-if="validationErrors.category_id">
+                  <!--<v-autocomplete v-if="categories" v-model="form.category_id" :loading="!categories" :items="categories" hide-no-data
+                    hide-details outlined item-text="category" item-value="id" dense  :error-messages="formErrors.category_id" >
+                  </v-autocomplete>-->
+
+
+                  <!--<div class="invalid-feedback" v-if="validationErrors.category_id">
                     <ul>
                       <li v-for="(e, i) in validationErrors.category_id" :key="i">{{ e }}</li>
                     </ul>
-                  </div>
+                  </div>-->
 
                   Specific Subcategory
 
@@ -335,7 +445,6 @@
             v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
             <div class="card-title">
               ASSESSMENT INFORMATION
-
             </div>
             <div class="card-body">
 
@@ -391,36 +500,62 @@
 
                 <div class="col-md-8">
 
-                  <v-btn icon @click="fundsrc_dialog = !fundsrc_dialog"> <v-icon
-                      class="mdi mdi-plus-box"></v-icon></v-btn> Fund Source
 
 
 
-                  <table class="table table-bordered" v-if="selected_fund_sources.length > 0">
-                    <tr v-for="(e, i) in selected_fund_sources" :key="i">
+                  <table class="table  text-center table-sm" style="vertical-align: middle;">
+                    <tbody>
+                      <tr>
 
-                      <td style="width:10%">
-                        <v-btn color="red" icon @click="deleteFundSrc(i)">
-                          <v-icon class="mdi mdi-close-box"></v-icon>
-                        </v-btn>
+                        <td>Fund Source</td>
+                        <td>Amount</td>
+                        <td style="width: 50px !important">
+                          <v-btn icon @click="AddItems()">
+                            <v-icon small>mdi-plus-circle</v-icon>
+                          </v-btn>
+                        </td>
+                      </tr>
+                   
+                      <tr v-if="details.length == 0">
+                        <td colspan="3">Please Add Data</td>
+                      </tr>
 
-                      </td>
-                      <td>
-                        <div v-if="e.fund_source"> {{ e.fund_source.name }} </div>
-                      </td>
-                      <td style="text-align:right">{{ e.amount }}
-                      </td>
+                      <template v-else>
+                        <tr v-for="(e, i) in details" :key="i">
 
-                    </tr>
+                          <td>
 
-                    <tr>
-                      <td></td>
-                      <td>TOTAL</td>
-                      <td style="text-align:right"> {{ sumValue }}</td>
+                            <select v-model="e.fund_source" name="" id="" class="form-control">
+                              <option :value="fund_source" v-for="fund_source in fund_sources" :key="fund_source.id">
+                                {{ fund_source.name }}
+                              </option>
+                            </select>
 
-                    </tr>
+                          </td>
+                          <td>
+                            <CurrencyInput v-model="e.amount"
+                              :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }"
+                              :rules="[v => !!v || 'Fund Source is required']" />
+                          </td>
+                          <td>
+                            <v-icon small @click="DeleteItem(e, i)">
+                              mdi-delete
+                            </v-icon>
+                          </td>
+                        </tr>
+                      </template>
+                      <tr>
+                        <td>Total</td>
+                        <td colspan="2" style="text-align: right">
+                          {{ sumValue }}
+                        </td>
 
+                      </tr>
+                    </tbody>
                   </table>
+
+
+
 
                 </div>
 
@@ -481,13 +616,22 @@
               RECORDS IN FILE
             </div>
             <div class="card-body">
-              <div class="row">
+              <v-row align="start" no-gutters>
+                <template v-for="e in records_opts">
+                  <v-col xs="12" sm="5" md="3" lg="3">
+                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
+                  </v-col>
+                </template>
+
+              </v-row>
+              <!--<div class="row">
                 <div class="col-md-12 " style="display: block; column-count: 4;">
+                 
                   <template v-for="e in records_opts">
                     <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                   </template>
                 </div>
-              </div>
+              </div>-->
             </div>
           </div>
 
@@ -499,10 +643,24 @@
             <div class="card-body">
 
               Provider
-              <select name="" id="" v-model="selected_provider" class="form-control">
+              <!--:error-messages="formErrors.selected_provider"-->
+
+              <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
+                return-object outlined item-text="company_name" dense>
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ data.item.company_address }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+
+              </v-autocomplete>
+
+
+              <!--<select name="" id="" v-model="selected_provider" class="form-control">
                 <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name }} | {{ e.company_address }}
                 </option>
-              </select>
+              </select>-->
 
               Signatory
               <select name="" id="" v-model="form.gl_signatory_id" class="form-control">
@@ -574,7 +732,7 @@
             </v-card>
           </v-dialog>
 
-          <v-dialog v-model="fundsrc_dialog" width="50%">
+          <!--<v-dialog v-model="fundsrc_dialog" medium>
             <v-card>
               <v-card-title>Fund Source</v-card-title>
               <v-card-text>
@@ -586,11 +744,23 @@
                   </option>
                 </select>
 
-                Amount
-                <!--<input v-model="fsd.amt" class="form-control" type="number">-->
+                <div class="row">
+                  <div class="col-md-6"><v-autocomplete v-model="fsd.fs" :items="fund_sources" cache-items hide-no-data
+                      label="Fund Source" return-object outlined item-text="name" item-value="id" dense
+                      :rules="[v => !!v || 'Fund Source is required']"></v-autocomplete></div>
+                  <div class="col-md-6">
 
+                  </div>
+                </div>
+
+                Amount
                 <CurrencyInput v-model="fsd.amt"
-                  :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
+                  :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }"
+                  :rules="[v => !!v || 'Fund Source is required']" />
+
+
+
+
 
 
                 <v-btn @click="AddFundSrc" dark color="red">
@@ -599,7 +769,7 @@
               </v-card-text>
 
             </v-card>
-          </v-dialog>
+          </v-dialog>-->
 
         </form>
 
@@ -625,7 +795,6 @@
 import userMixin from './../Mixin/userMixin.js'
 import authMixin from './../Mixin/authMixin.js'
 import CurrencyInput from './CurrencyInput'
-
 import { debounce, cloneDeep } from 'lodash'
 export default {
   mixins: [userMixin, authMixin],
@@ -694,7 +863,7 @@ export default {
       fsd: [],
       selected_fund_sources: [],
       remarks: "",
-
+      details: [],
     };
   },
   watch: {
@@ -711,13 +880,18 @@ export default {
       //console.log(val);
       this.form.assessment = val.template;
 
+    },
+    "fsd.fs"(c) {
+      this.sel = cloneDeep(c);
+      this.sumValue;
     }
+
 
   },
   computed: {
     sumValue() {
-      if (this.selected_fund_sources.length > 0) {
-        return this.selected_fund_sources.reduce((acc, item) => {
+      if (this.details.length > 0) {
+        return this.details.reduce((acc, item) => {
           return acc + parseFloat(item.amount);
         }, 0);
       }
@@ -920,21 +1094,32 @@ export default {
         this.signatories = response.data.sort();
       }).catch(error => console.log(error))
     },
-    AddFundSrc() {
-
-      this.selected_fund_sources.push({
-        "amount": this.fsd.amt,
-        "fund_source": this.fsd.fs,
+    AddItems() {
+      this.details.push({
+        description: "",
+        amount: 0,
       });
+    },
 
-      this.fsd = { amount: 0 };
-      this.fundsrc_dialog = false;
+    /*AddFundSrc() {
+
+      if (this.fsd.amt && this.fsd.fs) {
+
+        this.selected_fund_sources.push({
+          "amount": this.fsd.amt,
+          "fund_source": this.fsd.fs,
+        });
+
+        this.fundsrc_dialog = false;
+        this.fsd = {}
+        this.fsd.amount = 0;
+      }
 
     },
 
     deleteFundSrc(i) {
       this.selected_fund_sources.splice(i, 1);
-    },
+    },*/
     status_color(c) {
 
 
@@ -998,5 +1183,3 @@ export default {
 </script>
 
 <style></style>
-
-

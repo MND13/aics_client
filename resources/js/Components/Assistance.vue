@@ -36,7 +36,7 @@
 
             <v-stepper-items>
                 <v-stepper-content step="1">
-                    <v-card flat class="mb-12">
+                    <v-card flat class="mb-12 ">
 
                         NAIS HINGIIN NA TULONG (Assistance Requested)
 
@@ -78,138 +78,212 @@
 
                 <v-stepper-content step="2">
                     <v-card class="mb-12" flat>
-                        <b> IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)</b>
 
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
+                        <v-card-text>
 
+                            Ako ang {{ requester_type }}
 
+                            <div class="d-flex  gap-3">
 
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Last name </th>
-                                    <td>{{ user.last_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>First name </th>
-                                    <td>{{ user.first_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Middle name </th>
-                                    <td>{{ user.middle_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ext name </th>
-                                    <td>{{ user.ext_name }}</td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
+                                <v-radio-group v-model="requester_type">
+                                    <v-radio v-for="n in ['Beneficiary', 'Representative']" :key="n" :label="`${n}`"
+                                        :value="n"></v-radio>
+                                </v-radio-group>
 
 
+                            </div>
+                            <v-row v-if="requester_type">
 
+                                <v-col cols="12">
+                                    <v-card outlined v-if="requester_type == 'Representative'">
+                                        <v-card-title>IMPORMASYON NG BENEPISYARYO </v-card-title>
+                                        <v-card-subtitle>(Beneficiary's Identifying Information)</v-card-subtitle>
+                                        <v-card-text>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Street Address</th>
-                                    <td>{{ user.street_number }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Region</th>
-                                    <td>{{ psgc_data.region_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Province</th>
-                                    <td>{{ psgc_data.province_name }}</td>
-                                </tr>
+                                            <v-row>
 
-                                <tr>
-                                    <th>City/Muni</th>
-                                    <td>{{ psgc_data.city_name }}</td>
+                                                <v-col cols="12" md="3"> <v-text-field v-model="bene.first_name"
+                                                        label="First Name" class="mx-0" outlined dense
+                                                        :error-messages="beneErrors.occupation"></v-text-field></v-col>
+                                                <v-col cols="12" md="3"> <v-text-field v-model="bene.middle_name"
+                                                        label="Middle Name" class="mx-0" outlined dense
+                                                        :error-messages="beneErrors.middle_name"></v-text-field></v-col>
+                                                <v-col cols="12" md="3"> <v-text-field v-model="bene.last_name"
+                                                        label="Last Name" class="mx-0" outlined dense
+                                                        :error-messages="beneErrors.last_name"></v-text-field></v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-select v-model="bene.ext_name" label="Ext Name" outlined dense
+                                                        :items="suffixes" item-value="id" item-text="name"
+                                                        :error-messages="beneErrors.ext_name">
+                                                    </v-select>
+
+                                                </v-col>
+                                            </v-row>
 
 
 
-                                </tr>
-                                <tr>
-                                    <th>Barangay</th>
-                                    <td>{{ psgc_data.brgy_name }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            Address <v-checkbox v-model="same_address"
+                                                label="Same as Representative"></v-checkbox>
+                                            <v-row v-if="same_address">
+                                                <v-col cols="12">
+                                                    <strong> {{ user.street_number }}<br />
+                                                        {{ psgc_data.brgy_name }}
+                                                        {{ psgc_data.city_name }},
+                                                        {{ psgc_data.province_name }},
+                                                        {{ psgc_data.region_name }}</strong>
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-row v-else>
+
+                                                <v-col cols="12"> <v-text-field v-model="bene.street_number"
+                                                        label="House No./Street/Purok*" outlined dense
+                                                        :error-messages="formErrors.street_number"></v-text-field>
+                                                </v-col>
+
+                                                <v-col cols="12" md="3">
+
+                                                    <v-select label="Region" outlined dense :items="['XI']">
+                                                    </v-select>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-autocomplete v-model="province_name" :loading="loading"
+                                                        :items="provinces" @change="getCities()" cache-items hide-no-data
+                                                        hide-details label="Province" outlined item-text="province_name"
+                                                        item-value="id" dense></v-autocomplete>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-autocomplete v-model="city_name" :disabled="!cities"
+                                                        :loading="loading" :items="cities" @change="getBrgys()" hide-no-data
+                                                        hide-details label="City/Municipality" outlined
+                                                        item-text="city_name" item-value="id" dense></v-autocomplete>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-autocomplete v-model="bene.psgc_id" :disabled="!brgys"
+                                                        :loading="loading" :items="brgys" hide-no-data hide-details
+                                                        label="Barangay" outlined item-text="brgy_name" item-value="id"
+                                                        dense :error-messages="formErrors.psgc_id"></v-autocomplete>
+
+                                                </v-col>
+
+                                            </v-row>
+
+                                            <v-row>
+                                                <v-col cols="12" md="11">
+                                                    <v-text-field type="date" v-model="bene.birth_date" label="Birthday*"
+                                                        outlined dense :error-messages="formErrors.birth_date"
+                                                        @input="calculateAge"></v-text-field>
+                                                </v-col>
+
+                                                <v-col cols="12" md="1">
+                                                    <v-text-field v-model="bene.age" label="Age" outlined dense
+                                                        :error-messages="formErrors.birth_date" readonly></v-text-field>
+
+                                                </v-col>
+
+                                                <v-col cols="12">
+                                                    <v-select v-model="bene.gender" label="Sex*" outlined dense
+                                                        :items="['Lalake', 'Babae']" item-value="id" item-text="name"
+                                                        :error-messages="formErrors.gender">
+                                                    </v-select>
+
+                                                </v-col>
+
+                                                <v-col cols="12">
+                                                    <v-select v-model="bene.civil_status" label="Civil Status"
+                                                        outlined dense
+                                                        :items="['Single', 'Married', 'Widowed', 'Separated']"
+                                                        :error-messages="formErrors.civil_status">
+                                                    </v-select>
+                                                </v-col>
+
+                                                <v-col cols="12">
+
+                                                    <v-text-field v-model="bene.occupation" label="Trabaho" class="mx-0"
+                                                        outlined dense
+                                                        :error-messages="formErrors.occupation"></v-text-field>
+                                                </v-col>
+
+                                                <v-col cols="12">
+                                                    <v-text-field v-model="bene.monthly_salary"
+                                                        label="Buwanang Kita ng Pamilya" outlined dense
+                                                        :error-messages="formErrors.monthly_salary"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+
+                                        </v-card-text>
+
+                                    </v-card>
+                                </v-col>
 
 
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
+                                <v-col cols="12">
+                                    <v-card outlined>
+                                        <template v-if="requester_type == 'Beneficiary'">
+                                            <v-card-title>IMPORMASYON NG BENEPISYARYO</v-card-title>
+                                            <v-card-subtitle> (Beneficiary's Identifying Information) </v-card-subtitle>
+                                        </template>
+                                        <template v-else-if="requester_type == 'Representative'">
+                                            <v-card-title>IMPORMASYON NG KINATAWAN </v-card-title>
+                                            <v-card-subtitle> (Representative's Identifying Information) </v-card-subtitle>
+                                        </template>
+
+                                        <div class="d-flex flex-no-wrap">
+                                            <v-avatar class="ma-3 " size="125" rounded="0">
+                                                <v-img :src="user.profile_pic.file_directory"></v-img>
+                                            </v-avatar>
+                                            <div>
+                                                <v-card-title class="text-h5">
+                                                    {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{
+                                                        user.ext_name
+                                                    }}
+                                                </v-card-title>
+
+                                                <v-card-subtitle>
+                                                    {{ user.birth_date | formatDate }} <br />
+                                                    {{ user.mobile_number }}<br />
+                                                    {{ user.street_number }}<br />
+                                                    {{ psgc_data.brgy_name }}
+                                                    {{ psgc_data.city_name }},
+                                                    {{ psgc_data.province_name }},
+                                                    {{ psgc_data.region_name }}
+                                                </v-card-subtitle>
+                                            </div>
+                                        </div>
+
+                                        <v-card-text>
+                                            <v-divider></v-divider>
+                                            <v-select v-model="form.civil_status" label="Civil Status" outlined dense
+                                                :items="['Single', 'Married', 'Widowed', 'Separated']"
+                                                :error-messages="formErrors.civil_status">
+                                            </v-select>
+
+                                            <v-text-field v-model="form.occupation" label="Trabaho" class="mx-0" outlined
+                                                dense :error-messages="formErrors.occupation"></v-text-field>
+
+
+                                            <v-text-field v-model="form.monthly_salary" label="Buwanang Kita ng Pamilya"
+                                                outlined dense :error-messages="formErrors.monthly_salary"></v-text-field>
+
+                                            <v-autocomplete v-if="requester_type == 'Representative'"
+                                                item-text="relationship" v-model="form.rel_beneficiary" label="Relasyon"
+                                                outlined dense :items="relationships" item-value="relationship"
+                                                :error-messages="formErrors.rel_beneficiary">
+                                            </v-autocomplete>
+
+                                        </v-card-text>
+
+                                    </v-card>
+                                </v-col>
+
+                            </v-row>
+
+
+                        </v-card-text>
 
 
 
 
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Birthdate</th>
-                                    <td>{{ user.birth_date }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Gender</th>
-                                    <td>{{ user.gender }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Telephone/Mobile No.</th>
-                                    <td>{{ user.mobile_number }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Trabaho</th>
-                                    <td>
-                                        <v-text-field v-model="form.occupation" label="Trabaho" class="mx-0" outlined dense
-                                            :error-messages="formErrors.occupation"></v-text-field>
-                                        <!-- <input type="text" name="" v-model="form.occupation" id="" class="form-control">-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Buwanang Kita ng Pamilya</th>
-                                    <td>
-                                        <v-text-field v-model="form.monthly_salary" label="Buwanang Kita ng Pamilya"
-                                            outlined dense :error-messages="formErrors.monthly_salary"></v-text-field>
-
-                                        <!--<input type="text" name="" v-model="form.monthly_salary" id="" class="form-control">-->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Civil Status</th>
-                                    <td>
-                                        <v-select v-model="form.civil_status" label="Civil Status" outlined dense
-                                            :items="['Single', 'Married', 'Widowed', 'Separated']"
-                                            :error-messages="formErrors.civil_status">
-                                        </v-select>
-
-                                        <!--<select v-model="form.civil_status" name="civil_status" id="civil_status"
-                                            class="form-control">
-                                            <option :value="e" v-for="e in ['Single', 'Married', 'Widowed', 'Separated']"
-                                                :key="e">
-                                                {{ e }}</option>
-                                        </select>-->
-                                    </td>
-                                </tr>
-
-
-
-
-                            </tbody>
-                        </table>
 
 
 
@@ -307,9 +381,11 @@
                                             {{ r.name }}</v-list-item-subtitle>
                                     </v-list-item-title>
                                     <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
-                                        capture="camera" :error-messages="formErrors.valid_id" v-model="form.documents[r.id]">
+                                        capture="camera" :error-messages="formErrors.valid_id"
+                                        v-model="form.documents[r.id]">
                                     </v-file-input>
-                                    <v-progress-linear v-if="form.documents[r.id]" :value="uploadProgress "></v-progress-linear>
+                                    <v-progress-linear v-if="form.documents[r.id]"
+                                        :value="uploadProgress"></v-progress-linear>
 
                                 </v-list-item-content>
                             </v-list-item>
@@ -380,20 +456,57 @@ export default {
             file: [],
             offices: [],
             formErrors: {},
-            uploadProgress: 0
-            
+            uploadProgress: 0,
+            requester_type: '',
+            bene: {
+                psgc_id: 0
+            },
+            beneErrors: {},
+            province_name: "",
+            city_name: "",
+            cities: [],
+            brgys: [],
+            loading: false,
+            same_address: false,
+            relationships: {},
+            suffixes: ["", "JR",
+                "SR",
+                "I",
+                "II",
+                "III",
+                "IV",
+                "V",
+                "VI",
+                "VII",
+                "VIII",
+                "IX",
+                "X"],
+
+
         }
     },
     computed: {
-  config () {
-    return {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: progressEvent => {
-        this.uploadProgress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-      }
-    };
-  },
-},
+        config() {
+            return {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                onUploadProgress: progressEvent => {
+                    this.uploadProgress = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+                }
+            };
+        },
+    },
+    watch: {
+
+        same_address(val) {
+            if (val == true) {
+                this.bene.psgc_id = this.user.psgc_id;
+                this.bene.street_number = this.user.street_number;
+            } else {
+                this.bene.psgc_id = "";
+                this.bene.street_number = "";
+            }
+        }
+    },
 
     methods:
     {
@@ -439,11 +552,24 @@ export default {
                 }
             });
 
+            if (this.bene) {
+                _.each(this.bene, (value, key) => {
+                    if (typeof value === "object") {
+                        _.each(value, (v, k) => {
+                            formData.append("beneficiary[" + key + "][" + k + "]", v);
+                        });
+                    } else {
+                        formData.append("beneficiary[" + key + "]", value);
+                    }
+                });
+
+            }
+
             axios.post(route("assistances.store"), formData, this.config).then(response => {
 
                 alert(response.data.message);
                 if (response.data.message == "Saved") {
-                    document.location.href = "/";
+                    //    document.location.href = "/";
                 }
             }).catch(error => {
                 console.log(error);
@@ -465,6 +591,52 @@ export default {
                 this.offices = response.data;
                 //console.log(response.data);
             }).catch(error => console.log(error));
+        },
+
+        calculateAge: function () {
+            if (!this.bene.birth_date) {
+                this.bene.age = 0;
+            } else {
+                let currentDate = new Date();
+                let birthDate = new Date(this.bene.birth_date);
+                let difference = currentDate - birthDate;
+                let age = Math.floor(difference / 31557600000);
+                this.bene.age = age;
+            }
+        },
+
+        getCities() {
+            this.cities = [];
+            this.brgys = [];
+            this.loading = true;
+            axios.get(route("api.psgc.show", { type: "cities", field: "province_name", value: this.province_name })).then(response => {
+                this.cities = response.data;
+                this.loading = false;
+            }).catch(error => { console.log(error); this.loading = false; });
+        },
+
+        getBrgys() {
+            this.loading = true;
+            let fields = [{ field: "city_name", value: this.city_name }, { field: "province_name", value: this.province_name, }];
+            console.log(fields);
+
+            axios.get(route("api.psgc.show", { type: "brgy", fields })).then(response => {
+                this.brgys = response.data;
+                this.loading = false;
+            }).catch(error => { console.log(error); this.loading = false; });
+        },
+        getProvinces() {
+            this.loading = true;
+            axios.get(route("api.psgc.show", { type: "province" })).then(response => {
+                this.provinces = response.data;
+                this.loading = false;
+            }).catch(error => { console.log(error); this.loading = false; });
+        },
+        getRels() {
+            axios.get(route("api.family_rel")).then(response => {
+                this.relationships = response.data;
+                this.loading = false;
+            }).catch(error => { console.log(error); this.loading = false; });
         }
 
     },
@@ -472,6 +644,8 @@ export default {
         this.getAssistanceTypes();
         this.getPsgc();
         this.getOffices();
+        this.getProvinces();
+        this.getRels();
     }
 }
 </script>

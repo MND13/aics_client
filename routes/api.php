@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AicsClientController;
 use App\Http\Controllers\AicsBeneficiaryController;
 use App\Http\Controllers\AicsTypeController;
+use App\Models\FamilyRelationships;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,5 +66,6 @@ Route::get('gl/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gl'
 Route::post('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'create'])->name("charging.create");
 Route::get('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'index'])->name("charging.index");
 
-
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
+
+Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");

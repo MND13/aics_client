@@ -30,7 +30,8 @@ class FundSource extends Model
 
     public function balance()
     {
-        
+       
+       return $this->journal()->getCurrentBalanceInDollars() ;
     }
    
 }

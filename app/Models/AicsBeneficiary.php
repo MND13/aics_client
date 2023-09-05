@@ -10,7 +10,7 @@ class AicsBeneficiary extends Model
     use HasFactory;
 
     protected $fillable = [
-        'aics_client_id',
+       # 'aics_client_id',
         'last_name',
         'first_name',
         'middle_name',
@@ -22,19 +22,18 @@ class AicsBeneficiary extends Model
         'age',
         'gender',
         'occupation',
-        'monthly_salary',
-        'category_id',
-        'subcategory_id',
-        'assessment',
-        'interviewed_by',
-        'subcategory_others',
-        
-
+        'monthly_salary',  
+        'civil_status'      
     ];
 
-    public function aics_client()
+    /*public function aics_client()
     {
         return $this->belongsTo(AicsClient::class);
+    }*/
+
+    public function aics_assistance()
+    {
+        return $this->hasOne(AicsAssistance::class);
     }
 
     public function psgc()

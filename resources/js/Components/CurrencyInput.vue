@@ -3,6 +3,7 @@
       ref="inputRef"
       type="text"
       class="form-control"
+      
     />
   </template>
   
