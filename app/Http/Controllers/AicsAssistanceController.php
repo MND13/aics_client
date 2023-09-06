@@ -226,28 +226,30 @@ class AicsAssistanceController extends Controller
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->get()->transform(function ($asst) {
 
-                    $selected_fund_source = array();
-                    $i = 0;
-                    $r = array();
-                    foreach ($asst->assessment->fund_sources as $key => $value) {
+                    if (isset($asst->assessment->fund_sources)) {
+                        $selected_fund_source = array();
+                        $i = 0;
+                        $r = array();
+                        foreach ($asst->assessment->fund_sources as $key => $value) {
 
 
-                        if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
-                            
-                            $selected_fund_source[$i] = (object) [];
-                            $selected_fund_source[$i]->id = $value["fund_source"]["id"];
-                            $selected_fund_source[$i]->name = $value["fund_source"]["name"];
-                            $selected_fund_source[$i]->amount = $value["amount"];
-                            $selected_fund_source[$i]->txn_id = $value["id"];
-                            $selected_fund_source[$i]->remarks = $value["remarks"];
-                            $selected_fund_source[$i]->key = $key;
-                            $r[$i] = $value["remarks"];
-                            $i++;
+                            if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
+
+                                $selected_fund_source[$i] = (object) [];
+                                $selected_fund_source[$i]->id = $value["fund_source"]["id"];
+                                $selected_fund_source[$i]->name = $value["fund_source"]["name"];
+                                $selected_fund_source[$i]->amount = $value["amount"];
+                                $selected_fund_source[$i]->txn_id = $value["id"];
+                                $selected_fund_source[$i]->remarks = $value["remarks"];
+                                $selected_fund_source[$i]->key = $key;
+                                $r[$i] = $value["remarks"];
+                                $i++;
+                            }
                         }
-                    }
 
-                    $asst->selected_fs = $selected_fund_source;
-                    $asst->aa = $r;
+                        $asst->selected_fs = $selected_fund_source;
+                        $asst->aa = $r;
+                    }
                     return $asst;
                 });
 
