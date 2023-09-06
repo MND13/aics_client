@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AicsAssistanceCreateRequest;
 use App\Http\Requests\AicsBeneficiaryCreateRequest;
 use App\Http\Requests\AicsClientCreateRequest;
+use App\Models\AicsAssessmentFundSource;
 use App\Models\AicsAssistance;
 use App\Models\AicsBeneficiary;
 use App\Models\AicsClient;
@@ -205,8 +206,9 @@ class AicsAssistanceController extends Controller
             #RESTRICTED TO OFFICE ID 
             # Super Admin not bound to office id
 
-            return AicsAssistance::with([
 
+
+            $assisstance =  AicsAssistance::with([
                 "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
@@ -214,14 +216,44 @@ class AicsAssistanceController extends Controller
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "aics_client.profile_docs:id,user_id,name,file_directory",
-                "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
-                "assessment.fund_sources.fund_source:id,name",
+                "assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
+                "assessment.fund_sources.fund_source:id,name", # FS 
                 "verified_by:id,full_name",
                 "aics_beneficiary",
                 "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
             ])
                 ->where("uuid", "=", $uuid)
-                ->whereRelation("office", "office_id", "=", Auth::user()->office_id)->first();
+                ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
+                ->get()->transform(function ($asst) {
+
+                    $selected_fund_source = array();
+                    $i = 0;
+                    $r = array();
+                    foreach ($asst->assessment->fund_sources as $key => $value) {
+
+
+                        if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
+                            
+                            $selected_fund_source[$i] = (object) [];
+                            $selected_fund_source[$i]->id = $value["fund_source"]["id"];
+                            $selected_fund_source[$i]->name = $value["fund_source"]["name"];
+                            $selected_fund_source[$i]->amount = $value["amount"];
+                            $selected_fund_source[$i]->txn_id = $value["id"];
+                            $selected_fund_source[$i]->remarks = $value["remarks"];
+                            $selected_fund_source[$i]->key = $key;
+                            $r[$i] = $value["remarks"];
+                            $i++;
+                        }
+                    }
+
+                    $asst->selected_fs = $selected_fund_source;
+                    $asst->aa = $r;
+                    return $asst;
+                });
+
+
+
+            return $assisstance[0];
         }
 
         if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {

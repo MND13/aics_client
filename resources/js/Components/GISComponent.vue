@@ -135,7 +135,7 @@
               (Beneficiary's Identifying Information)
             </v-card-subtitle>
             <v-card-text>
-              
+
               <v-row>
                 <v-col cols="12" md="3">
                   <label>
@@ -165,25 +165,25 @@
               <v-row>
                 <v-col cols="12" md="12">
                   <label>House No./Street/Purok <small>(Ex. 123 Sun St.) </small> </label>
-                  {{ gis_data.aics_beneficiary.street_number}}
+                  {{ gis_data.aics_beneficiary.street_number }}
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" md="3">
                   <label for="">Region <small>(Ex. NCR)</small></label>
-                  {{ gis_data.aics_beneficiary.psgc.region_name}}
+                  {{ gis_data.aics_beneficiary.psgc.region_name }}
                 </v-col>
                 <v-col cols="12" md="3">
                   <label for="">Province/District <small>(Ex. Dis. III)</small></label>
-                  {{ gis_data.aics_beneficiary.psgc.province_name}}
+                  {{ gis_data.aics_beneficiary.psgc.province_name }}
                 </v-col>
                 <v-col cols="12" md="3">
                   <label for="">City/Municipality <small>(Ex. Quezon City)</small></label>
-                  {{ gis_data.aics_beneficiary.psgc.city_name}}
+                  {{ gis_data.aics_beneficiary.psgc.city_name }}
                 </v-col>
                 <v-col cols="12" md="3">
                   <label for="">Barangay <small>(Ex. Batasan Hills)</small></label>
-                  {{ gis_data.aics_beneficiary.psgc.brgy_name}}
+                  {{ gis_data.aics_beneficiary.psgc.brgy_name }}
                 </v-col>
               </v-row>
               <v-row>
@@ -223,7 +223,7 @@
 
 
           <div class="card mt-2" v-if="gis_data.aics_client">
-            <div class="card-title"   >
+            <div class="card-title">
               <span v-if="gis_data.aics_beneficiary">
                 IMPORMASYON NG KINATAWAN (Representative's Identifying Information)
               </span>
@@ -369,7 +369,7 @@
             </div>
           </div>
 
-          
+
 
 
 
@@ -387,16 +387,7 @@
                     </option>
                   </select>
 
-                  <!--<v-autocomplete v-if="categories" v-model="form.category_id" :loading="!categories" :items="categories" hide-no-data
-                    hide-details outlined item-text="category" item-value="id" dense  :error-messages="formErrors.category_id" >
-                  </v-autocomplete>-->
 
-
-                  <!--<div class="invalid-feedback" v-if="validationErrors.category_id">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.category_id" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>-->
 
                   Specific Subcategory
 
@@ -500,62 +491,56 @@
 
                 <div class="col-md-8">
 
+                  <v-autocomplete v-model="selected_fund_sources" :items="fund_sources" small-chips outlined
+                    label="Fund Source" dense return-object item-text="name" multiple density="compact">
+                  </v-autocomplete>
 
-
-
-                  <table class="table  text-center table-sm" style="vertical-align: middle;">
+                  <v-simple-table>
+                    <thead>
+                      <tr>
+                        <th>Fund Source</th>
+                        <th>Amount</th>
+                        <th>X</th>
+                      </tr>
+                    </thead>
                     <tbody>
-                      <tr>
-
-                        <td>Fund Source</td>
-                        <td>Amount</td>
-                        <td style="width: 50px !important">
-                          <v-btn icon @click="AddItems()">
-                            <v-icon small>mdi-plus-circle</v-icon>
-                          </v-btn>
+                      <tr v-for="(e, i) in selected_fund_sources" :key="i">
+                        <td>
+                          {{ e.name }}
+                          --
+                          <small>
+                            <pre>{{ e }}</pre>
+                          </small>
                         </td>
-                      </tr>
-                   
-                      <tr v-if="details.length == 0">
-                        <td colspan="3">Please Add Data</td>
-                      </tr>
-
-                      <template v-else>
-                        <tr v-for="(e, i) in details" :key="i">
-
-                          <td>
-
-                            <select v-model="e.fund_source" name="" id="" class="form-control">
-                              <option :value="fund_source" v-for="fund_source in fund_sources" :key="fund_source.id">
-                                {{ fund_source.name }}
-                              </option>
-                            </select>
-
-                          </td>
-                          <td>
-                            <CurrencyInput v-model="e.amount"
-                              :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }"
-                              :rules="[v => !!v || 'Fund Source is required']" />
-                          </td>
-                          <td>
-                            <v-icon small @click="DeleteItem(e, i)">
-                              mdi-delete
-                            </v-icon>
-                          </td>
-                        </tr>
-                      </template>
-                      <tr>
-                        <td>Total</td>
-                        <td colspan="2" style="text-align: right">
-                          {{ sumValue }}
+                        <td>
+                          <br>
+                          <v-text-field class="mt-1" v-model="e.amount" outlined dense step="0.25"></v-text-field>
                         </td>
+                        <td>
+                          {{ i }}
+                          <v-icon small @click="deleteFundSrc(i)">
 
+                            mdi-delete
+                          </v-icon>
+                        </td>
                       </tr>
                     </tbody>
-                  </table>
+                    <tfoot>
+                      <tr>
+                        <td>TOTAL</td>
+                        <td>{{ sumValue }}</td>
+                        <td>
 
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </v-simple-table>
 
-
+                  --- 
+REVERSAL
+                  <pre><SMALL>
+                    {{for_reveresal}}</SMALL>
+                  </pre>
 
                 </div>
 
@@ -732,45 +717,6 @@
             </v-card>
           </v-dialog>
 
-          <!--<v-dialog v-model="fundsrc_dialog" medium>
-            <v-card>
-              <v-card-title>Fund Source</v-card-title>
-              <v-card-text>
-
-                Fund Source
-                <select v-model="fsd.fs" name="" id="" class="form-control">
-                  <option :value="fund_source" v-for="fund_source in fund_sources" :key="fund_source.id">
-                    {{ fund_source.name }}
-                  </option>
-                </select>
-
-                <div class="row">
-                  <div class="col-md-6"><v-autocomplete v-model="fsd.fs" :items="fund_sources" cache-items hide-no-data
-                      label="Fund Source" return-object outlined item-text="name" item-value="id" dense
-                      :rules="[v => !!v || 'Fund Source is required']"></v-autocomplete></div>
-                  <div class="col-md-6">
-
-                  </div>
-                </div>
-
-                Amount
-                <CurrencyInput v-model="fsd.amt"
-                  :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }"
-                  :rules="[v => !!v || 'Fund Source is required']" />
-
-
-
-
-
-
-                <v-btn @click="AddFundSrc" dark color="red">
-                  Add Fund Source
-                </v-btn>
-              </v-card-text>
-
-            </v-card>
-          </v-dialog>-->
-
         </form>
 
 
@@ -863,7 +809,8 @@ export default {
       fsd: [],
       selected_fund_sources: [],
       remarks: "",
-      details: [],
+      total: 0,
+      for_reveresal: []
     };
   },
   watch: {
@@ -872,30 +819,21 @@ export default {
         this.form.subcategory_others = "";
       }
     },
-    "form.mode_of_assistance": function (newVal, oldVal) {
-
-    },
-
     selected_assessment_option(val) {
-      //console.log(val);
+
       this.form.assessment = val.template;
 
     },
-    "fsd.fs"(c) {
-      this.sel = cloneDeep(c);
-      this.sumValue;
-    }
 
 
   },
   computed: {
     sumValue() {
-      if (this.details.length > 0) {
-        return this.details.reduce((acc, item) => {
+      if (this.selected_fund_sources.length > 0) {
+        return this.selected_fund_sources.reduce((acc, item) => {
           return acc + parseFloat(item.amount);
         }, 0);
       }
-
       return 0;
     },
   },
@@ -924,11 +862,18 @@ export default {
     }, 250),
 
     updateAssessment() {
+
+      if(this.for_reveresal)
+      {
+        this.form.fs_reversal = this.for_reveresal;
+      }
+
       axios
         .post(route("api.assessment.update", this.form.id), this.form)
         .then((response) => {
           this.submit = false;
           alert(response.data.message);
+          location.reload();
         })
         .catch((error) => {
           this.submit = false;
@@ -1050,8 +995,13 @@ export default {
             }
 
             if (this.gis_data.assessment.fund_sources) {
-              this.selected_fund_sources = this.gis_data.assessment.fund_sources;
+              //this.selected_fund_sources = this.gis_data.assessment.fund_sources;
+              //this.selected_fund_sources = [{ "id": 1, "name": "DC1"}]
+              this.selected_fund_sources =  this.gis_data.selected_fs;
+
             }
+
+
 
 
           }
@@ -1094,35 +1044,19 @@ export default {
         this.signatories = response.data.sort();
       }).catch(error => console.log(error))
     },
-    AddItems() {
-      this.details.push({
-        description: "",
-        amount: 0,
-      });
-    },
-
-    /*AddFundSrc() {
-
-      if (this.fsd.amt && this.fsd.fs) {
-
-        this.selected_fund_sources.push({
-          "amount": this.fsd.amt,
-          "fund_source": this.fsd.fs,
-        });
-
-        this.fundsrc_dialog = false;
-        this.fsd = {}
-        this.fsd.amount = 0;
+   
+    deleteFundSrc(i) {
+      
+      if(this.selected_fund_sources[i].txn_id)
+      {
+        this.for_reveresal.push(cloneDeep(this.selected_fund_sources[i]));
       }
 
-    },
-
-    deleteFundSrc(i) {
+      this.selected_fund_sources[i].amount = 0;
       this.selected_fund_sources.splice(i, 1);
-    },*/
+
+    },
     status_color(c) {
-
-
       switch (c) {
         case "Rejected":
           return "red";
