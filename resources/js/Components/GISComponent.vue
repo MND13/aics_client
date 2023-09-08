@@ -1,5 +1,6 @@
 <template>
   <div class="container-fluid">
+
     <div class="row">
       <div class="col-md-12"
         v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
@@ -536,10 +537,6 @@
                       </tr>
                     </tfoot>
                   </v-simple-table>
-
-                  <pre>
-                    {{ for_reveresal }}
-                  </pre>
 
                 </div>
 
