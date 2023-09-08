@@ -902,7 +902,7 @@ export default {
 
       if (this.schedule) {
 
-        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule, "remarks": this.remarks, "task": "verify" }).then(response => {
+        axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), { "uuid": this.gis_data.uuid, status: "Verified", "schedule": this.schedule, "remarks": this.remarks, "task": "update_status" }).then(response => {
 
           alert(response.data.message);
           this.dialog_reject = false;
