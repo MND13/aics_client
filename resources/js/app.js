@@ -149,7 +149,7 @@ const router = new VueRouter({
 
 Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format("MMM. DD, YYYY");
+        return moment(String(value)).format("MMM. DD, YYYY LT");
     }
 });
 

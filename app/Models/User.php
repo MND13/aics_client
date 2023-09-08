@@ -80,7 +80,8 @@ class User extends Authenticatable
     }
 
     public function age()
-    {
+    {   
+        
         return Carbon::parse($this->attributes['birth_date'])->age;
     }
 

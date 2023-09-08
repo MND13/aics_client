@@ -170,8 +170,8 @@
 
     <br><br>
 
-    <b> {{ $assistance['assessment']['signatory']['name'] }}</b><br>
-    {{ $assistance['assessment']['signatory']['position'] }}
+    <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
+    {{ $assistance['assessment']['gl_signatory']['position'] }}
 
     <br><br>
 

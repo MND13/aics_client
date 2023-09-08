@@ -53,7 +53,7 @@
                 <td> <label for=""> Schedule for Interview: </label>
 
                   <span v-if="gis_data.status == 'Pending'">
-                    <v-text-field type="date" v-model="schedule" :error-messages="schedule_error"></v-text-field>
+                    <v-text-field type="datetime-local" v-model="schedule" :error-messages="schedule_error"></v-text-field>
                   </span>
                   <span v-else>{{ gis_data.schedule | formatDate }}</span>
 
@@ -168,7 +168,7 @@
                   {{ gis_data.aics_beneficiary.street_number }}
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row v-if="gis_data.aics_beneficiary.psgc">
                 <v-col cols="12" md="3">
                   <label for="">Region <small>(Ex. NCR)</small></label>
                   {{ gis_data.aics_beneficiary.psgc.region_name }}
@@ -271,7 +271,7 @@
                     {{ gis_data.aics_client.street_number }}
                   </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row mt-2" v-if="gis_data.aics_client.psgc">
                   <div class="col-md-3">
                     <label>Region <small>(Ex. NCR)</small>
 
@@ -492,34 +492,35 @@
                 <div class="col-md-8">
 
                   <v-autocomplete v-model="selected_fund_sources" :items="fund_sources" small-chips outlined
-                    label="Fund Source" dense return-object item-text="name" multiple density="compact">
+                    label="Fund Source" dense return-object item-text="name" multiple density="compact"
+                    >
                   </v-autocomplete>
 
                   <v-simple-table>
                     <thead>
                       <tr>
-                        <th>Fund Source</th>
-                        <th>Amount</th>
-                        <th>X</th>
+                        <th style="width:30%">Fund Source</th>
+                        <th style="width:65%">Amount</th>
+                        <th style="width:5%"></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(e, i) in selected_fund_sources" :key="i">
                         <td>
                           {{ e.name }}
-                          --
-                          <small>
-                            <pre>{{ e }}</pre>
-                          </small>
-                        </td>
-                        <td>
-                          <br>
-                          <v-text-field class="mt-1" v-model="e.amount" outlined dense step="0.25"></v-text-field>
-                        </td>
-                        <td>
-                          {{ i }}
-                          <v-icon small @click="deleteFundSrc(i)">
 
+                        </td>
+                        <td>
+                          <span v-if="e.txn_id">
+                            {{ e.amount }}
+                          </span>
+                          <span v-else> <br>
+                            <v-text-field class="mt-1" v-model="e.amount" outlined dense step="0.25"></v-text-field>
+                          </span>
+                        </td>
+                        <td>
+
+                          <v-icon small @click="deleteFundSrc(i)">
                             mdi-delete
                           </v-icon>
                         </td>
@@ -536,10 +537,8 @@
                     </tfoot>
                   </v-simple-table>
 
-                  --- 
-REVERSAL
-                  <pre><SMALL>
-                    {{for_reveresal}}</SMALL>
+                  <pre>
+                    {{ for_reveresal }}
                   </pre>
 
                 </div>
@@ -609,14 +608,7 @@ REVERSAL
                 </template>
 
               </v-row>
-              <!--<div class="row">
-                <div class="col-md-12 " style="display: block; column-count: 4;">
-                 
-                  <template v-for="e in records_opts">
-                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
-                  </template>
-                </div>
-              </div>-->
+
             </div>
           </div>
 
@@ -628,7 +620,6 @@ REVERSAL
             <div class="card-body">
 
               Provider
-              <!--:error-messages="formErrors.selected_provider"-->
 
               <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
                 return-object outlined item-text="company_name" dense>
@@ -672,7 +663,7 @@ REVERSAL
             </v-btn>
 
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && gis_data.status == 'Verified' || gis_data.status == 'Serving'">
+              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
 
               <span v-if="form.id">UPDATE</span>
               <span v-else>SUBMIT</span>
@@ -824,7 +815,19 @@ export default {
       this.form.assessment = val.template;
 
     },
+    selected_fund_sources(newVal, oldVal) {
+  
+     let x =  oldVal.filter(object1 => {
+        return !newVal.some(object2 => {
+          return object1.id === object2.id;
+        });
+      });
 
+      if (x.length > 0 && x[0].txn_id) {
+        this.for_reveresal.push(cloneDeep(x[0]));
+      }
+
+    }
 
   },
   computed: {
@@ -844,6 +847,7 @@ export default {
       this.form.gis_id = this.gis_data.id; // FOREIGN KEY
       this.form.fund_sources = this.selected_fund_sources;
       this.form.amount = this.sumValue;
+      if (this.form.mode_of_assistance == "GL") { this.form.provider_id = this.selected_provider.id; }
 
       if (this.form.id) { //UPDATE
         this.updateAssessment();
@@ -851,10 +855,7 @@ export default {
         if (this.gis_data.status == "Pending") {
           this.verifyGis();
         } else {
-          if (this.form.mode_of_assistance == "GL") {
-            this.form.provider_id = this.selected_provider.id;
 
-          }
           this.createAssessment();
         }
       }
@@ -863,8 +864,7 @@ export default {
 
     updateAssessment() {
 
-      if(this.for_reveresal)
-      {
+      if (this.for_reveresal) {
         this.form.fs_reversal = this.for_reveresal;
       }
 
@@ -997,7 +997,7 @@ export default {
             if (this.gis_data.assessment.fund_sources) {
               //this.selected_fund_sources = this.gis_data.assessment.fund_sources;
               //this.selected_fund_sources = [{ "id": 1, "name": "DC1"}]
-              this.selected_fund_sources =  this.gis_data.selected_fs;
+              this.selected_fund_sources = this.gis_data.selected_fs;
 
             }
 
@@ -1044,11 +1044,10 @@ export default {
         this.signatories = response.data.sort();
       }).catch(error => console.log(error))
     },
-   
+
     deleteFundSrc(i) {
-      
-      if(this.selected_fund_sources[i].txn_id)
-      {
+
+      if (this.selected_fund_sources[i].txn_id) {
         this.for_reveresal.push(cloneDeep(this.selected_fund_sources[i]));
       }
 
@@ -1056,6 +1055,10 @@ export default {
       this.selected_fund_sources.splice(i, 1);
 
     },
+    /*del(e)
+    {
+      console.log(e);
+    },*/
     status_color(c) {
       switch (c) {
         case "Rejected":
@@ -1086,7 +1089,7 @@ export default {
         let tempform = {};
         tempform.uuid = this.gis_data.uuid;
         tempform.status = "Served";
-        tempform.task = "verify";
+        tempform.task = "update_status";
 
         axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), tempform).then(response => {
 
@@ -1094,6 +1097,7 @@ export default {
           alert(response.data.message);
           //this.dialog_reject = false;
           //this.$router.push({ path: '/' })
+          location.reload();
 
         }).catch(error => console.log(error));
       }

@@ -27,7 +27,8 @@ class AicsAssistanceController extends Controller
 {
 
     public function store(Request $request)
-    {
+    {   
+      
         DB::beginTransaction();
         $user = Auth::user();
         $year = date("Y");
@@ -58,9 +59,10 @@ class AicsAssistanceController extends Controller
                     return response(['errors' => $errors], 422);
                 }
 
+                
 
-
-                if (isset($form_data['beneficiary'])) {
+                if (isset($form_data['beneficiary'])) 
+                {
                     $beneficiary = AicsBeneficiary::create($form_data['beneficiary']);
                 }
 
@@ -68,11 +70,17 @@ class AicsAssistanceController extends Controller
                 $aics_assistance = new AicsAssistance;
                 $aics_assistance->fill($form_data["assistance"]);
 
+               
+
                 if (isset($form_data['beneficiary'])) {
                     $aics_assistance->aics_beneficiary_id  =  $beneficiary->id;
                 }
+              
+                #dd($aics_assistance->save());
 
                 $aics_assistance->save();
+
+                
 
                 //Uploaded Documents
                 $documents = [];
@@ -80,7 +88,6 @@ class AicsAssistanceController extends Controller
                 $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->get();
 
                 $files = request('assistance.documents');
-
 
 
                 foreach ($requirements as $key => $requirement) {
@@ -206,8 +213,6 @@ class AicsAssistanceController extends Controller
             #RESTRICTED TO OFFICE ID 
             # Super Admin not bound to office id
 
-
-
             $assisstance =  AicsAssistance::with([
                 "aics_type:id,name",
                 "aics_documents",
@@ -216,13 +221,20 @@ class AicsAssistanceController extends Controller
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "aics_client.profile_docs:id,user_id,name,file_directory",
-                "assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
+                #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
                 "assessment.fund_sources.fund_source:id,name", # FS 
                 "verified_by:id,full_name",
                 "aics_beneficiary",
                 "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
             ])
                 ->where("uuid", "=", $uuid)
+                ->with("assessment.fund_sources", function ($q) {
+                    $q->where("remarks", "!=", "CANCELLED")
+                    ->where("remarks", "!=", "REVERSAL")
+                    ->orWhereNull("remarks");
+        
+                    return $q;
+                })
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->get()->transform(function ($asst) {
 
@@ -231,7 +243,6 @@ class AicsAssistanceController extends Controller
                         $i = 0;
                         $r = array();
                         foreach ($asst->assessment->fund_sources as $key => $value) {
-
 
                             if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
 
@@ -372,7 +383,7 @@ class AicsAssistanceController extends Controller
             if ($a) {
 
                 #CHANGE STATUS ONLY, SEE ASSESSMENT CONTROLLER UPDATE 
-                if ($request->task == "verify") {
+                if ($request->task == "update_status") {
                     $a->status = $request->status;
 
                     if ($request->remarks) {
@@ -414,12 +425,13 @@ class AicsAssistanceController extends Controller
                 break;
             default:
                 #Ayaw usaba ang spacing kai madaot pg view sa phone;
-                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa MEDICINE ASSISTANCE. Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " . $request->schedule . " Daghang Salamat!";
+                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa MEDICINE ASSISTANCE. Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " .  date_format(date_create($request->schedule),"M. d, Y h:i A")  . " Daghang Salamat!";
                 if ($request->remarks && $request->remarks != "") $msg .= " Pahabol na Mensahe: " .  $request->remarks;
                 break;
         }
 
         $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
         return $response->collect();
+      
     }
 }

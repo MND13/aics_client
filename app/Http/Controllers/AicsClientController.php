@@ -107,23 +107,56 @@ class AicsClientController extends Controller
     public function gis($uuid)
     {
 
-
+        #\DB::enableQueryLog();
         $assistance =  AicsAssistance::with(
 
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-            "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
+            #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks",
             "assessment.fund_sources.fund_source:id,name",
             "assessment.category:id,category",
             "assessment.subcategory:id,subcategory",
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
-
-        )->where("uuid", "=", $uuid)->firstOrFail();
-
+            "aics_beneficiary",
+            "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
+            "assessment.signatory:id,name",
+           
+        )->with("assessment.fund_sources", function ($q) {
+            $q->where("remarks", "!=", "CANCELLED")
+                ->where("remarks", "!=", "REVERSAL")
+                ->orWhereNull("remarks");
+            return $q;
+        })
+        ->where("uuid", "=", $uuid)
+        ->firstOrFail();
 
         if ($assistance) {
-            $pdf = Pdf::loadView('pdf.gis', ["assistance" =>   $assistance->toArray()]);
+
+            $res = $assistance->toArray();
+            $args = array();
+           
+            /*if(isset($res["aics_beneficiary"]))
+            {
+                $args = 
+                [
+                    "aics_beneficiary" => $res["aics_beneficiary"],
+                    "aics_client" =>  $res["aics_client"],  
+                    "assessment" =>  $res["assessment"]  
+                ];
+            }else
+            {
+                $args =[ 
+                    "aics_beneficiary" => $res["aics_client"],
+                    "assessment" =>  $res["assessment"], 
+                    "ff"                   
+                ];
+            }*/
+           
+          
+            
+            $pdf = Pdf::loadView('pdf.gis', $res);
+          #  $pdf = Pdf::loadView('pdf.gis', ["assistance" =>   $assistance->toArray()]);
             return $pdf->stream('gis.pdf');
         }
     }
@@ -142,7 +175,7 @@ class AicsClientController extends Controller
             "assessment.subcategory:id,subcategory",
             "assessment.provider:id,company_name",
             "assessment.signatory:id,name,position",
-           
+
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
@@ -191,7 +224,6 @@ class AicsClientController extends Controller
     public function gl($uuid)
     {
         $assistance =  AicsAssistance::with(
-
             "aics_type:id,name",
             "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
             "aics_client.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
@@ -202,22 +234,25 @@ class AicsClientController extends Controller
             "assessment.interviewed_by:id,first_name,middle_name,last_name,ext_name",
             "assessment.provider",
             "assessment.signatory:id,name,position",
+            "assessment.gl_signatory:id,name,position",
 
         )->where("uuid", "=", $uuid)->firstOrFail();
+
 
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
+
         if ($assistance) {
-            $pdf = Pdf::loadView('pdf.gl', 
-            ["assistance" =>   $assistance->toArray(), 
-             "client" => $res["aics_client"],
-             "amount_in_words" => $f->format($res["assessment"]["amount"]),
-             ]
+            $pdf = Pdf::loadView(
+                'pdf.gl',
+                [
+                    "assistance" =>   $assistance->toArray(),
+                    "client" => $res["aics_client"],
+                    "amount_in_words" => $f->format($res["assessment"]["amount"]),
+                ]
             );
             return $pdf->stream('gl.pdf');
         }
     }
-
-
 }

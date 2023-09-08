@@ -552,7 +552,7 @@ export default {
                 }
             });
 
-            if (this.bene) {
+            if (this.bene && this.bene.psgc_id > 0) {
                 _.each(this.bene, (value, key) => {
                     if (typeof value === "object") {
                         _.each(value, (v, k) => {
@@ -569,7 +569,7 @@ export default {
 
                 alert(response.data.message);
                 if (response.data.message == "Saved") {
-                    //    document.location.href = "/";
+                    document.location.href = "/";
                 }
             }).catch(error => {
                 console.log(error);
