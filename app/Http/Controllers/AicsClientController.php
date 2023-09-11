@@ -175,13 +175,16 @@ class AicsClientController extends Controller
             "assessment.subcategory:id,subcategory",
             "assessment.provider:id,company_name",
             "assessment.signatory:id,name,position",
+            "aics_beneficiary",
+            "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
+           
 
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-
+      
         if ($assistance) {
             $pdf = Pdf::loadView(
                 'pdf.coe',
@@ -191,6 +194,8 @@ class AicsClientController extends Controller
                     "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
                     "records" => json_decode($res['assessment']['records']),
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
+                    "bene"=> $res["aics_beneficiary"],
+                    "relationship" => $res["rel_beneficiary"]
                 ]
             );
             return $pdf->stream('coe.pdf');
@@ -235,6 +240,9 @@ class AicsClientController extends Controller
             "assessment.provider",
             "assessment.signatory:id,name,position",
             "assessment.gl_signatory:id,name,position",
+            "aics_beneficiary",
+            "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
+           
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
@@ -250,6 +258,8 @@ class AicsClientController extends Controller
                     "assistance" =>   $assistance->toArray(),
                     "client" => $res["aics_client"],
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
+                    "bene"=> $res["aics_beneficiary"],
+                   
                 ]
             );
             return $pdf->stream('gl.pdf');

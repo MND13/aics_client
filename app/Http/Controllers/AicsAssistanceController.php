@@ -11,6 +11,7 @@ use App\Models\AicsBeneficiary;
 use App\Models\AicsClient;
 use App\Models\AicsDocument;
 use App\Models\AicsRequrement;
+use App\Models\AicsType;
 use App\Models\CertOfEligibility;
 use App\Models\User;
 use Carbon\Carbon;
@@ -414,7 +415,8 @@ class AicsAssistanceController extends Controller
 
 
     public function sms($request)
-    {
+    {     
+        
         switch ($request->status) {
             case 'Rejected':
                 $msg = "";
@@ -424,8 +426,10 @@ class AicsAssistanceController extends Controller
                 $msg = "";
                 break;
             default:
+                $assistance_type = AicsType::where("id","=",$request->aics_type_id)->first();       
+
                 #Ayaw usaba ang spacing kai madaot pg view sa phone;
-                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa MEDICINE ASSISTANCE. Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " .  date_format(date_create($request->schedule),"M. d, Y h:i A")  . " Daghang Salamat!";
+                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa ". strtoupper($assistance_type->name) .". Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " .  date_format(date_create($request->schedule),"M. d, Y, @ h:iA")  . " Daghang Salamat!";
                 if ($request->remarks && $request->remarks != "") $msg .= " Pahabol na Mensahe: " .  $request->remarks;
                 break;
         }

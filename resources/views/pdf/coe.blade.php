@@ -114,21 +114,45 @@
     </table>
 
 
-
-
     <p style="text-align: center; line-height:2em">
 
         This is to certify that
-        <span class="underline">
-            {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}</span>,
-        <span class="underline">{{ $client['gender'] }}</span>, <span class="underline">{{ $age }}</span>
-        year/s
-        <br>
-        and presently residing at
-        <span class="underline">
-            {{ $client['street_number'] . ', BRGY ' . $client['psgc']['brgy_name'] . ', ' . $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
-        </span><br>
-        has been found eligible for assistance after assessment and validation conducted, for his/herself.
+
+        @if (isset($bene))
+            <!-- CLIENT AND BENE -->
+
+            <span class="underline">
+                {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}</span>,
+            <span class="underline">{{ $client['gender'] }}</span>, <span class="underline">{{ $age }}</span>
+            year/s
+            <br>
+            and presently residing at
+            <span class="underline">
+                {{ $client['street_number'] . ', BRGY ' . $client['psgc']['brgy_name'] . ', ' . $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
+            </span><br>
+            has been found eligible for assistance after assessment and validation conducted, for his/herself or through
+            the representation of his/her
+
+            <span class="underline">{{ $relationship }}</span>,
+            <span class="underline">
+                {{ $bene['first_name'] . ' ' . $bene['middle_name'] . ' ' . $bene['last_name'] . ' ' . $bene['ext_name'] }}</span>,
+
+            <!-- CLIENT AND BENE END -->
+
+        @else
+        
+            <!-- CLIENT ONLY -->
+            <span class="underline">
+                {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}</span>,
+            <span class="underline">{{ $client['gender'] }}</span>, <span class="underline">{{ $age }}</span>
+            year/s
+            <br>
+            and presently residing at
+            <span class="underline">
+                {{ $client['street_number'] . ', BRGY ' . $client['psgc']['brgy_name'] . ', ' . $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
+            </span><br>
+            has been found eligible for assistance after assessment and validation conducted, for his/herself.
+        @endif
 
     </p>
 
@@ -168,7 +192,8 @@
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
             ONLY</span>,
         PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
-        CHARGABLE AGAINST <span class="underline">AICS FUND  {{ date('Y', strtotime($assistance['assessment']['created_at'])) }} </span>
+        CHARGABLE AGAINST <span class="underline">AICS FUND
+            {{ date('Y', strtotime($assistance['assessment']['created_at'])) }} </span>
         <!--if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
             CHARGABLE AGAINST: <span class="underline">
 
@@ -210,9 +235,9 @@
                 </td>
                 <td>
                     <div class="sig">
-                        {{$assistance['assessment']['signatory']["name"]}}
-                     
-                        
+                        {{ $assistance['assessment']['signatory']['name'] }}
+
+
                     </div>
                 </td>
             </tr>

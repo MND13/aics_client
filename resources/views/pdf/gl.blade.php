@@ -85,14 +85,15 @@
 </head>
 
 <body>
- <br><br>
+    <br><br>
     <table style="width:100%">
         <tr>
             <td>
                 <!--<img src='{ public_path('images/DSWD-DVO-LOGO.png') }}' style="width: 250px;">-->
             </td>
             <td style="text-align: right; line-height:1em;">
-                <b style="font-size:14pt;color: darkblue; padding:0px; margin:0px;">CRISIS INTERVENTION SECTION</b> <br/>
+                <b style="font-size:14pt;color: darkblue; padding:0px; margin:0px;">CRISIS INTERVENTION SECTION</b>
+                <br />
                 <small style="font-size:9pt;">
                     Cor. Suazo St. R. Magsaysay Ave. Davao City
                 </small>
@@ -100,14 +101,14 @@
             </td>
         </tr>
     </table>
-	
+
     <p style="text-align:right">
-       <small> CONTROL NO: {{ $assistance["assessment"]["control_no"]}}</small> 
+        <small> CONTROL NO: {{ $assistance['assessment']['control_no'] }}</small>
     </p>
 
     <p style="text-align:left">
         <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }} <br> <br>
-        
+
         <b>{{ $assistance['assessment']['provider']['addressee_name'] }} </b><br>
         @if (
             $assistance['assessment']['provider']['addressee_name'] !=
@@ -121,22 +122,36 @@
     </p>
 
     <p>Dear <b> Sir/Madam</b>,<br><br></p>
-    
+
     <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
         <span
             class="upper bold">{{ trim($client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name']) }},
         </span>
         {{ $assistance['aics_client']['gender'] == 'Lalake' ? 'Male' : 'Female' }},
         {{ $assistance['age'] }},
-        
+
         @if (isset($client['street_number']) && $client['street_number'] != '')
             {{ $client['street_number'] }},
         @endif
-        
+
         <span style="text-transform:capitalize;">
             {{ 'BRGY. ' . $client['psgc']['brgy_name'] . ', ' }}
             {{ $client['psgc']['city_name'] . ', ' . $client['psgc']['province_name'] }}
         </span>
+
+        @if (isset($bene))
+            for the beneficiary,
+            <span class="upper bold">
+                {{ $bene['first_name'] . ' ' . $bene['middle_name'] . ' ' . $bene['last_name'] . ' ' . $bene['ext_name'] }}</span>
+
+            of
+
+            @if ($client['psgc']['id'] == $bene['psgc']['id'])
+                the same address.
+            @else
+                {{ $bene['street_number'] }}, {{ $bene['psgc']['city_name'] . ', ' . $bene['psgc']['province_name'] }}
+            @endif
+        @endif
 
     <p>
         The Department of Social Welfare and Development has assessed and validated the said
