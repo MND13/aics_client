@@ -15,120 +15,106 @@
     <div class="row g-2">
       <div class="col-md-3">
 
-        <div v-if="gis_data.aics_client">
-          <v-card class="mb-2" outlined v-for="(images, i) in gis_data.aics_client.profile_docs" :key="i">
-            <a :href="images.file_directory" target="_blank">
-              <v-avatar class="ma-3" size="125" rounded="0">
-                <v-img :src="images.file_directory"></v-img>
-              </v-avatar>
-            </a>
+        <v-card flat outlined tile>
+          <v-card-text>
+            <v-row v-if="gis_data.aics_client">
+              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in gis_data.aics_client.profile_docs"
+                :key="i">
+                <a :href="images.file_directory" target="_blank">
+                  <v-img :src="images.file_directory" max-height="100px" height="auto" width="100%"></v-img>
+                </a>
+              </v-col>
+            </v-row>
+            <v-skeleton-loader v-else type="list-item-avatar-three-line"></v-skeleton-loader>
+          </v-card-text>
+        </v-card>
 
-          </v-card>
-        </div>
+        <v-card tile flat outlined class="mt-2">
+          <v-card-subtitle class="indigo--text">Submission Info</v-card-subtitle>
+          <v-list dense v-if="gis_data.status">
+            <v-list-item two-line v-for="(e, i) in submission_info" :key="i">
+              <v-list-item-content>
+                <v-list-item-title> {{ e.title }} </v-list-item-title>
+                <v-list-item-subtitle>
+                  <v-chip class="white--text" dark small v-if="e.title == 'Status'" :color="status_color(e.value)"> {{
+                    e.value
+                  }} </v-chip>
+                  <span v-else>{{ e.value }}</span>
+                </v-list-item-subtitle>
+                <v-divider></v-divider>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+        </v-card>
 
 
-        <div class="card">
-          <div class="card-title">SUBMISSION DATA</div>
-
-
-
-          <table class="table">
-            <tbody>
-              <tr>
-                <td> <label for=""> Status:</label>
-
-                  <v-chip :color="status_color(gis_data.status)" dark small label>
-                    {{ gis_data.status }} </v-chip>
-
-
-                </td>
-              </tr>
-              <tr>
-                <td> <label for="">Date Submitted: </label> {{ gis_data.created_at | formatDate }} </td>
-              </tr>
-              <tr>
-                <td v-if="gis_data.office"><label for=""> Office: </label> {{ gis_data.office.name }} <br>
-                  {{ gis_data.office.address }}</td>
-              </tr>
-              <tr>
-                <td> <label for=""> Schedule for Interview: </label>
-
+        <v-card flat tile outlined class="mt-2">
+          <v-list dense>
+            <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>Schedule for Interview: </v-list-item-title>
+                <v-list-item-subtitle>
                   <span v-if="gis_data.status == 'Pending'">
-                    <v-text-field type="datetime-local" v-model="schedule" :error-messages="schedule_error"></v-text-field>
+                    <v-text-field type="datetime-local" v-model="schedule"
+                      :error-messages="schedule_error"></v-text-field>
                   </span>
                   <span v-else>{{ gis_data.schedule | formatDate }}</span>
 
-                </td>
-              </tr>
+                </v-list-item-subtitle>
+                <v-divider></v-divider>
+              </v-list-item-content>
+            </v-list-item>
 
-              <tr>
-                <td> <label for=""> Remarks:</label>
-
+            <v-list-item two-line>
+              <v-list-item-content>
+                <v-list-item-title>Remarks:</v-list-item-title>
+                <v-list-item-subtitle>
                   <span v-if="gis_data.status == 'Pending'">
                     <v-text-field v-model="remarks"></v-text-field>
                   </span>
                   <span v-else> {{ gis_data.remarks }} </span>
+                </v-list-item-subtitle>
 
-                </td>
-              </tr>
-              <tr>
-                <td> <label for=""> Verified by:</label>
-                  <span v-if="gis_data.verified_by">
-                    {{ gis_data.verified_by.full_name }}
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>Interviewed by:</label>
-                  <span v-if="gis_data.assessment"> {{ gis_data.assessment.interviewed_by }}</span>
-                </td>
-              </tr>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
 
-            </tbody>
-          </table>
-        </div>
+        <v-card tile flat outlined class="mt-2">
+          <v-card-subtitle class="indigo--text">Attachments</v-card-subtitle>
 
-        <div v-if="gis_data.id">
-          <table class="table table-bordered mt-2">
-            <tbody v-if="gis_data.aics_documents">
-              <tr class="card-title">
-                <td><label for="">Attachments:</label></td>
-              </tr>
-              <tr v-for="(e, i) in gis_data.aics_documents" :key="i">
-                <td> <span class="mdi mdi-file-document-outline"></span>
-                  <a :href="e.file_directory" target="_blank">
-                    {{ e.requirement.name }}</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <v-list dense v-if="gis_data.aics_documents">
+            <v-list-item dense v-for="(e, i) in gis_data.aics_documents" :key="i" link :href="e.file_directory"
+              target="_blank" color="primary">
+              <v-list-item-content :href="e.file_directory" target="_blank">
+                <v-list-item-subtitle :to="e.file_directory"> {{ e.requirement.name }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
 
+          <v-skeleton-loader v-else type="article"></v-skeleton-loader>
 
-
-        </div>
-        <div v-else>
-          <v-skeleton-loader type="article"></v-skeleton-loader>
-
-        </div>
+        </v-card>
 
       </div>
       <div class="col-md-9">
-        <form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
-
-          <div class="card">
-            <div class="card-title">
-              NAIS HINGIIN NA TULONG (Assistance Requested)
-            </div>
-            <div class="card-body">
-              <h5 v-if="gis_data.aics_type">{{ gis_data.aics_type.name }} </h5>
-              <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+        <!--<form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">-->
+        <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
 
-            </div>
-          </div>
 
-          <v-card class="mt-2" v-if="gis_data.aics_beneficiary" outlined>
+          <v-card flat outlined tile>
+            <v-card-title>NAIS HINGIIN NA TULONG</v-card-title>
+
+            <v-card-subtitle> (Assistance Requested) </v-card-subtitle>
+            <v-card-text>
+              <span v-if="gis_data.aics_type"> {{ gis_data.aics_type.name }}</span>
+              <v-skeleton-loader v-else type="text"></v-skeleton-loader>
+            </v-card-text>
+          </v-card>
+
+          <v-card class="mt-2 client-details" v-if="gis_data.aics_beneficiary" outlined>
             <v-card-title>
               IMPORMASYON NG BENEPISYARYO
             </v-card-title>
@@ -163,12 +149,14 @@
                   {{ gis_data.aics_beneficiary.ext_name }}
                 </v-col>
               </v-row>
+              <hr>
               <v-row>
                 <v-col cols="12" md="12">
                   <label>House No./Street/Purok <small>(Ex. 123 Sun St.) </small> </label>
                   {{ gis_data.aics_beneficiary.street_number }}
                 </v-col>
               </v-row>
+              <hr>
               <v-row v-if="gis_data.aics_beneficiary.psgc">
                 <v-col cols="12" md="3">
                   <label for="">Region <small>(Ex. NCR)</small></label>
@@ -187,6 +175,7 @@
                   {{ gis_data.aics_beneficiary.psgc.brgy_name }}
                 </v-col>
               </v-row>
+              <hr>
               <v-row>
                 <v-col cols="12" md="3">
                   <label for="">Telepono <small>(Mobile Number) </small></label>
@@ -204,6 +193,7 @@
                   {{ gis_data.aics_beneficiary.gender }}
                 </v-col>
               </v-row>
+              <hr>
               <v-row>
                 <v-col cols="12" md="3">
                   <label for="">Trabaho <small>(Occupation) </small></label>
@@ -217,286 +207,191 @@
                   <label for="">Civil Status</label>
                   {{ gis_data.aics_beneficiary.civil_status }}
                 </v-col>
-
               </v-row>
             </v-card-text>
           </v-card>
 
-
-          <div class="card mt-2" v-if="gis_data.aics_client">
-            <div class="card-title">
-              <span v-if="gis_data.aics_beneficiary">
-                IMPORMASYON NG KINATAWAN (Representative's Identifying Information)
-              </span>
-              <span v-else>
-                IMPORMASYON NG BENEPISYARYO (Beneficiary's Identifying Information)
-              </span>
-            </div>
-            <div class="card-body">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-md-3">
-                    <label for="last_name">
-                      Apelyido <small>(Last name) <span color="red"></span></small> <br>
-                    </label>
-                    {{ gis_data.aics_client.last_name }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="first_name">
-                      Unang Pangalan
-                      <small>(First name) <span color="red"></span></small></label>
-                    {{ gis_data.aics_client.first_name }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="middle_name">Gitnang Pangalan <small>(Middle name)</small></label>
-                    {{ gis_data.aics_client.middle_name }}
-
-
-
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="ext_name">Ext <small>(Sr.,Jr., II, III)</small></label><br />
-                    {{ gis_data.aics_client.ext_name }}
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-12">
-                    <label for="street_number">House No./Street/Purok
-                      <small>(Ex. 123 Sun St.)</small>
-
-                    </label>
-                    {{ gis_data.aics_client.street_number }}
-                  </div>
-                </div>
-                <div class="row mt-2" v-if="gis_data.aics_client.psgc">
-                  <div class="col-md-3">
-                    <label>Region <small>(Ex. NCR)</small>
-
-                    </label>
-
-                    {{ gis_data.aics_client.psgc.region_name }}
-
-                  </div>
-
-                  <div class="col-md-3">
-                    <label>Province/District <small>(Ex. Dis. III)</small>
-
-                    </label>
-
-                    {{ gis_data.aics_client.psgc.province_name }}
-
-
-                  </div>
-
-                  <div class="col-md-3">
-                    <label>
-                      City/Municipality <small>(Ex. Quezon City)</small>
-
-                    </label>
-
-                    {{ gis_data.aics_client.psgc.city_name }}
-
-
-                  </div>
-
-                  <div class="col-md-3">
-                    <label>Barangay
-                      <small>(Ex. Batasan Hills)</small>
-
-                    </label>
-
-                    {{ gis_data.aics_client.psgc.brgy_name }}
-
-
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3">
-                    <label for="mobile_number">Telepono <small>(Mobile Number)</small></label>
-                    {{ gis_data.aics_client.mobile_number }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="birth_date">Kapanganakan <small>(Birthdate)</small></label>
-                    {{ gis_data.aics_client.birth_date }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="age">Edad <small>(Age)</small></label>
-                    {{ gis_data.age }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="gender">Kasarian <small>(gender)</small></label>
-
-
-                    {{ gis_data.aics_client.gender }}
-
-
-                  </div>
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-md-3">
-                    <label for="occupation">Trabaho <small> (Occupation)</small> </label>
-
-                    {{ gis_data.occupation }}
-
-
-                  </div>
-                  <div class="col-md-3">
-                    <label for="monthly_salary">Buwanang Kita <small> (Monthly Salary) </small>
-                    </label>
-                    {{ gis_data.monthly_salary }}
-                  </div>
-
-                  <div class="col-md-3">
-                    <label for="civil_status">Civil Status</label>
-                    {{ gis_data.civil_status }}
-                  </div>
-                  <div class="col-md-3">
-                    <label for="civil_status">Relasyon</label>
-                    {{ gis_data.rel_beneficiary }}
-                  </div>
-
-
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-
-          <div class="row" v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
-            <div class="col-md-4">
-              <div class="card">
-                <div class="card-title">Beneficiary Category</div>
-                <div class="card-body">
-                  Target Sector
-                  <select v-model="form.category_id" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.category_id }">
-                    <option></option>
-                    <option v-for="(e, i) in categories" :key="i" :value="e.id">
-                      {{ e.category }}
-                    </option>
-                  </select>
-
-
-
-                  Specific Subcategory
-
-                  <select v-model="form.subcategory_id" class="form-control">
-                    <option></option>
-                    <option v-for="(e, i) in subcategories" :key="i" :value="e.id">
-                      {{ e.subcategory }}
-                    </option>
-                  </select>
-
-                  <div class="" v-if="form.subcategory_id == 8">
-                    Others
-                    <input type="text" v-model="form.subcategory_others" class="form-control" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-8">
-              <div class="card">
-                <div class="card-title">Social Worker's Assessment</div>
-                <div class="card-body">
-                  Assessment Option
-                  <select id="" class="form-control" v-model="selected_assessment_option">
-                    <option :value="o" v-for="(o, i) in assessment_options" :key="i">{{ o.option }}</option>
-                  </select>
-                  Social Worker's Assessment
-                  <textarea id="" v-model="form.assessment" class="form-control" cols="30" rows="10"
-                    :class="{ 'is-invalid': validationErrors.mode_of_admission }"></textarea>
-                  <div class="invalid-feedback" v-if="validationErrors.assessment">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.assessment" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-
-
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-
-          <br />
-
-          <div class="card mt-2"
-            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
-            <div class="card-title">
-              ASSESSMENT INFORMATION
-            </div>
-            <div class="card-body">
-
-              <div class="row">
-
-                <div class="col-md-4">
-                  Mode of Admission
-                  <select id="mode_of_admission" v-model="form.mode_of_admission" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.mode_of_admission }">
-                    <option :value="e" v-for="(e, i) in ['Walk-in', 'Referral']" :key="i">
-                      {{ e }}
-                    </option>
-                  </select>
-
-                  <div class="invalid-feedback" v-if="validationErrors.mode_of_admission">
-
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.mode_of_admission" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-
-
-                </div>
-
-                <div class="col-md-8">
-                  Purpose
-                  <input type="text" v-model="form.purpose" class="form-control "
-                    :class="{ 'is-invalid': validationErrors.purpose }">
-
-                  <div class="invalid-feedback" v-if="validationErrors.purpose">
-
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.purpose" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-
-                </div>
-
-                <div class="col-md-4">
-                  Mode of Assistance
-                  <select name="" id="" class="form-control" v-model="form.mode_of_assistance"
-                    :class="{ 'is-invalid': validationErrors.mode_of_assistance }">
-                    <option :value="e" v-for="e in ['CAV', 'GL']" :key="e">{{ e }}</option>
-                  </select>
-
-                  <div class="invalid-feedback" v-if="validationErrors.mode_of_assistance">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.mode_of_assistance" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-
-                </div>
-
-                <div class="col-md-8">
-
-                  <v-autocomplete v-model="selected_fund_sources" :items="fund_sources" small-chips outlined
-                    label="Fund Source" dense return-object item-text="name" multiple density="compact"
-                    >
+          <v-card v-if="gis_data.aics_client" flat outlined tile class="mt-2 client-details">
+            <v-card-title>
+              <span v-if="gis_data.aics_beneficiary"> IMPORMASYON NG KINATAWAN </span>
+              <span v-else> IMPORMASYON NG BENEPISYARYO</span>
+            </v-card-title>
+
+            <v-card-subtitle>
+              <span v-if="gis_data.aics_beneficiary"> (Representative's Identifying Information) </span>
+              <span v-else> (Beneficiary's Identifying Information)</span>
+            </v-card-subtitle>
+
+            <v-card-text>
+
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label>
+                    Apelyido <small>(Last name) </small>
+                  </label>
+                  {{ gis_data.aics_client.last_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Unang Pangalan <small>(First name) </small>
+                  </label>
+                  {{ gis_data.aics_client.first_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Gitnang Pangalan <small>(Middle name) </small>
+                  </label>
+                  {{ gis_data.aics_client.middle_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label>
+                    Ext <small>(Sr.,Jr., II, III) </small>
+                  </label>
+                  {{ gis_data.aics_client.ext_name }}
+                </v-col>
+              </v-row>
+              <hr>
+              <v-row>
+                <v-col cols="12" md="12">
+                  <label>House No./Street/Purok <small>(Ex. 123 Sun St.) </small> </label>
+                  {{ gis_data.aics_client.street_number }}
+                </v-col>
+              </v-row>
+              <hr>
+
+              <v-row v-if="gis_data.aics_client.psgc">
+                <v-col cols="12" md="3">
+                  <label for="">Region <small>(Ex. NCR)</small></label>
+                  {{ gis_data.aics_client.psgc.region_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Province/District <small>(Ex. Dis. III)</small></label>
+                  {{ gis_data.aics_client.psgc.province_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">City/Municipality <small>(Ex. Quezon City)</small></label>
+                  {{ gis_data.aics_client.psgc.city_name }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Barangay <small>(Ex. Batasan Hills)</small></label>
+                  {{ gis_data.aics_client.psgc.brgy_name }}
+                </v-col>
+              </v-row>
+              <hr>
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label for="">Telepono <small>(Mobile Number) </small></label>
+                  {{ gis_data.aics_client.mobile_number }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Kapanganakan <small>(Birthdate)</small></label>
+                  {{ gis_data.aics_client.birth_date }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Edad <small>(Age)</small></label>
+                  {{ gis_data.age }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Kasarian <small>(gender)</small></label>
+                  {{ gis_data.aics_client.gender }}
+                </v-col>
+              </v-row>
+              <hr>
+              <v-row>
+                <v-col cols="12" md="3">
+                  <label for="">Trabaho <small>(Occupation) </small></label>
+                  {{ gis_data.occupation }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Buwanang Kita <small>(Monthly Salary)</small></label>
+                  {{ gis_data.monthly_salary }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Civil Status</label>
+                  {{ gis_data.civil_status }}
+                </v-col>
+                <v-col cols="12" md="3">
+                  <label for="">Relasyon</label>
+                  {{ gis_data.rel_beneficiary }}
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+          <v-row v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'" class="g-2">
+            <v-col cols="12" md="4">
+              <v-card flat outlined tile>
+                <v-app-bar flat dense short color="indigo darken-3 " dark>
+                  Beneficiary Category
+                </v-app-bar>
+                <v-card-text>
+
+
+                  <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.category_id"
+                    label="Target Sector" :items="categories" item-value="id" item-text="category"
+                    :error-messages="validationErrors.category_id">
                   </v-autocomplete>
 
+                  <v-autocomplete outlined class="rounded-0" clearable dense v-model="form.subcategory_id"
+                    label="Specific Subcategory" :items="subcategories" item-value="id" item-text="subcategory"
+                    :error-messages="validationErrors.subcategory_id">
+                  </v-autocomplete>
+
+                  <v-text-field outlined dense class="rounded-0" v-if="form.subcategory_id == 8"
+                    v-model="form.subcategory_others" label="Others"></v-text-field>
+
+                </v-card-text>
+              </v-card>
+            </v-col>
+
+            <v-col cols="12" md="8">
+              <v-card flat outlined tile>
+                <v-app-bar flat dense short dark color="indigo darken-3">Social Worker's Assessment</v-app-bar>
+                <v-card-text>
+
+                  <v-autocomplete class="rounded-0" outlined dense label="Assessment Option"
+                    v-model="selected_assessment_option" :items="assessment_options" item-text="option" return-object>
+                  </v-autocomplete>
+
+                  <v-textarea class="rounded-0" outlined dense label="Social Worker's Assessment"
+                    v-model="form.assessment" :error-messages="validationErrors.assessment" cols="30"
+                    rows="10"></v-textarea>
+
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+
+
+          <v-card flat outlined tile class="mt-2"
+            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
+            <v-app-bar flat dense short color="indigo darken-3 " dark>
+              Assessment Information
+            </v-app-bar>
+            <v-card-text>
+              <v-row class="g-2">
+                <v-col>
+                  <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.mode_of_admission" cols="12"
+                    md="4" label="Mode of Admission" :items="['Walk-in', 'Referral']"
+                    :error-messages="validationErrors.mode_of_admission" hide-details="auto">
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="8">
+                  <v-text-field class="rounded-0" outlined dense v-model="form.purpose" label="Purpose"
+                    :error-messages="validationErrors.purpose" hide-details="auto"></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.mode_of_assistance"
+                    label="Mode of Assistance" :items="['CAV', 'GL']"
+                    :error-messages="validationErrors.mode_of_assistance" hide-details="auto">
+                  </v-autocomplete>
+                </v-col>
+
+                <v-col cols="12" md="8">
+                  <v-autocomplete class="rounded-0" v-model="selected_fund_sources" :items="fund_sources" small-chips
+                    outlined label="Fund Source" dense return-object item-text="name" multiple density="compact"
+                    hide-details="auto">
+                  </v-autocomplete>
                   <v-simple-table>
                     <thead>
                       <tr>
@@ -516,7 +411,8 @@
                             {{ e.amount }}
                           </span>
                           <span v-else> <br>
-                            <v-text-field class="mt-1" v-model="e.amount" outlined dense step="0.25"></v-text-field>
+                            <v-text-field class="rounded-0" v-model="e.amount" outlined dense step="0.25"
+                              hide-details="auto"></v-text-field>
                           </span>
                         </td>
                         <td>
@@ -537,59 +433,43 @@
                       </tr>
                     </tfoot>
                   </v-simple-table>
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-text-field class="rounded-0" readonly outlined dense v-model="form.interviewed_by"
+                    label="Interviewed By" :error-messages="validationErrors.interviewed_by"
+                    hide-details="auto"></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
 
-                </div>
+                  <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.signatory_id"
+                    :loading="!signatories" label="Approved by" :items="signatories"
+                    :error-messages="validationErrors.signatory_id" item-value="id" item-text="name" hide-details="auto">
+                    <template v-slot:item="data">
+                      <v-list-item-content>
+                        <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ data.item.position }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </template>
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="4">
+                  <v-text-field outlined dense class="rounded-0" v-model="form.sdo"
+                    v-if="form.mode_of_assistance == 'CAV'" label="Special Disbursing Officer (SDO)" hide-details="auto"
+                    :error-messages="validationErrors.sdo"></v-text-field>
+                </v-col>
 
+                <v-col cols="12" md="12">
+                  <v-text-field outlined dense class="rounded-0" v-model="form.referral"
+                    v-if="form.mode_of_admission == 'Referral'" label="Referral" hide-details="auto"
+                    :error-messages="validationErrors.referral"></v-text-field>
+                </v-col>
 
-              </div>
+              </v-row>
 
-              <div class="row">
+            </v-card-text>
 
-                <div class="col-md-4">
-                  Interviewed by <br>
+          </v-card>
 
-                  <input type="text" class="form-control" v-model="form.interviewed_by"
-                    :class="{ 'is-invalid': validationErrors.interviewed_by }" disabled="true" />
-
-                  <div class="invalid-feedback" v-if="validationErrors.interviewed_by">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.interviewed_by" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-
-                </div>
-                <div class="col-md-4">
-
-                  Approved by
-
-                  <select v-model="form.signatory_id" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.signatory_id }">
-                    <option></option>
-                    <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }}</option>
-
-                  </select>
-
-                  <div class="invalid-feedback" v-if="validationErrors.approved_by">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.approved_by" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="col-md-4" v-if="form.mode_of_assistance == 'CAV'">
-                  Special Disbursing Officer (SDO)
-
-                  <input type="text" v-model="form.sdo" class="form-control"
-                    :class="{ 'is-invalid': validationErrors.sdo }">
-
-                  <div class="invalid-feedback" v-if="validationErrors.sdo">
-                    <ul>
-                      <li v-for="(e, i) in validationErrors.sdo" :key="i">{{ e }}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="card mt-2"
             v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
@@ -615,11 +495,8 @@
               GL
             </div>
             <div class="card-body">
-
-              Provider
-
               <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
-                return-object outlined item-text="company_name" dense>
+                return-object outlined item-text="company_name" dense class="rounded-0">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>
@@ -630,15 +507,18 @@
               </v-autocomplete>
 
 
-              <!--<select name="" id="" v-model="selected_provider" class="form-control">
-                <option :value="e" v-for="(e, i) in providers" :key="i">{{ e.company_name }} | {{ e.company_address }}
-                </option>
-              </select>-->
+              <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.gl_signatory_id"
+                :loading="!signatories" label="Signatory" :items="signatories"
+                :error-messages="validationErrors.gl_signatory_id" item-value="id" item-text="name" hide-details="auto">
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ data.item.position }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
 
-              Signatory
-              <select name="" id="" v-model="form.gl_signatory_id" class="form-control">
-                <option :value="e.id" v-for="(e, i) in signatories" :key="i">{{ e.name }} | {{ e.position }} </option>
-              </select>
+
 
               <hr>
 
@@ -660,7 +540,7 @@
             </v-btn>
 
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving')">
+              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving' || gis_data.status == 'Served')">
 
               <span v-if="form.id">UPDATE</span>
               <span v-else>SUBMIT</span>
@@ -672,16 +552,45 @@
               Mark as Served
             </v-btn>
 
-
-            <!--<v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
-              UPDATE
-            </v-btn>-->
-
             <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
               @click="dialog_reject = true" :disabled="submit">
               REJECT
             </v-btn>
+
+
+            <v-menu v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+              <template  v-slot:activator="{ on, attrs }">
+                <v-btn large dark v-bind="attrs" v-on="on">
+                  <v-icon> mdi-printer </v-icon> Print
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="PrintGIS()">
+                  <v-list-item-title>
+                    <v-icon> mdi-printer </v-icon>Print GIS <v-chip label small>CTLR + P</v-chip>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="PrintCOE()">
+                  <v-list-item-title>
+                    <v-icon> mdi-printer </v-icon> Print COE <v-chip label small>CTLR + SHIFT + P</v-chip>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="PrintCAV()"
+                  v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">
+                  <v-list-item-title>
+                    <v-icon> mdi-printer </v-icon> Print CAV <v-chip label small>CTLR + ALT + P</v-chip>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="PrintGL()" v-else>
+                  <v-list-item-title>
+                    <v-icon> mdi-printer </v-icon> Print GL <v-chip label small>CTLR + SPACE</v-chip>
+                  </v-list-item-title>
+                </v-list-item>
+
+              </v-list>
+            </v-menu>
+
+
 
 
           </div>
@@ -705,13 +614,20 @@
             </v-card>
           </v-dialog>
 
-        </form>
+          <!--</form>-->
+        </v-form>
 
 
 
       </div>
 
     </div>
+    <span v-shortkey="['ctrl', 'p']" @shortkey="PrintGIS()"></span>
+    <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="PrintCOE()"></span>
+    <span v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'" v-shortkey="['ctrl', 'alt', 'p']" @shortkey="PrintCAV()"></span>
+    <span v-else v-shortkey="['ctrl', 'space']" @shortkey="PrintGL()"></span>
+    
+
   </div>
 </template>
 
@@ -730,6 +646,7 @@ import userMixin from './../Mixin/userMixin.js'
 import authMixin from './../Mixin/authMixin.js'
 import CurrencyInput from './CurrencyInput'
 import { debounce, cloneDeep } from 'lodash'
+import moment from 'moment';
 export default {
   mixins: [userMixin, authMixin],
   components: { CurrencyInput },
@@ -789,7 +706,7 @@ export default {
         "PRC ID"],
       providers: [],
       selected_provider: {},
-      signatories: {},
+      signatories: [],
       selected_gl_signatory: "",
       schedule: '',
       schedule_error: '',
@@ -798,7 +715,8 @@ export default {
       selected_fund_sources: [],
       remarks: "",
       total: 0,
-      for_reveresal: []
+      for_reveresal: [],
+
     };
   },
   watch: {
@@ -813,8 +731,8 @@ export default {
 
     },
     selected_fund_sources(newVal, oldVal) {
-  
-     let x =  oldVal.filter(object1 => {
+
+      let x = oldVal.filter(object1 => {
         return !newVal.some(object2 => {
           return object1.id === object2.id;
         });
@@ -836,6 +754,16 @@ export default {
       }
       return 0;
     },
+    submission_info() {
+      return [
+        { title: "Status", value: this.gis_data.status },
+        { title: "Date Submitted:", value: moment(this.gis_data.created_at).format("MMM. DD, YYYY LT") },
+        { title: "Office:", value: this.gis_data.office ? this.gis_data.office.name : "" },
+        { title: "Verified by:", value: this.gis_data.verified_by ? this.gis_data.verified_by.full_name : "---" },
+        { title: "Interviewed by:", value: this.gis_data.assessment ? this.gis_data.assessment.interviewed_by : "---" },
+      ]
+    },
+
   },
 
   methods: {
@@ -1052,10 +980,7 @@ export default {
       this.selected_fund_sources.splice(i, 1);
 
     },
-    /*del(e)
-    {
-      console.log(e);
-    },*/
+
     status_color(c) {
       switch (c) {
         case "Rejected":

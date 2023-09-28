@@ -10923,13 +10923,11 @@ textarea.form-control-lg {
   max-height: 500px;
 }
 
-#GIS label {
+#GIS .client-details label {
   font-weight: bold;
   color: #196491;
-  display: block;
   clear: both;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10pt;
+  display: block;
 }
 
 #GIS ul li {

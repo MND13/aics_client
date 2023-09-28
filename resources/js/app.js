@@ -35,7 +35,10 @@ Vue.use(Vuetify);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-Vue.use(VueViewer)
+Vue.use(VueViewer);
+Vue.use(require('vue-shortkey'));
+
+
 
 const router = new VueRouter({
     mode: "history",

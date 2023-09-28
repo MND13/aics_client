@@ -15,7 +15,7 @@ class AicsTypeController extends Controller
     public function index()
     {
       
-        return AicsType::with('requirements')->whereIn("id",[2,3,4,5,6,7])->get();
+        return AicsType::with('requirements')->whereIn("id",[2,3,4,5,6,7,8])->get();
        
     }
 
