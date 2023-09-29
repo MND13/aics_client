@@ -13,15 +13,7 @@ class AicsAssessmentFundSourceController extends Controller
 {
     public function index()
     {
-        /*$collection =  AicsAssessmentFundSource::orderBy("created_at", "desc")
-            ->with([
-                "fund_source:id,name",
-                "assessment.assistance.aics_client:id,full_name",
-                "assessment.provider"
-            ])
-            ->get();  
-            
-            $collection = Accouunt*/
+       
         return FundSource::with("journal", "journal.transactions")->get();
     }
 
@@ -59,11 +51,11 @@ class AicsAssessmentFundSourceController extends Controller
 
                 /* MAIN RECORD */
                 if ($request->movement > 0) {
-                    $transaction_1 = $fs->journal->creditDollars($request->amount);
+                    $transaction_1 = $fs->journal->creditDollars($request->amount,  $request->remarks);
                     $transaction_1->referencesObject($t);
                 } else {
 
-                    $transaction_1 = $fs->journal->debitDollars($request->amount);
+                    $transaction_1 = $fs->journal->debitDollars($request->amount,  $request->remarks);
                     $transaction_1->referencesObject($t);
                 }
                 $balance = $fs->journal->getCurrentBalance();
@@ -75,5 +67,24 @@ class AicsAssessmentFundSourceController extends Controller
             DB::rollBack();
             throw $th;
         }
+    }
+
+    public function show($id)
+    {
+        $fs = FundSource::with("journal", "journal.transactions")->findOrFail($id);
+        if ($fs) {
+            $txn = $fs->journal->transactions->sortByDesc("created_at");
+
+            $txn->map(function ($t) {
+              
+                $t->credit = $t->credit/100;
+                $t->debit = $t->debit/100;
+                return $t;
+
+            });
+
+            return $txn->values()->all()  ;
+        }
+        return $fs;
     }
 }

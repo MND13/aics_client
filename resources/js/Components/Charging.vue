@@ -5,16 +5,17 @@
                 <v-card-title>Charging</v-card-title>
                 <v-card-text>
 
-                    <form @submit.prevent="submitForm" enctype="multipart/form-data" id="charging">
+                    <form @submit.prevent="submitForm" enctype="multipart/form-data" id="charging"  ref="charging">
                         Fund Source
-                        <select v-model="form.fund_source_id" name="" id="" class="form-control">
+                        <select v-model="form.fund_source_id" name="" id="" class="form-control" @change="viewTxn()">
                             <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">
                                 {{ fund_source.name }} {{ fund_source.description }}
                             </option>
                         </select>
                         Amount
 
-                        <CurrencyInput v-model="form.amount" :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
+                        <CurrencyInput v-model="form.amount"
+                            :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
 
                         <!--  <input type="text" name="" id="" v-model="form.amount" class="form-control">-->
 
@@ -38,40 +39,12 @@
         </div>
         <div class="col-md-8">
 
-            <!--<v-data-table dense :items-per-page="10" :headers="headers" :items="data" :loading="loading"
-                class="elevation-1">
+            <v-data-table dense :items-per-page="10" :items="transactions" :headers="txn_headers">
 
-                <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | formatDate }}
-                </template>
-
-                <template v-slot:item.remarks="{ item }">
-                    <div v-if="item.assessment">
-                        {{ item.assessment.mode_of_assistance }}
-                        {{ item.assessment.assistance.aics_client.full_name }}
-
-                        <span v-if="item.assessment.provider">
-                            {{ item.assessment.provider.company_name }}
-                        </span>
-
-
-                    </div>
-                    <div class="">
-                        {{ item.remarks }}
-                    </div>
-
-
-                </template>
-
-                <template v-slot:item.amount="{ item }">
-                    <div :class="item.movement > 0 ? 'green--text' : 'red--text'">
-                        {{ getAmount(item) }}
-                    </div>
-                </template>
+            </v-data-table>
 
 
 
-            </v-data-table>-->
         </div>
     </div>
 </template>
@@ -94,23 +67,18 @@ export default {
             form: {},
             submit: false,
             data: [],
-            headers: [
-
+            txn_headers: [
+                { text: 'Remarks', value: 'memo' },
+                { text: 'Withdrawal', value: 'debit' },
+                { text: 'Allocation', value: 'credit' },
                 { text: 'Date', value: 'created_at' },
-                { text: 'Office', value: 'fund_source.name' },
-                /*{ text: 'Description', value: 'fund_source.description' },
-                { text: 'Legislator', value: 'fund_source.legislators' },
-                { text: 'Type', value: 'fund_source.type' },*/
-                { text: 'Remarks', value: 'remarks', },
-                { text: 'Amount', value: 'amount', align: 'end', },
-
-
             ],
             loading: false,
             txn_type: [
-                { name: "Credit", value: 1 },
-                { name: "Reversal", value: -1 }
-            ]
+                { name: "Allocation", value: 1 },
+                { name: "Withdrawal", value: -1 }
+            ],
+            transactions:[],
         };
     },
     methods:
@@ -125,17 +93,12 @@ export default {
 
             axios.post(route("charging.create"), this.form).then(response => {
                 alert(response.data.message);
-                this.getLogs();
+                this.$refs.charging.reset();
+                this.viewTxn();
             });
 
         }, 250),
-        getLogs() {
-            axios.get(route("charging.index")).then(res => {
-                console.log(res);
-                this.data = res.data;
-            }).catch(err => console.log(res));
-        },
-
+        
         getAmount(item) {
             let x = item.amount * item.movement;
             return x.toLocaleString();
@@ -146,6 +109,13 @@ export default {
                 console.log(res);
             }).catch(err => console.log(err));
 
+        },
+        viewTxn() {
+
+            axios.get(route("charging.txn", this.form.fund_source_id)).then(response => {
+                this.transactions = response.data;
+                this.dialog_txn = true;
+            }).catch(err => console.log(err));
         }
 
     },

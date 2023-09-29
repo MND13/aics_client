@@ -559,7 +559,7 @@
 
 
             <v-menu v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
-              <template  v-slot:activator="{ on, attrs }">
+              <template v-slot:activator="{ on, attrs }">
                 <v-btn large dark v-bind="attrs" v-on="on">
                   <v-icon> mdi-printer </v-icon> Print
                 </v-btn>
@@ -618,15 +618,24 @@
         </v-form>
 
 
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+        
+
 
       </div>
 
     </div>
     <span v-shortkey="['ctrl', 'p']" @shortkey="PrintGIS()"></span>
     <span v-shortkey="['ctrl', 'shift', 'p']" @shortkey="PrintCOE()"></span>
-    <span v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'" v-shortkey="['ctrl', 'alt', 'p']" @shortkey="PrintCAV()"></span>
+    <span v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'" v-shortkey="['ctrl', 'alt', 'p']"
+      @shortkey="PrintCAV()"></span>
     <span v-else v-shortkey="['ctrl', 'space']" @shortkey="PrintGL()"></span>
-    
+
 
   </div>
 </template>

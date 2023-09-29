@@ -82,6 +82,21 @@
 
                 </v-data-table>
 
+                <v-dialog v-model="dialog_txn">
+                    <v-card>
+                        <v-card-text>
+                            <v-row v-if="transactions">
+
+
+                                <v-data-table dense :items-per-page="10" :items="transactions" :headers="txn_headers">
+
+                                </v-data-table>
+
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+
 
             </v-card>
 
@@ -110,9 +125,15 @@ export default {
                 { text: 'Description', value: 'description' },
                 { text: 'Legislators', value: 'legislators' },
                 { text: 'Type', value: 'type' },
-                { text: 'Current Balance', value: 'current_balance' },
+                { text: 'Current Balance', value: 'balance' },
                 { text: 'Actions', value: 'actions' },
 
+            ],
+            txn_headers: [
+                { text: 'Remarks', value: 'memo' },
+                { text: 'Withdrawal', value: 'debit' },
+                { text: 'Allocation', value: 'credit' },
+                { text: 'Date', value: 'created_at' },
             ],
             types: [
                 '',
@@ -123,6 +144,8 @@ export default {
             ], formData: {},
             formErrors: {},
             submit: false,
+            transactions: [],
+            dialog_txn: false,
 
         }
     },
@@ -198,9 +221,12 @@ export default {
                     ;
             }
         },
-        viewTxn(item)
-        {
-            console.log("c")
+        viewTxn(item) {
+
+            axios.get(route("charging.txn", item.id)).then(response => {
+                this.transactions = response.data;
+                this.dialog_txn = true;
+            }).catch(err => console.log(err));
         }
 
 

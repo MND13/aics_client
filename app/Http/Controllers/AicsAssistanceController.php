@@ -28,8 +28,8 @@ class AicsAssistanceController extends Controller
 {
 
     public function store(Request $request)
-    {   
-      
+    {
+
         DB::beginTransaction();
         $user = Auth::user();
         $year = date("Y");
@@ -60,10 +60,9 @@ class AicsAssistanceController extends Controller
                     return response(['errors' => $errors], 422);
                 }
 
-                
 
-                if (isset($form_data['beneficiary'])) 
-                {
+
+                if (isset($form_data['beneficiary'])) {
                     $beneficiary = AicsBeneficiary::create($form_data['beneficiary']);
                 }
 
@@ -71,17 +70,17 @@ class AicsAssistanceController extends Controller
                 $aics_assistance = new AicsAssistance;
                 $aics_assistance->fill($form_data["assistance"]);
 
-               
+
 
                 if (isset($form_data['beneficiary'])) {
                     $aics_assistance->aics_beneficiary_id  =  $beneficiary->id;
                 }
-              
+
                 #dd($aics_assistance->save());
 
                 $aics_assistance->save();
 
-                
+
 
                 //Uploaded Documents
                 $documents = [];
@@ -231,15 +230,15 @@ class AicsAssistanceController extends Controller
                 ->where("uuid", "=", $uuid)
                 ->with("assessment.fund_sources", function ($q) {
                     $q->where("remarks", "!=", "CANCELLED")
-                    ->where("remarks", "!=", "REVERSAL")
-                    ->orWhereNull("remarks");
-        
+                        ->where("remarks", "!=", "REVERSAL")
+                        ->orWhereNull("remarks");
+
                     return $q;
                 })
-                ->with("aics_client.profile_docs", function ($q){
-                  
-                    $q->select("id","user_id","name","file_directory")                    
-                    ->orderBy("id","desc");
+                ->with("aics_client.profile_docs", function ($q) {
+
+                    $q->select("id", "user_id", "name", "file_directory")
+                        ->orderBy("id", "desc");
                     return $q;
                 })
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
@@ -278,7 +277,7 @@ class AicsAssistanceController extends Controller
 
         if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
-            return AicsAssistance::with([
+            $assisstance =  AicsAssistance::with([
 
                 "aics_type:id,name",
                 "aics_documents",
@@ -286,13 +285,58 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "assessment",
-                "assessment.fund_sources:id,assessment_id,fund_source_id,amount",
-                "assessment.fund_sources.fund_source:id,name",
-                "aics_beneficiary"
-            ])
-                ->where("uuid", "=", $uuid)
-                ->firstOrFail();
+                #"aics_client.profile_docs:id,user_id,name,file_directory",
+                #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
+                "assessment.fund_sources.fund_source:id,name", # FS 
+                "verified_by:id,full_name",
+                "aics_beneficiary",
+                "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
+            ])->where("uuid", "=", $uuid)
+                ->with("assessment.fund_sources", function ($q) {
+                    $q->where("remarks", "!=", "CANCELLED")
+                        ->where("remarks", "!=", "REVERSAL")
+                        ->orWhereNull("remarks");
+
+                    return $q;
+                })
+                ->with("aics_client.profile_docs", function ($q) {
+
+                    $q->select("id", "user_id", "name", "file_directory")
+                        ->orderBy("id", "desc");
+                    return $q;
+                })
+
+                ->get()->transform(function ($asst) {
+
+                    if (isset($asst->assessment->fund_sources)) {
+                        $selected_fund_source = array();
+                        $i = 0;
+                        $r = array();
+                        foreach ($asst->assessment->fund_sources as $key => $value) {
+
+                            if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
+
+                                $selected_fund_source[$i] = (object) [];
+                                $selected_fund_source[$i]->id = $value["fund_source"]["id"];
+                                $selected_fund_source[$i]->name = $value["fund_source"]["name"];
+                                $selected_fund_source[$i]->amount = $value["amount"];
+                                $selected_fund_source[$i]->txn_id = $value["id"];
+                                $selected_fund_source[$i]->remarks = $value["remarks"];
+                                $selected_fund_source[$i]->key = $key;
+                                $r[$i] = $value["remarks"];
+                                $i++;
+                            }
+                        }
+
+                        $asst->selected_fs = $selected_fund_source;
+                        $asst->aa = $r;
+                    }
+                    return $asst;
+                });
+
+
+
+            return $assisstance[0];
         }
 
 
@@ -421,8 +465,8 @@ class AicsAssistanceController extends Controller
 
 
     public function sms($request)
-    {     
-        
+    {
+
         switch ($request->status) {
             case 'Rejected':
                 $msg = "";
@@ -432,16 +476,15 @@ class AicsAssistanceController extends Controller
                 $msg = "";
                 break;
             default:
-                $assistance_type = AicsType::where("id","=",$request->aics_type_id)->first();       
+                $assistance_type = AicsType::where("id", "=", $request->aics_type_id)->first();
 
                 #Ayaw usaba ang spacing kai madaot pg view sa phone;
-                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa ". strtoupper($assistance_type->name) .". Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " .  date_format(date_create($request->schedule),"M. d, Y, @ h:iA")  . " Daghang Salamat!";
+                $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office, nadawat na namo ang imohang aplikasyon sa " . strtoupper($assistance_type->name) . ". Sa karon, gina proceso na inyohang dokyumento. Mamalihog mi na magpa-abot ug tawag gikan sa social workers sa kani na schedule: " .  date_format(date_create($request->schedule), "M. d, Y, @ h:iA")  . " Daghang Salamat!";
                 if ($request->remarks && $request->remarks != "") $msg .= " Pahabol na Mensahe: " .  $request->remarks;
                 break;
         }
 
         $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
         return $response->collect();
-      
     }
 }

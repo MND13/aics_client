@@ -65,7 +65,10 @@ Route::get('gl/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gl'
 
 Route::post('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'create'])->name("charging.create");
 Route::get('charging', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'index'])->name("charging.index");
+Route::get('charging/txn/{id}', [\App\Http\Controllers\AicsAssessmentFundSourceController::class, 'show'])->name("charging.txn");
+
 
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
 
 Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
+
