@@ -35,12 +35,14 @@
             <v-list-item two-line v-for="(e, i) in submission_info" :key="i">
               <v-list-item-content>
                 <v-list-item-title> {{ e.title }} </v-list-item-title>
-                <v-list-item-subtitle>
-                  <v-chip class="white--text" dark small v-if="e.title == 'Status'" :color="status_color(e.value)"> {{
+                <v-list-item-subtitle v-if="e.title == 'Status'" >
+                  
+                  <v-chip class="white--text" dark small :color="status_color(e.value)"> {{
                     e.value
-                  }} </v-chip>
-                  <span v-else>{{ e.value }}</span>
-                </v-list-item-subtitle>
+                  }} </v-chip> as of {{gis_data.status_date  | formatDateOnly }}</v-list-item-subtitle>
+
+                  <v-list-item-subtitle v-else>{{ e.value }}</v-list-item-subtitle>
+                
                 <v-divider></v-divider>
               </v-list-item-content>
             </v-list-item>

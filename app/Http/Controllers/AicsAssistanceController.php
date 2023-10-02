@@ -3,25 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AicsAssistanceCreateRequest;
-use App\Http\Requests\AicsBeneficiaryCreateRequest;
-use App\Http\Requests\AicsClientCreateRequest;
-use App\Models\AicsAssessmentFundSource;
 use App\Models\AicsAssistance;
 use App\Models\AicsBeneficiary;
-use App\Models\AicsClient;
 use App\Models\AicsDocument;
 use App\Models\AicsRequrement;
 use App\Models\AicsType;
-use App\Models\CertOfEligibility;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AcisCrimsExport;
+
 
 
 class AicsAssistanceController extends Controller
@@ -486,5 +482,22 @@ class AicsAssistanceController extends Controller
 
         $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
         return $response->collect();
+    }
+
+    public function export(Request $request)
+    {
+       
+
+        $filename = "";
+        $filename = "aics-app-client-" . \Str::slug(Carbon::now());
+        $export_file_name = "$filename.xlsx";
+      
+        Excel::store(new AcisCrimsExport($request->date_option, $request->date_range), "public/$export_file_name", 'local');
+        return [
+            "file" => url(Storage::url("public/$export_file_name")),
+        ];
+      
+
+       
     }
 }

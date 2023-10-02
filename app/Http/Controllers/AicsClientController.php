@@ -250,7 +250,7 @@ class AicsClientController extends Controller
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
-
+ 
         if ($assistance) {
             $pdf = Pdf::loadView(
                 'pdf.gl',

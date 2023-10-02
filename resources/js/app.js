@@ -30,6 +30,7 @@ import NotFound from "./Components/NotFound.vue"
 import Offices from "./Components/Offices.vue"
 import Signatories from "./Components/Signatories.vue"
 import Charging from "./Components/Charging.vue"
+import Reports from "./Components/Reports.vue"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -142,6 +143,15 @@ const router = new VueRouter({
                 requiresAuth: true,
                 requiresRoles: ["super-admin"]
             }            
+        },
+        {   
+            path: "/reports",
+            name: "reports",
+            component:  Reports,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin"]
+            }            
         }
 
         
@@ -153,6 +163,12 @@ const router = new VueRouter({
 Vue.filter("formatDate", function (value) {
     if (value) {
         return moment(String(value)).format("MMM. DD, YYYY LT");
+    }
+});
+
+Vue.filter("formatDateOnly", function (value) {
+    if (value) {
+        return moment(String(value)).format("MMM. DD, YYYY");
     }
 });
 

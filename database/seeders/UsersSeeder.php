@@ -29,21 +29,22 @@ class UsersSeeder extends Seeder
             }
             
             $insert_data['first_name'] = $psgc_data[0];
-            $insert_data['last_name'] = "";
-            $insert_data['street_number'] = $psgc_data[1];
+            $insert_data['middle_name'] = $psgc_data[1];
+            $insert_data['last_name']  = $psgc_data[2];
+            $insert_data['ext_name'] = $psgc_data[3];
             $insert_data['gender'] = "";
-            $insert_data['birth_date'] = "1939-11-1";
+            $insert_data['birth_date'] = "1900-01-1";
             //$insert_data['contact_person'] = $psgc_data[2];
-            $insert_data['mobile_number'] = $psgc_data[3];
-            $insert_data['email'] = $psgc_data[4];
-            $insert_data['username'] = $psgc_data[5];
-            $insert_data['password'] = $psgc_data[6];
-            $insert_data['psgc_id'] = $psgc_data[7];
+            $insert_data['mobile_number'] = "09000000000";
+            $insert_data['email'] = $psgc_data[5];
+            $insert_data['username'] = $psgc_data[6];
+            $insert_data['password'] = $psgc_data[7];
+            $insert_data['psgc_id'] = $psgc_data[8];
         
             $user = User::create($insert_data);
             $user->assignRole('admin');
            
-            echo "created User: $user->first_name \n";
+            echo "created User: $user->username \n";
         }
     }
 
