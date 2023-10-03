@@ -133,11 +133,15 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
     public function map($assistance): array
     {
         $fs = array();
+        $total =  0;
+       
         if ($assistance->assessment->fund_sources) {
-            foreach ($assistance->assessment->fund_sources as $key => $value) {
-                $fs[] = $value->fund_source->name;
+            foreach ($assistance->assessment->fund_sources as $key => $value) {               
+                $fs[] = $value->fund_source->name."=". $value->amount;              
             }
+            $total = $assistance->assessment->fund_sources->sum("amount");
         }
+        
         return [
             $assistance->created_at->format("m/d/Y h:i:s"),
             $assistance->assessment->interviewed_by,
@@ -158,7 +162,7 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
             $assistance->age,
             $assistance->assessment->mode_of_admission,
             $assistance->aics_type->name,
-            $assistance->assessment->amount,
+            $total,
             "CURRENT FUND",
             "",
             "",
