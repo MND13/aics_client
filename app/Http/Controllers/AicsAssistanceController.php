@@ -175,13 +175,11 @@ class AicsAssistanceController extends Controller
                     }
 
 
-                    if($asst->aics_client->profile_docs)
-                    {
+                    if ($asst->aics_client->profile_docs) {
                         foreach ($asst->aics_client->profile_docs as $key => $value) {
-                           
+
                             $value->file_directory =  User::s3Url($value->file_directory);
                         }
-
                     }
 
 
@@ -224,7 +222,6 @@ class AicsAssistanceController extends Controller
                         ->orderBy("id", "desc");
                     return $q;
                 })
-
                 ->get()->transform(function ($asst) {
 
                     if (isset($asst->assessment->fund_sources)) {
@@ -249,7 +246,16 @@ class AicsAssistanceController extends Controller
 
                         $asst->selected_fs = $selected_fund_source;
                         $asst->aa = $r;
+
+                      
                     }
+
+                    if ($asst->aics_client->profile_docs) {
+                        foreach ($asst->aics_client->profile_docs as $key => $value) {
+                            $value->file_directory =  User::s3Url($value->file_directory);
+                        }
+                    }
+                    
                     return $asst;
                 });
 
@@ -427,6 +433,5 @@ class AicsAssistanceController extends Controller
     public function view_attachment(Request $request)
     {
         return  User::s3Url($request->file_directory);
-      
     }
 }
