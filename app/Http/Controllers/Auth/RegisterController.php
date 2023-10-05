@@ -162,7 +162,7 @@ class RegisterController extends Controller
             $month = date("m");
 
             $files = request('valid_id');
-            $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $user->uuid, $files);
+            $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $user->uuid, $files);
             $url = Storage::url($path);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
@@ -172,8 +172,7 @@ class RegisterController extends Controller
             $doc->save();
 
             $files = request('client_photo');
-            $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $user->uuid, $files);
-            
+            $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $user->uuid, $files);
             $url = Storage::url($path);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,

@@ -29,8 +29,8 @@ Route::group(['prefix' => '/aics'], function () {
     Route::get('assistance-types', [\App\Http\Controllers\AicsTypeController::class, 'index'])->name("api.aics.assistance-types");
     Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class, 'getCategories'])->name("api.categories");
-
     Route::post('export', [\App\Http\Controllers\AicsAssistanceController::class, 'export'])->name("api.report.export");
+    Route::post('view_attachment', [\App\Http\Controllers\AicsAssistanceController::class, 'view_attachment'])->name("api.view_attachment");
 
 });
 

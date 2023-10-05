@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AcisCrimsExport;
-
-
+use App\Models\User;
 
 class AicsAssistanceController extends Controller
 {
@@ -89,7 +88,7 @@ class AicsAssistanceController extends Controller
                 foreach ($requirements as $key => $requirement) {
 
                     if (isset($files[$requirement->id])) {
-                        $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
+                        $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
                         $url = Storage::url($path);
                         $documents[] = new AicsDocument([
                             'file_directory' => $url,
@@ -110,95 +109,6 @@ class AicsAssistanceController extends Controller
                 throw $th;
             }
         }
-
-        /*try {
-            $form_data = $request->all();
-            $errors = [];
-            $year = date("Y");
-            $nmonth = date("m");
-
-            $errors = [
-                "client" => [],
-                "beneficiary" => [],
-                "assistance" => [],
-            ];
-
-            //Client Validation
-            $client_request_rules = (new AicsClientCreateRequest())->rules();
-            $client_validator =  Validator::make($form_data['client'], $client_request_rules);
-            if ($client_validator->fails()) {
-                $errors['client'] = $client_validator->errors();
-            }
-
-            //Beneficiary Validation
-            $beneficiary_request_rules = (new AicsBeneficiaryCreateRequest())->rules();
-            $beneficiary_validator =  Validator::make($form_data['beneficiary'], $beneficiary_request_rules);
-            if ($beneficiary_validator->fails()) {
-                $errors['beneficiary'] = $beneficiary_validator->errors();
-            }
-
-            //Assistance Validation
-            $assistance_request_rules = (new AicsAssistanceCreateRequest())->rules();
-            $assistance_validator =  Validator::make($form_data['assistance'], $assistance_request_rules);
-           // (new AicsAssistanceCreateRequest())->withValidator($assistance_validator);
-            if ($assistance_validator->fails()) {
-                $errors['assistance'] = $assistance_validator->errors();
-            }
-
-            if (
-                $errors['client'] != array() &&
-                $errors['beneficiary'] != array() &&
-                $errors['assistance'] != array()
-            ) {
-                return response(['errors' => $errors], 422);
-            }
-
-            $aics_assistance = AicsAssistance::create($form_data['assistance']);
-            $client = AicsClient::create($form_data['client']);
-            $beneficiary = AicsBeneficiary::create($form_data['beneficiary']);
-
-            $aics_assistance->aics_client()->associate($client);
-            $aics_assistance->aics_beneficiary()->associate($beneficiary);
-            $aics_assistance->aics_beneficiary->aics_client()->associate($client);
-
-
-            $aics_assistance->aics_beneficiary->save();
-            $aics_assistance->save();
-
-            $start_year = Carbon::parse("$year-01-01");
-            $end_year = Carbon::parse("$year-01-01")->addYear()->subSecond();
-
-            $count_users = User::whereBetween('created_at', [$start_year, $end_year])->whereNotNull('aics_client_id')->count();
-            $user = $aics_assistance->aics_client->user()->create([
-                'name' => $client->first_name . " " . $client->middle_name . " " . $client->last_name . " " . $client->ext_name,
-                'email' => $year . "-" . str_pad($month, 2, "0", STR_PAD_LEFT) . "-" . str_pad($count_users, 4, "0", STR_PAD_LEFT),
-                'password' => $client->mobile_number,
-            ]);
-
-            //Uploaded Documents
-            $documents = [];
-            $aics_type_id = request('assistance.aics_type_id');
-            $requirements = AicsRequrement::where('aics_type_id', $aics_type_id)->where('is_required', 1)->get();
-            $files = request('assistance.documents');
-
-            foreach ($requirements as $key => $requirement) {
-                if (isset($files[$key])) {
-                    $path = Storage::disk('local')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$key]);
-                    $url = Storage::url($path);
-                    $documents[] = new AicsDocument([
-                        'file_directory' => $url,
-                        'aics_requrement_id' => $requirement->id,
-                    ]);
-                }
-            }
-            $aics_assistance->aics_documents()->saveMany($documents);
-            DB::commit();
-            $aics_assistance->user_account = $user;
-            return $aics_assistance;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            throw $th;
-        }*/
     }
 
     public function show(Request $request, $uuid)
@@ -263,6 +173,19 @@ class AicsAssistanceController extends Controller
                         $asst->selected_fs = $selected_fund_source;
                         $asst->aa = $r;
                     }
+
+
+                    if($asst->aics_client->profile_docs)
+                    {
+                        foreach ($asst->aics_client->profile_docs as $key => $value) {
+                           
+                            $value->file_directory =  User::s3Url($value->file_directory);
+                        }
+
+                    }
+
+
+
                     return $asst;
                 });
 
@@ -376,8 +299,8 @@ class AicsAssistanceController extends Controller
 
 
             ])
-                //->whereRelation("office","user_id","=",Auth::id() )
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
+                ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
                 ->orderBy("created_at",  "desc")
                 ->get();
         }
@@ -403,6 +326,7 @@ class AicsAssistanceController extends Controller
 
             // var_dump(Auth::user());
 
+
             return AicsAssistance::with([
 
                 "aics_type:id,name",
@@ -414,8 +338,10 @@ class AicsAssistanceController extends Controller
                 "assessment"
 
             ])
-                //->whereRelation("office","user_id","=",Auth::id() )
-                // ->whereRelation("office","office_id","=",Auth::user()->office_id )
+
+                ->orderBy("created_at",  "desc")
+                ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
+
                 ->get();
         }
     }
@@ -486,18 +412,21 @@ class AicsAssistanceController extends Controller
 
     public function export(Request $request)
     {
-       
+
 
         $filename = "";
         $filename = "aics-app-client-" . \Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";
-      
+
         Excel::store(new AcisCrimsExport($request->date_option, $request->date_range), "public/$export_file_name", 'local');
         return [
             "file" => url(Storage::url("public/$export_file_name")),
         ];
-      
+    }
 
-       
+    public function view_attachment(Request $request)
+    {
+        return  User::s3Url($request->file_directory);
+      
     }
 }

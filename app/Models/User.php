@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 
 class User extends Authenticatable
@@ -80,8 +81,8 @@ class User extends Authenticatable
     }
 
     public function age()
-    {   
-        
+    {
+
         return Carbon::parse($this->attributes['birth_date'])->age;
     }
 
@@ -99,7 +100,24 @@ class User extends Authenticatable
         return $this->hasMany(ProfileDocuments::class);
     }
 
-    
+    public static function s3Url($path)
+    {
+        $path =  str_replace("/storage/", "public/", $path);
 
-   
+        if (Storage::disk("s3")->exists($path)) {
+
+            $mimtype  = Storage::disk("s3")->mimeType($path);
+            $foo  = Storage::disk("s3")->get($path);
+            $base64 = "data:" . $mimtype . ";base64," . base64_encode($foo);
+            return $base64;
+
+        } else if(Storage::exists($path))
+        {
+            $mimtype  = Storage::mimeType($path);
+            $foo  = Storage::get($path);
+            $base64 = "data:" . $mimtype . ";base64," . base64_encode($foo);
+            return $base64;
+
+        } else return url("images/broken-link.png");
+    }
 }

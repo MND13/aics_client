@@ -20,7 +20,7 @@ class UserController extends Controller
                 'roles',
                 'office',
                 'profile_docs'
-            ])->role(['admin','encoder','social-worker'])->get()
+            ])->role(['admin', 'encoder', 'social-worker'])->get()
         ];
     }
 
@@ -100,4 +100,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
     }
+
+
 }

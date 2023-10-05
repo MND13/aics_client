@@ -35,14 +35,14 @@
             <v-list-item two-line v-for="(e, i) in submission_info" :key="i">
               <v-list-item-content>
                 <v-list-item-title> {{ e.title }} </v-list-item-title>
-                <v-list-item-subtitle v-if="e.title == 'Status'" >
-                  
+                <v-list-item-subtitle v-if="e.title == 'Status'">
+
                   <v-chip class="white--text" dark small :color="status_color(e.value)"> {{
                     e.value
-                  }} </v-chip> as of {{gis_data.status_date  | formatDateOnly }}</v-list-item-subtitle>
+                  }} </v-chip> as of {{ gis_data.status_date | formatDateOnly }}</v-list-item-subtitle>
 
-                  <v-list-item-subtitle v-else>{{ e.value }}</v-list-item-subtitle>
-                
+                <v-list-item-subtitle v-else>{{ e.value }}</v-list-item-subtitle>
+
                 <v-divider></v-divider>
               </v-list-item-content>
             </v-list-item>
@@ -87,10 +87,11 @@
           <v-card-subtitle class="indigo--text">Attachments</v-card-subtitle>
 
           <v-list dense v-if="gis_data.aics_documents">
-            <v-list-item dense v-for="(e, i) in gis_data.aics_documents" :key="i" link :href="e.file_directory"
-              target="_blank" color="primary">
-              <v-list-item-content :href="e.file_directory" target="_blank">
-                <v-list-item-subtitle :to="e.file_directory"> {{ e.requirement.name }}</v-list-item-subtitle>
+            <!--<v-list-item dense v-for="(e, i) in gis_data.aics_documents" :key="i" link :href="e.file_directory"
+              target="_blank" color="primary">-->
+            <v-list-item dense v-for="(e, i) in gis_data.aics_documents" :key="i" color="primary">
+              <v-list-item-content>
+                <v-list-item-subtitle @click="viewFile(e.file_directory)"> {{ e.requirement.name }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -101,7 +102,7 @@
 
       </div>
       <div class="col-md-9">
-        <!--<form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">-->
+
         <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
 
@@ -261,6 +262,9 @@
               </v-row>
               <hr>
 
+
+
+
               <v-row v-if="gis_data.aics_client.psgc">
                 <v-col cols="12" md="3">
                   <label for="">Region <small>(Ex. NCR)</small></label>
@@ -319,6 +323,12 @@
               </v-row>
             </v-card-text>
           </v-card>
+
+          <v-card tile flat outlined id="docs_preview" v-if="view_url" class="my-2" :loading="loading_view_url">
+            <v-app-bar flat dense short dark color="indigo darken-3">View Attachment</v-app-bar>
+            <iframe :src="view_url" frameborder="0" style="width:100%; min-height: 500px;"></iframe>
+          </v-card>
+
 
           <v-row v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'" class="g-2">
             <v-col cols="12" md="4">
@@ -620,14 +630,6 @@
         </v-form>
 
 
-        <table>
-          <tr>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
-        
-
 
       </div>
 
@@ -727,6 +729,8 @@ export default {
       remarks: "",
       total: 0,
       for_reveresal: [],
+      view_url: null,
+      loading_view_url: false,
 
     };
   },
@@ -1034,6 +1038,14 @@ export default {
 
         }).catch(error => console.log(error));
       }
+    },
+
+    viewFile(file_directory) {
+      this.loading_view_url = true;
+      axios.post(route("api.view_attachment"), { "file_directory": file_directory }).then(response => {
+        this.view_url = response.data;
+        this.loading_view_url = false;
+      }).catch(err => console.log(err));
     }
 
 

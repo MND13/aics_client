@@ -19,9 +19,7 @@ use App\Models\DirtyList;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use \NumberFormatter;
-
-
-
+use App\Models\User;
 
 
 
@@ -265,4 +263,7 @@ class AicsClientController extends Controller
             return $pdf->stream('gl.pdf');
         }
     }
+
+
+    
 }
