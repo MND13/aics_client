@@ -31,16 +31,18 @@ Route::group(['prefix' => '/aics'], function () {
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class, 'getCategories'])->name("api.categories");
     Route::post('export', [\App\Http\Controllers\AicsAssistanceController::class, 'export'])->name("api.report.export");
     Route::post('view_attachment', [\App\Http\Controllers\AicsAssistanceController::class, 'view_attachment'])->name("api.view_attachment");
+    Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
+    Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
+
 
 });
+
+
 
 Route::get('psgc', [\App\Http\Controllers\PsgcController::class, 'index'])->name("api.psgc");
 Route::get('psgc/{type}', [\App\Http\Controllers\PsgcController::class, 'show'])->name("api.psgc.show");
 Route::get('gis/{uuid}', [\App\Http\Controllers\AicsClientController::class, 'gis'])->name("api.pdf.gis2");
 Route::get('assessment_opts', [\App\Http\Controllers\AssessmentOptionsController::class, 'index'])->name("api.assessment_opts");
-
-Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
-Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
 
 Route::get('fund_source', [\App\Http\Controllers\FundSourceController::class, 'index'])->name("api.fund_src");
 Route::post('fund_source', [\App\Http\Controllers\FundSourceController::class, 'store'])->name("api.fund_src.store");
@@ -72,6 +74,9 @@ Route::get('charging/txn/{id}', [\App\Http\Controllers\AicsAssessmentFundSourceC
 
 
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
-
 Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
+Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
+
+Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate");
+Route::post('otp/verify', [\App\Http\Controllers\OtpController::class, 'verify'])->name("api.otp.verify");
 

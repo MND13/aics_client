@@ -25,11 +25,11 @@
 
     @routes()
 </head>
-<body>
+<body >
     <div id="app" data-app >
         <v-app>
 
-        <main class="py-4"> 
+        <main> 
             @yield('content')
         </main>
         </v-app>

@@ -39,20 +39,11 @@ class HomeController extends Controller
 
 
         if ($user->valid_id) {
-
-            # $url =  str_replace("/storage/", "public/", $user->profile_pic->file_directory);
             $url = $user->profile_pic->file_directory;
             $url_res = User::s3Url($url);
             $user->profile_pic->file_directory = $url_res;
         }
 
-        # $mimtype  = Storage::disk("s3")->mimeType("public/uploads/2023/10/10db9e53-2fe4-4b53-8f97-67ceaed08ab5/jnlr19J80yptYAWw51Miwr3LmirAbLMQ827mlO63.png");
-        # $foo  = Storage::disk("s3")->get("public/uploads/2023/10/10db9e53-2fe4-4b53-8f97-67ceaed08ab5/jnlr19J80yptYAWw51Miwr3LmirAbLMQ827mlO63.png");
-        #  $user->foo = s3Url:: "data:".$mimtype.";base64,".base64_encode($foo);
-
-
-        # $user->foo  = base64_encode( $user->foo);
-        #dd($user->foo);
 
         $data = [
             'user' => $user,

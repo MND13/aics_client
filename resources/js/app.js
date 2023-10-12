@@ -173,6 +173,7 @@ Vue.filter("formatDateOnly", function (value) {
 });
 
 Vue.component('register-component', require('./components/Register.vue').default);
+Vue.component('otp-gen-component', require('./components/OtpGen.vue').default);
 
 
 export default new Vuetify({

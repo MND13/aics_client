@@ -29,7 +29,7 @@ class AddBeneIdToAicsAssistancesTable extends Migration
     {
         Schema::table('aics_assistances', function (Blueprint $table) {
             $table->dropForeign(['aics_beneficiary_id']);
-            $table->dropColum('rel_beneficiary');
+            $table->dropColumn('rel_beneficiary');
         });
     }
 }
