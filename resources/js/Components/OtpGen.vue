@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
 
-            {{ user }}
+           
             <v-col cols="9" class="ma-auto">
 
                 <v-card flat tile outlined class="p-auto text-center">
