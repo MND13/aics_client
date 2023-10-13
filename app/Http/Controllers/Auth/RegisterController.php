@@ -70,7 +70,8 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
-    {
+    {   
+      
         if (!isset($data['middle_name'])) {
             $data['middle_name'] = NULL;
         }
@@ -88,18 +89,14 @@ class RegisterController extends Controller
             'ext_name' => ['sometimes', 'string', 'max:255'],
             'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
             'full_name' => ['unique:users'],
-            #'full_name' => ['bail', 'required', Rule::unique('users', 'full_name')->where(function ($query) use ($data) {
-            #   if(isset($data['birth_date'])) return $query->where('birth_date', '=',  $data['birth_date']);
-            #})],
             'gender' => ['required'],
             'psgc_id' => ['required','exists:psgcs,id'],
-            'mobile_number' => ['required', 'numeric', 'digits:11',],
+            'mobile_number' => ['required', 'numeric', 'digits:11','unique:users'],
             #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'street_number' => ['required', 'string', 'max:255'],
             #'password' => ['required', 'string', 'min:8', 'confirmed'],
             'valid_id' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
             'client_photo' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
-
         ]);
 
         $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
