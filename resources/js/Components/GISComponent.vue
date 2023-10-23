@@ -900,7 +900,7 @@ export default {
       this.rejectform.uuid = this.gis_data.uuid;
       this.rejectform.status = "Rejected";
       this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
-      this.rejectform.task = "verify";
+      this.rejectform.task = "update_status";
 
 
       axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
