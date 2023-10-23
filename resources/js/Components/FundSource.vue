@@ -79,7 +79,7 @@
                         </v-icon>-->
                     </template>
 
-                    <template v-slot:item.actions="{ item }" v-if="hasRoles(['super-admin'])">
+                    <template v-slot:item.balance="{ item }" v-if="hasRoles(['super-admin'])">
                         {{ item.balance }}
                     </template>
 
