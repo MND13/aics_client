@@ -29,6 +29,6 @@ Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLogi
 
 Auth::routes();
 Route::get('/holiday-crawler', [App\Models\HolidayCrawler::class, 'crawler'])->name('holiday-crawler');
-Route::get('/verify_mobile', [App\Models\OtpController::class, 'index'])->name('otp.form');
+//Route::get('/verify_mobile', [App\Models\OtpController::class, 'index'])->name('otp.form');
 
 Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*')->middleware('mobile_verified');

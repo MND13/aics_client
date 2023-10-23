@@ -103,10 +103,10 @@ const router = new VueRouter({
             path: "/providers",
             name: "Providers",
             component: Providers,
-            meta: {
+            /*meta: {
                 requiresAuth: true,
                 requiresRoles: ["super-admin", "admin"]
-            }
+            }*/
         },
         {
             path: "/fund_source",

@@ -1,5 +1,5 @@
 name,type,parent,rquired
-One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Transportation Assistance,TRUE
+One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Transportation Assistance,FALSE
 "Police Blotter/ Police Certification (for victims of pickpockets, illegal recruitment, etc.)",assistance_requirements,Transportation Assistance,TRUE
 "Other supporting document/s such as but
 not limited to, justification of the social
@@ -8,53 +8,53 @@ certificate, and/or court order/subpoena",assistance_requirements,Transportation
 "Barangay Certificate or Residency or
 Certificate of Indigency or Certificate of
 the client is in need of assistance may be
-required",assistance_requirements,Transportation Assistance,TRUE
-One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Medical Assistance for Hospital Bill,TRUE
+required",assistance_requirements,Transportation Assistance,FALSE
+One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Medical Assistance for Hospital Bill,FALSE
 "Medical Certificate/Clinical Abstract complete with name, license number and signature of the Physician issued within three months (Original / Certified true copy)",assistance_requirements,Medical Assistance for Hospital Bill,TRUE
 Hospital bill / Statement of Account (outstanding balance) with name and signature,assistance_requirements,Medical Assistance for Hospital Bill,TRUE
 Social Case Study Report/ Case Summary,assistance_requirements,Medical Assistance for Hospital Bill,FALSE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Hospital Bill,TRUE
-One (1) Any valid identification card,assistance_requirements,Medical Assistance for Medicine/ Assistive Device,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Hospital Bill,FALSE
+One (1) Any valid identification card,assistance_requirements,Medical Assistance for Medicine/ Assistive Device,FALSE
 "Medical Certificate/Clinical Abstract complete with name, license number and signature of the Physician issued within three months (Original / Certified true copy)",assistance_requirements,Medical Assistance for Medicine/ Assistive Device,TRUE
 "Prescription with date of issuance, complete name, license number and signature of the Physician issued within three months.",assistance_requirements,Medical Assistance for Medicine/ Assistive Device,TRUE
 Social Case Study Report/ Case Summary,assistance_requirements,Medical Assistance for Medicine/ Assistive Device,FALSE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Medicine/ Assistive Device,TRUE
-One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Medical Assistance for Laboratory Requests,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Medicine/ Assistive Device,FALSE
+One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Medical Assistance for Laboratory Requests,FALSE
 "Medical Certificate/Clinical Abstract complete with name, license number and signature of the Physician issued within three months (Original / Certified true copy)",assistance_requirements,Medical Assistance for Laboratory Requests,TRUE
 "Laboratory Requests with name, license number and signature of the Physician",assistance_requirements,Medical Assistance for Laboratory Requests,TRUE
 Social Case Study Report/ Case Summary,assistance_requirements,Medical Assistance for Laboratory Requests,FALSE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Laboratory Requests,TRUE
-One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Burial Assistance for Funeral Bill,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Medical Assistance for Laboratory Requests,FALSE
+One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Burial Assistance for Funeral Bill,FALSE
 Registered Death Certificate/ Certification from the Tribal Chieftain (Original / certified true copy,assistance_requirements,Burial Assistance for Funeral Bill,TRUE
 Funeral Contract,assistance_requirements,Burial Assistance for Funeral Bill,TRUE
 Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Burial Assistance for Funeral Bill,TRUE
-One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Burial Assistance for Transfer of Cadaver,TRUE
+One (1) Any valid identification card of the client/ person to be interviewed,assistance_requirements,Burial Assistance for Transfer of Cadaver,FALSE
 Registered Death Certificate/ Certification from the Tribal Chieftain (Original / certified true copy),assistance_requirements,Burial Assistance for Transfer of Cadaver,TRUE
 Funeral Contract,assistance_requirements,Burial Assistance for Transfer of Cadaver,TRUE
 Transfer Permit ,assistance_requirements,Burial Assistance for Transfer of Cadaver,TRUE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Burial Assistance for Transfer of Cadaver,TRUE
-One (1) Validated School ID,assistance_requirements,Educational Assistance,TRUE
-One (1) Valid I.D of the Parent/guardian,assistance_requirements,Educational Assistance,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Burial Assistance for Transfer of Cadaver,FALSE
+One (1) Validated School ID,assistance_requirements,Educational Assistance,FALSE
+One (1) Valid I.D of the Parent/guardian,assistance_requirements,Educational Assistance,FALSE
 Enrolment Assessment Form or Certificate of Enrolment or Registration,assistance_requirements,Educational Assistance,TRUE
 "Statement of Account for college students, when available. This may not available to State Universities",assistance_requirements,Educational Assistance,TRUE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Educational Assistance,TRUE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Educational Assistance,FALSE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Food Assistance,TRUE
-Project proposal and Food distribution List(CRCF client),assistance_requirements,Food Assistance,TRUE
-Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Food Assistance,TRUE
+Project proposal and Food distribution List(CRCF client),assistance_requirements,Food Assistance,FALSE
+Barangay Certificate or Residency or Certificate of Indigency or Certificate of the client is in need of assistance may be required,assistance_requirements,Food Assistance,FALSE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Fire Victim,TRUE
 Police Report/ Bureau of Fire Protection Report from the Bureau of Fire,assistance_requirements,Cash Assistance for Fire Victim,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Distressed OFs,TRUE
 Passport,assistance_requirements,Cash Assistance for Distressed OFs,TRUE
 Travel Documents,assistance_requirements,Cash Assistance for Distressed OFs,TRUE
-Certification from OWWA or the Barangay,assistance_requirements,Cash Assistance for Distressed OFs,TRUE
+Certification from OWWA or the Barangay,assistance_requirements,Cash Assistance for Distressed OFs,FALSE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Rescued Client,TRUE
 Certification from a social worker or Case manager from rescued clients.,assistance_requirements,Cash Assistance for Rescued Client,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
 Police Report,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
 Social Worker? certification for the victims of online sexual exploitation of children,assistance_requirements,Cash Assistance for Victims of Online Sexual Exploitation,TRUE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for Locally stranded individuals (LSI),TRUE
-"LSI without valid IDs, the Medical Certificate or the Travel Authority issued by the Philippine National Police will suffice and be accepted to prove his/her identity.",assistance_requirements,Cash Assistance for Locally stranded individuals (LSI),TRUE
+"LSI without valid IDs, the Medical Certificate or the Travel Authority issued by the Philippine National Police will suffice and be accepted to prove his/her identity.",assistance_requirements,Cash Assistance for Locally stranded individuals (LSI),FALSE
 One (1) identification card of the client/person to be interviewed,assistance_requirements,Cash Assistance for all other Incidents,TRUE
 "Barangay Certificate of Residency or Certificate of Indigency or Certificate of the Client is in Need of Assistance as well as other documents from legal authorities/regulating agencies, as may be applicable.",assistance_requirements,Cash Assistance for all other Incidents,FALSE
-One (1) Any valid Government Issued I.D,assistance_requirements,Provision of PPE,TRUE
+One (1) Any valid Government Issued I.D,assistance_requirements,Provision of PPE,FALSE
 "RT-PCR* Test Result, if applicable;",assistance_requirements,Provision of PPE,FALSE

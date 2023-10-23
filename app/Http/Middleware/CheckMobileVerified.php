@@ -19,7 +19,9 @@ class CheckMobileVerified
        
         if (auth()->user()->mobile_verified) {
             return $next($request);
-        }else return response()->view('otp');
+        }else{ 
+            return response()->view('otp');
+        }
 
     }
 }

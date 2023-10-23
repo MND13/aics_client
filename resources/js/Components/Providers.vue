@@ -21,15 +21,12 @@
               <v-text-field v-model="formData.company_address" label="Address"
               :error-messages="formErrors.company_address"></v-text-field>
 
-              <v-text-field v-model="formData.action_executed_by" label="Executed By"
-              :error-messages="formErrors.action_executed_by"></v-text-field>
-
+       
               <v-text-field v-model="formData.to_mention" label="To Mention"
               :error-messages="formErrors.to_mention"></v-text-field>
 
           
-            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="hasRoles(['super-admin'])">
+            <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit">
               <span>{{ formType }}</span>
             </v-btn>
 
@@ -56,7 +53,7 @@
         <v-data-table dense :items-per-page="20" :loading="isLoading" :headers="headers" :items="data" :search="search">
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editProviders(item)" v-if="hasRoles(['super-admin'])">
+            <v-icon small class="mr-2" @click="editProviders(item)" >
               mdi-pencil
             </v-icon>
             <v-icon small class="mr-2" @click="deleteProviders(item)" v-if="hasRoles(['super-admin'])">
@@ -95,9 +92,7 @@ export default {
         { text: 'Position', value: 'addressee_position' },
         { text: 'Company', value: 'company_name' },
         { text: 'Address', value: 'company_address' },
-        { text: 'Executed By', value: 'action_executed_by' },
-        { text: 'To Mention', value: 'to_mention' },
-        { text: 'Actions', value: 'actions' },
+         { text: 'Actions', value: 'actions' },
 
 
 

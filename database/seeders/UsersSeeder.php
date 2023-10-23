@@ -40,9 +40,10 @@ class UsersSeeder extends Seeder
             $insert_data['username'] = $psgc_data[6];
             $insert_data['password'] = $psgc_data[7];
             $insert_data['psgc_id'] = $psgc_data[8];
+            $insert_data['mobile_verified'] = $psgc_data[10];
         
             $user = User::create($insert_data);
-            $user->assignRole('admin');
+            $user->assignRole($psgc_data[9]);
            
             echo "created User: $user->username \n";
         }

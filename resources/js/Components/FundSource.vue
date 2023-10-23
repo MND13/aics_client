@@ -17,8 +17,7 @@
 
                         <v-select v-model="formData.type" label="Type" :items="types"></v-select>
 
-                        <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-                            v-if="hasRoles(['super-admin'])">
+                        <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit">
                             <span>{{ formType }}</span>
                         </v-btn>
 
@@ -69,7 +68,7 @@
 
 
                     <template v-slot:item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="editFsrc(item)" v-if="hasRoles(['super-admin'])">
+                        <v-icon small class="mr-2" @click="editFsrc(item)">
                             mdi-pencil
                         </v-icon>
                         <v-icon small class="mr-2" @click="viewTxn(item)" v-if="hasRoles(['super-admin'])">
@@ -80,7 +79,16 @@
                         </v-icon>-->
                     </template>
 
+                    <template v-slot:item.actions="{ item }" v-if="hasRoles(['super-admin'])">
+                        {{ item.balance }}
+                    </template>
+
+
+
                 </v-data-table>
+
+
+
 
                 <v-dialog v-model="dialog_txn">
                     <v-card>

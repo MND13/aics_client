@@ -80,3 +80,5 @@ Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::c
 Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate");
 Route::post('otp/verify', [\App\Http\Controllers\OtpController::class, 'verify'])->name("api.otp.verify");
 
+Route::post('assessment/{uuid}/sms', [\App\Http\Controllers\AicsAssessmentController::class, 'sms'])->name("api.assessment.sms");
+

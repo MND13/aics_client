@@ -62,7 +62,7 @@ class FundSourceController extends Controller
     {
         try {
 
-            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin','social-worker'])) {
 
                 $validator = Validator::make($request->all(), [
                     'name' => 'required',

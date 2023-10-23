@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class OtpController extends Controller
 {
-    public function generate()
+    public static function generate()
     {
         if (Auth::user()) {
             $otp = new UserOtps;
@@ -25,7 +25,7 @@ class OtpController extends Controller
                 if($res["ErrorCode"] == 0)
                 {
                     return [
-                        "success" => "OTP Sent to " . Auth::user()->mobile_number . ". OTP will expire in 30 min",
+                        "success" => "OTP Sent to " . Auth::user()->mobile_number . ". OTP will expire in 15 min",
                         "sms_response" =>  $res
                     ];
                 }else

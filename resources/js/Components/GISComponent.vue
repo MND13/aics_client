@@ -5,6 +5,7 @@
       <div class="col-md-12"
         v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
         <v-spacer></v-spacer>
+        <v-btn dark @click="SendSMS()">Send SMS</v-btn>
         <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
         <v-btn dark @click="PrintCOE()">Print COE</v-btn>
         <v-btn dark @click="PrintCAV()"
@@ -1046,8 +1047,27 @@ export default {
         this.view_url = response.data;
         this.loading_view_url = false;
       }).catch(err => console.log(err));
-    }
+    },
 
+    SendSMS()
+    { 
+      let sms_data = {};
+      sms_data.assistance = this.gis_data.aics_type.name;
+      sms_data.amount = this.gis_data.assessment.amount;
+      sms_data.client = this.gis_data.aics_client.full_name;
+      sms_data.mobile_no = this.gis_data.aics_client.mobile_number;
+      if(this.gis_data.aics_beneficiary)
+      {
+        sms_data.bene = this.gis_data.aics_beneficiary.first_name + " " + this.gis_data.aics_beneficiary.middle_name + this.gis_data.aics_beneficiary.last_name ;
+      
+      };
+      
+      
+      console.log(this.gis_data);
+      axios.post(route("api.assessment.sms", this.gis_data.uuid), sms_data).then(response=> {
+        console.log(response.data);
+      }).catch(e=>console.log(e));
+    }
 
   },
   mounted() {

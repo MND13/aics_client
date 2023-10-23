@@ -1,6 +1,100 @@
-first_name,middle_name,last_name,ext_name,full_name,email,username,password,psgc_id
-BERNARDITA,OPEZ,DE VILLENA,,BERNARDITA O. DE VILLENA,bodevillena@gmail.com,bodevillena,DSWD12345,368
-GLADYS,SUBIO,PELDEROS,,GLADYS S. PELDEROS,pelderosgladys@gmail.com,gspelderos,DSWD12345,368
-PHOEBE,HALIM,TORRECAMPO,,PHOEBE H. TORRECAMPO,phoebetorrecampo0107@gmailcom,phtorrecampo,DSWD12345,368
-GRACE,JUNTILLA,OLANO,,GRACE J. OLANO,gjolano@dswd.gov.ph,gjolano,DSWD12345,368
-ELEAZAR ,SUSADA,MANCHA,JR.,ELEAZAR S. MANCHA  JR.,manchaeleazar@gmail.com,esmancha,DSWD12345,368
+first_name,middle_name,last_name,ext_name,full_name,email,username,password,psgc_id,role,mobile_verified
+ICTMS,,,,ICTMS,icts.fo11@dswd.gov.ph,ICTMS,dswd@12345,368,super-admin,1
+FO11,,ENCODER,,,FO11ENCODER@DSWD.GOV.PH,FO11ENCODER,dswd12345,368,encoder,1
+FO11,,SW,,,FO11SW@DSWD.GOV.PH,FO11SW,dswd12345,368,social-worker,1
+GEMMA,DOLOR,DELA CRUZ,,GEMMA DOLOR DELA CRUZ,gddelacruz@dswd.gov.ph,gddelacruz,dswd12345,368,social-worker,1
+GRACE,JUNTILLA,OLANO,,GRACE JUNTILLA OLANO,gjolano@dswd.gov.ph,gjolano,dswd12345,368,social-worker,1
+MONALIZA,CHING,VIDUYA,,MONALIZA CHING VIDUYA,monaliza061484@gmail.com,mcviduya,dswd12345,368,social-worker,1
+JAN OLIVER,VERGARA,ESTOQUIA,,JAN OLIVER VERGARA ESTOQUIA,janovestoquia@gmail.com,jvestoquia,dswd12345,368,encoder,1
+HYACINTH,ICDANG,MONTALLA,,HYACINTH ICDANG MONTALLA,hyacinthabonado@gmail.com,himontalla,dswd12345,368,social-worker,1
+ARLYN,TROBILLAS,MALDO,,ARLYN TROBILLAS MALDO,arlynmaldo@gmail.com,atmaldo,dswd12345,368,social-worker,1
+SHILOAH,MAQUILING,IMPIG,,SHILOAH MAQUILING IMPIG,impigshiloah89@gmail.com,smimpig,dswd12345,368,social-worker,1
+PETER PAUL,CABIGON,VILLALUNA,,PETER PAUL CABIGON VILLALUNA,ppcvillaluna@dswd.gov.ph,pcvillaluna,dswd12345,368,admin,1
+ARNOLD,BALASBAS,OLASIMAN,,ARNOLD BALASBAS OLASIMAN,arnold081414@gmail.com,abolasiman,dswd12345,368,encoder,1
+GAY MARIE,SUYMAN,VILLAVICENCIO,,GAY MARIE SUYMAN VILLAVICENCIO,gaymarie_091292@yahoo.com,gsvillavicencio,dswd12345,368,social-worker,1
+ELEAZAR,SUSADA,MANCHA,JR,ELEAZAR SUSADA MANCHA,manchaeleazar@gmail.com,esmancha,dswd12345,368,social-worker,1
+JEFIL CYRUS,NEDAMO,PINERO,,JEFIL CYRUS NEDAMO PINERO,JEFILCYRUS21@GMAIL.COM,jcnpinero,dswd12345,368,social-worker,1
+PATRICK GABRIEL,GUERRERO,SERRANO,,PATRICK GABRIEL GUERRERO SERRANO,patgab000024@gmail.com,pggserrano,dswd12345,368,social-worker,1
+LLEWELYN,LOMANTAS,EREBIAS,,LLEWELYN LOMANTAS EREBIAS,erebiasllewelyn@gmail.com,llerebias,dswd12345,368,social-worker,1
+JUSTIN JOE,CALVO,GLORIA,,JUSTIN JOE CALVO GLORIA,justinjoecomp01@gmail.com,jjcgloria,dswd12345,368,encoder,1
+JOSELITO,SIOCO,BARDINAS,,JOSELITO SIOCO BARDINAS,joselitobardinas19@gmail.com,jsbardinas,dswd12345,368,encoder,1
+JOYCE ANN,LOFRANCO,CALATRAVA,,JOYCE ANN LOFRANCO CALATRAVA,dreilof@gmail.com,jlcalatrava,dswd12345,368,encoder,1
+MAE,SABIO,CALLEDO,,MAE SABIO CALLEDO,marjuly24@gmail.com,mscalledo,dswd12345,368,encoder,1
+ROSEMARIE,BALUNOS,PERNIA,,ROSEMARIE BALUNOS PERNIA,perniarosemarie@gmail.com,rbpernia,dswd12345,368,encoder,1
+ROVELYN,DISCIPULO,DAQUIO,,ROVELYN DISCIPULO DAQUIO,rovper143@gmail.com,rddaquio,dswd12345,368,encoder,1
+ROXANNE,OBUSA,CALINDATAS,,ROXANNE OBUSA CALINDATAS,roxannecalindatas@gmail.com,rocalindatas,dswd12345,368,encoder,1
+MARJORIE,MANGLE,LOPEZ,,MARJORIE MANGLE LOPEZ,eureka90.doel@gmail.com,mmlopez,dswd12345,368,social-worker,1
+GERLIE,TUDLASAN,DUNGOG,,GERLIE TUDLASAN DUNGOG,gerliedungog@gmail.com,gtdungog,dswd12345,368,social-worker,1
+JEANEBEB,BANCAL,OSUNERO,,JEANEBEB BANCAL OSUNERO,jeanebebbancal@gmail.com,jbosunero,dswd12345,368,social-worker,1
+SANDRA,BASINGAN,MAHINAY,,SANDRA BASINGAN MAHINAY,sbmahinay04@gmail.com,sbmahinay,dswd12345,368,social-worker,1
+JULIE ANNE,LABRADA,ANG,,JULIE ANNE LABRADA ANG,julieannelabrada@yahoo.com,jlang,dswd12345,368,social-worker,1
+LOVELLE,DELA CRUZ,TORION,,LOVELLE DELA CRUZ TORION,torionlovelle@gmail.com,ldtorion,dswd12345,368,encoder,1
+CHELSEA,BALINGAN,MORATA,,CHELSEA BALINGAN MORATA,justchelseamorata@gmail.com,cbmorata,dswd12345,368,social-worker,1
+JOANN,BALIOLA,ANTIOLA,,JOANN BALIOLA ANTIOLA,joannbaliola199624@gmail.com,jbantiola,dswd12345,368,social-worker,1
+MARK JOSUA,BANZALE,SISON,,MARK JOSUA BANZALE SISON,markjosuasison@gmail.com,mjsison,dswd12345,368,social-worker,1
+MARIANE,YAUN,FABROA,,MARIANE YAUN FABROA,fabroamariane@gmail.com,mfabroa,dswd12345,368,social-worker,1
+JUDY ANN,ELIO,RELAMPAGOS,,JUDY ANN ELIO RELAMPAGOS,relampagosjudy97@gmail.com,jaerelampagos,dswd12345,368,social-worker,1
+DANILO,PAJE,NAVARRE,,DANILO PAJE NAVARRE,navarredanilo552@gmail.com,dpnavarre,dswd12345,368,social-worker,1
+MAE BHELYNE,DE LEON,GEOLLEGUE,,MAE BHELYNE DE LEON GEOLLEGUE,bhelynemae@gmail.com,mbdgeollegue,dswd12345,368,social-worker,1
+PSYCHE,A,CABAHUG,,PSYCHE A CABAHUG,psycabahug.19@gmail.com,pacabahug,dswd12345,368,encoder,1
+MARIA ARLENE,AQUINO,PARAGAMAC,,MARIA ARLENE AQUINO PARAGAMAC,letparagamac@gmail.com,maaparagamac,dswd12345,368,encoder,1
+HANNAH PRINCESS,MARTINEZ,TAGUINOD,,HANNAH PRINCESS MARTINEZ TAGUINOD,HANNAHPRINCESSTAGUINOD@GMAIL.COM,hpmtaguinod,dswd12345,368,social-worker,1
+PHOEBE,HALIM,TORRECAMPO,,PHOEBE HALIM TORRECAMPO,phoebetorrecampo0107@gmail.com,phtorrecampo,dswd12345,368,social-worker,1
+TEDDYGARDO,BAUGBOG,ADLAWAN,JR,TEDDYGARDO BAUGBOG ADLAWAN,junick1101@gmail.com,TBADLAWAN,dswd12345,368,admin,1
+MARY ROSE,GUMAPAC,GALLARDO,,MARY ROSE GUMAPAC GALLARDO,rosemac.mrg@gmail.com,mggallardo,dswd12345,368,social-worker,1
+MICHELLE,BESMONTE,PLAZA,,MICHELLE BESMONTE PLAZA,michelleplaza097@gmail.com,mbplaza,dswd12345,368,social-worker,1
+CHRISTIAM,MURILLO,ROSAUT,,CHRISTIAM MURILLO ROSAUT,cuttiecham@gmail.com,cmrosaut,dswd12345,368,social-worker,1
+JOHN LEO ,DALIGDIG,MAMBULAO,,JOHN LEO DALIGDIG MAMBULAO,ljmambulao1998@gmail.com,jldmambulao,dswd12345,368,encoder,1
+LIZABETH,COLOCAR,YAP,,LIZABETH COLOCAR YAP,lizabethyap@gmail.com,lcyap,dswd12345,368,social-worker,1
+PETER PAUL,ARGUNA,SAEZ,,PETER PAUL ARGUNA SAEZ,petersaez83@gmail.com,ppsaez,dswd12345,368,encoder,1
+ALYANNA PATRICIA MONIQUE,BABATUGON,BERJA,,ALYANNA PATRICIA MONIQUE BABATUGON BERJA,nikberja31@gmail.com,apmberja,dswd12345,368,encoder,1
+MARY JEAN,ADLAWAN,DULIENTE,,MARY JEAN ADLAWAN DULIENTE,dulientejean@gmail.com,mjduliente,dswd12345,368,social-worker,1
+DAISY,CAROLINO,VERONA,,DAISY CAROLINO VERONA,daisverona@gmail.com,dcverona,dswd12345,368,social-worker,1
+MARGERETH JOY,SARIGUMBA,PIANAR,,MARGERETH JOY SARIGUMBA PIANAR,iammargerethjoy95@gmail.com,mjspianar,dswd12345,368,social-worker,1
+REENA LIZA,DUBLAN,ALIGWAY,,REENA LIZA DUBLAN ALIGWAY,rldaligway@gmail.com,rdaligway,dswd12345,368,encoder,1
+RUFO,HUBIALADAS,AYAN,JR,RUFO HUBIALADAS AYAN,rufoayanjr@gmail.com,rhayan,dswd12345,368,encoder,1
+NOVELYN,LOMOTOS,VIZEN,,NOVELYN LOMOTOS VIZEN,novvizen@gmail.com,nlvizen,dswd12345,368,encoder,1
+NORID JEAN,BANDOLON,GALENZOGA,,NORID JEAN BANDOLON GALENZOGA,ghinggalenzoga04@gmail.com,njbgalenzoga,dswd12345,368,encoder,1
+DEVINE MAY,DELA CRUZ,PERALTA,,DEVINE MAY DELA CRUZ PERALTA,devinealterap@gmail.com,ddperalta,dswd12345,368,encoder,1
+GRETCHEN,C.,MIRANDA,,GRETCHEN C. MIRANDA,gretchmiranda87@gmail.com,gcmiranda,dswd12345,368,social-worker,1
+ANA MARIE,PAEREZ,CALUNSAG,,ANA MARIE PAEREZ CALUNSAG,anncalunsag28@gmail.com,ampcalunsag,dswd12345,368,encoder,1
+CYRIL JAMES,TUQUIB,PASCUAL,,CYRIL JAMES TUQUIB PASCUAL,khoyaokho@gmail.com,ctpascual,dswd12345,368,encoder,1
+KEYNAH FAITH,BURLAZA,ENOCH,,KEYNAH FAITH BURLAZA ENOCH,enoch.keynahfaith@gmail.com,kfbenoch,dswd12345,368,social-worker,1
+DONNIE JAMES,COMIA,BARAL,,DONNIE JAMES COMIA BARAL,donniejamesbaral18@gmail.com,djcbaral,dswd12345,368,social-worker,1
+RAM MILBERT,MERCADO,BUNTAS,,RAM MILBERT MERCADO BUNTAS,buntasmilbert@gmail.com,rmmbuntas,dswd12345,368,social-worker,1
+JADE DAVEN,B,GONJORAN,,JADE DAVEN B GONJORAN,jadelarrabgon@gmail.com,jdbgonjoran,dswd12345,368,social-worker,1
+JUNALYN,MATAMPOLI,MASIWEL,,JUNALYN MATAMPOLI MASIWEL,dnorma316@gmail.com,jmmasiwel,dswd12345,368,encoder,1
+JAIME ,MERCAMPO,MARCELINO,JR,JAIME MERCAMPO MARCELINO,jaimemarcelino81@gmail.com,jmmarcelino,dswd12345,368,encoder,1
+WILLIAM LOYD,NALAS,DIMAANO,,WILLIAM LOYD NALAS DIMAANO,william.loyd.n.dim@gmail.com,wlndimaano,dswd12345,368,social-worker,1
+AIRA MAE,TUBO,ENGRACIA,,AIRA MAE TUBO ENGRACIA,yamz08@yahoo.com,atengracia,dswd12345,368,social-worker,1
+GLADYS,SUBIO,PELDEROS,,GLADYS SUBIO PELDEROS,pelderosgladys@gmail.com,gspelderos,dswd12345,368,social-worker,1
+HAROLD,AUGIS,SINADJAN,,HAROLD AUGIS SINADJAN,hasinadjan@dswd.gov.ph,HASINADJAN,dswd12345,368,encoder,1
+NESTLE,RIMPOS,DOFILES,,NESTLE RIMPOS DOFILES,nestle_21dofiles@yahoo.com,nrdofiles,dswd12345,368,social-worker,1
+SAMMIE,S,MAMAC,,SAMMIE S MAMAC,sammiemamac03@gmail.com,SSMAMAC,dswd12345,368,encoder,1
+MARK REZZEL,TICO,SARABIA,,MARK REZZEL TICO SARABIA,sarabiamark0012@gmail.com,MTSARABIA,dswd12345,368,admin,1
+JERNOVEL,BONTILAO,DINAMPO,,JERNOVEL BONTILAO DINAMPO,dinampojernovel@gmail.com,JDINAMPO,dswd12345,368,encoder,1
+CARYL IYNS,EBERO,GENTILES,,CARYL IYNS EBERO GENTILES,caryliynsg@gmail.com,CIGENTILES,dswd12345,368,encoder,1
+BERNARDITA,OPEZ,DE VILLENA,,BERNARDITA OPEZ DE VILLENA,bodevillena@gmail.com,bodevillena,dswd12345,368,social-worker,1
+PABNER,LEONARDO,DOTDOT,,PABNER LEONARDO DOTDOT,pabz0415@gmail.com,pldotdot,dswd12345,368,encoder,1
+ERA,CASTIGON,NIEVES,,ERA CASTIGON NIEVES,Bobejxander@yahoo.com,ECNIEVES,dswd12345,368,encoder,1
+JAZEL,VILLACORTE,ESTORES,,JAZEL VILLACORTE ESTORES,jazestores26@gmail.com,jvestores,dswd12345,368,social-worker,1
+KAREN KATE,ESTOQUIA,NUÑEZ,,KAREN KATE ESTOQUIA NUÑEZ,kkenunez@dswd.gov.ph,kenunez,dswd12345,368,social-worker,1
+MAE ELAINE,GAMBONG,DESPE,,MAE ELAINE GAMBONG DESPE,megdespersw@gmail.com,MGDESPE,dswd12345,368,social-worker,1
+JOAN,CAÑAL,MASAMAYOR,,JOAN CAÑAL MASAMAYOR,joanmasamayor605@gmail.com,JCMASAMAYOR,dswd12345,368,social-worker,1
+OIREN  JANE  MARIE,FERNANDEZ,SERATO,,OIREN JANE MARIE FERNANDEZ SERATO,oirenjanemarie@gmail.com,OFSERATO,dswd12345,368,social-worker,1
+JAIRAH,,REGALA,,JAIRAH REGALA,jairahr05@gmail.com,JREGALA,dswd12345,368,social-worker,1
+JOANN,PERALTA,LASTIMOSA,,JOANN PERALTA LASTIMOSA,lastimosajoannp@gmail.com,JPLASTIMOSA,dswd12345,368,social-worker,1
+JAMES BRIAN,H.,DEGUIT,,JAMES BRIAN H. DEGUIT,jamesbriandeguit19@gmail.com,JHDEGUIT,dswd12345,368,encoder,1
+HAYDEE,SEPALON,BADO,,HAYDEE SEPALON BADO,haydeesepalon88@gmail.com,hsbado,dswd12345,368,social-worker,1
+BO DENNISSE,BALDOZA,GERAL,,BO DENNISSE BALDOZA GERAL,bodennissegeral3019@gmail.com,bbgeral,dswd12345,368,encoder,1
+DARYL,MAYAKI,BUTULAN,,DARYL MAYAKI BUTULAN,Groupdarb@gmail.com,DMBUTULAN,dswd12345,368,encoder,1
+JAMES PHILIP,ALESNA,BATOON,,JAMES PHILIP ALESNA BATOON,jpjhugy@gmail.com,JABATOON,dswd12345,368,encoder,1
+ROSILYN,BALTAZAR,MERCADO,,ROSILYN BALTAZAR MERCADO,kulitzmercado@gmail.com,RBMERCADO,dswd12345,368,encoder,1
+ANALYN,PLAZA,ROMERO,,ANALYN PLAZA ROMERO,analyn0731@gmail.com,apromero,dswd12345,368,social-worker,1
+NIDA,MAMBULAO,BOLILAN,,NIDA MAMBULAO BOLILAN,nidabolilan@yahoo.com,nmbolilan,dswd12345,368,social-worker,1
+RACHEL,SUMALHAG,LAO,,RACHEL SUMALHAG LAO,laorachel0412@gmail.com,RSLAO,dswd12345,368,encoder,1
+JENNY MAE,C,SEDON,,JENNY MAE C SEDON,RLAO@dswd.gov.ph,JCSEDON,dswd12345,368,encoder,1
+JOHNNY LOU MAE ,QUITOY,PAMAT,,JOHNNY LOU MAE QUITOY PAMAT,pamatjohnnyloumae21@gmail.com,JQPAMAT,dswd12345,368,encoder,1
+NORY JANE,CATILOC,MAALAM,,NORY JANE CATILOC MAALAM,noryjanemaalam1995royal@gmail.com,NCMAALAM,dswd12345,368,social-worker,1
+HANNAH LYCA CRISTINA,RUERAS,GALVANO,,HANNAH LYCA CRISTINA RUERAS GALVANO,lycagalvano@gmail.com,HHGALVANO,dswd12345,368,encoder,1
+JAYSEL,V,MEDEL,,JAYSEL V MEDEL,HGALVANO@dswd.gov.ph,JVMEDEL,dswd12345,368,encoder,1

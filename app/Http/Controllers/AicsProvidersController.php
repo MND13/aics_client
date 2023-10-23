@@ -40,7 +40,7 @@ class AicsProvidersController extends Controller
     public function store(Request $request)
     {
         try {
-            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+            if (Auth::check() &&  Auth::user()->hasRole(['super-admin','social-worker'])) {
 
                 $validator = Validator::make($request->all(), [
                     'addressee_name' => 'required',

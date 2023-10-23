@@ -12,13 +12,13 @@
         </v-list-item-content>
       </v-list-item>
 
-    
+
       <v-list dense>
         <div v-for="(link, i) in links">
           <v-list-item v-if="!link.subLinks" :key="i" :to="link.to" class="v-list-item">
-            
-            
-            <v-list-item-icon >
+
+
+            <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
 
@@ -26,7 +26,7 @@
               <v-list-item-title>
                 {{ link.text }}
               </v-list-item-title>
-             
+
             </v-list-item-content>
           </v-list-item>
 
@@ -179,11 +179,11 @@ export default {
           text: "Request Assistance",
 
         },
-       /* {
-          to: "/profile",
-          text: "Profile",
-
-        },*/
+        /* {
+           to: "/profile",
+           text: "Profile",
+ 
+         },*/
         {
           to: "/contact",
           text: "Contact Us",
@@ -191,7 +191,7 @@ export default {
       ],
       admin_menu: [
         {
-          to: { name: 'home',  },
+          to: { name: 'home', },
           text: "Home"
         },
         {
@@ -214,6 +214,18 @@ export default {
           to: "/home/Rejected",
           text: "Rejected"
         },
+        {
+          to: "/providers",
+          text: "Providers",
+        },
+        {
+          to: "/fund_source",
+          text: "Fund Source",
+        },
+        {
+            to: "/reports",
+            text: "Reports",
+          },
 
       ],
       lib_menu:
@@ -226,14 +238,14 @@ export default {
             to: "/offices",
             text: "Offices",
           },
-          {
+          /*{
             to: "/providers",
             text: "Providers",
           },
           {
             to: "/fund_source",
             text: "Fund Source",
-          },
+          },*/
           {
             to: "/charging",
             text: "Charging",
@@ -242,11 +254,8 @@ export default {
             to: "/signatories",
             text: "Signatories",
           },
-          {
-            to: "/reports",
-            text: "Reports",
-          },
-          
+         
+
         ]
     };
   },
