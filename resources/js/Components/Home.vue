@@ -31,7 +31,9 @@
         <div class="col-md-3">
           <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
         </div>
-        <div class="col-md-3"></div>
+        <div class="col-md-3">
+          <v-text-field type="date" :items="status_list" v-model="DateFilterValue" label="Schedule"></v-text-field>       
+        </div>
         <div class="col-md-3"></div>
         <div class="col-md-3"><v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
             hide-details></v-text-field></div>
@@ -219,6 +221,10 @@ export default {
       }
 
       return value === this.StatusFilterValue;
+    },
+    DateFilterValue(value)
+    {
+      
     }
   },
   mounted() {

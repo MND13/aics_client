@@ -516,9 +516,7 @@
                     <v-list-item-subtitle>{{ data.item.company_address }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </template>
-
               </v-autocomplete>
-
 
               <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.gl_signatory_id"
                 :loading="!signatories" label="Signatory" :items="signatories"
@@ -531,6 +529,16 @@
                 </template>
               </v-autocomplete>
 
+              <v-autocomplete class="mt-2 rounded-0" outlined clearable dense v-model="form.gl_for_signatory_id"
+                :loading="!signatories" label="For Signatory" :items="signatories"
+                :error-messages="validationErrors.gl_for_signatory_id" item-value="id" item-text="name" hide-details="auto">
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ data.item.position }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
 
 
               <hr>
