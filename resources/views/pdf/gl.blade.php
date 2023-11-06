@@ -17,8 +17,8 @@
         }
 
         body {
-            font-size: 12pt;
-            line-height: 12pt;
+            font-size: 10pt;
+            line-height: 1.5em;
             font-family: Arial, sans-serif
         }
 
@@ -122,7 +122,7 @@
         <br><br>
     </p>
 
-    <p>Dear <b> Sir/Madam</b>,<br><br></p>
+    <p>Dear <b> Sir/Madam</b>,<br></p>
 
     <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
         <span
@@ -180,28 +180,43 @@
     <p>
         Thank you for your consideration.</p>
 
-    <p>
-        Very truly yours,
-    </p>
+   
 
-    <br><br>
+ 
 
     <table style="width: 100%; table-layout:fixed">
         <tr>
-            <td style="text-align: center"> <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
+            <td> <p> Very truly yours,</p> <br>  </td>
+            <td></td>
+            <td>@if ($assistance['assessment']['gl_for_signatory_id']) <p> For the: </p> <br> @endif</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">
+              
+                <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
                 {{ $assistance['assessment']['gl_signatory']['position'] }}</td>
             <td></td>
-            <td></td>
+            <td  style="text-align: center">
+                @if ($assistance['assessment']['gl_for_signatory_id'])
+               
+                   
+               <b> {{ $assistance['assessment']['gl_for_signatory']['name'] }}</b><br>
+                {{ $assistance['assessment']['gl_for_signatory']['position'] }}
+                        
+                       
+                @endif
+
+            </td>
         </tr>
     </table>
 
+    <br>
+    <small class="initials"> {{ $assistance['assessment']['initials'] }}<br>
 
 
-    <br><br>
-    <small class="initials"> {{ $assistance['assessment']['initials'] }}</small><br><br>
+    <p> Valid within 30 days upon receipt. <br>
+    Not valid without seal </p></small>
 
-
-    <p> Valid within 30 days upon receipt.</p>
 
     <br>
 

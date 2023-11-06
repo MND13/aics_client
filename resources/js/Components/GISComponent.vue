@@ -781,7 +781,7 @@ export default {
       this.signatories_settings.forEach(e => {      
         if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {         
           this.form.gl_signatory_id = e.names[0].id;
-          this.form.gl_for_signatory_id = "" ;
+          this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "" ;
           this.form.initials = e.i + this.gis_data.en + "/"+ this.gis_data.sw;
         }
       });

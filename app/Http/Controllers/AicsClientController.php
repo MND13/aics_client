@@ -240,7 +240,8 @@ class AicsClientController extends Controller
             "assessment.gl_signatory:id,name,position",
             "aics_beneficiary",
             "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-           
+            "assessment.gl_for_signatory:id,name,position",
+          
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 

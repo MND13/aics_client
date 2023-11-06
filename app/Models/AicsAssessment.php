@@ -51,5 +51,11 @@ class AicsAssessment extends Model
         return $this->belongsTo(Signatories::class, "gl_signatory_id");
     }
 
+
+    public function gl_for_signatory()
+    {
+        return $this->belongsTo(Signatories::class, "gl_for_signatory_id");
+    }
+
    
 }
