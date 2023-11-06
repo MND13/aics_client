@@ -254,6 +254,10 @@ export default {
             to: "/signatories",
             text: "Signatories",
           },
+          {
+            to: "/signatories-settings",
+            text: "Signatories Settings",
+          },
          
 
         ]

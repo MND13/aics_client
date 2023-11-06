@@ -33,7 +33,8 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('view_attachment', [\App\Http\Controllers\AicsAssistanceController::class, 'view_attachment'])->name("api.view_attachment");
     Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
     Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
-
+    Route::resource('signatories_settings', \App\Http\Controllers\SignatoriesSettingsController::class);
+ 
 
 });
 

@@ -30,6 +30,7 @@ class SignatoriesSeeder extends Seeder
             
             $insert_data['name'] = $psgc_data[0];
             $insert_data['position'] = $psgc_data[1];
+            $insert_data['initials'] = $psgc_data[2];
            
             $psgc = Signatories::create($insert_data);
             echo "created: $psgc->name - $psgc->position \n";

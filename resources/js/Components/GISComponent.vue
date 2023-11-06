@@ -441,7 +441,7 @@
                         <td>TOTAL</td>
                         <td>{{ sumValue }}</td>
                         <td>
-
+                      
                         </td>
                       </tr>
                     </tfoot>
@@ -484,23 +484,7 @@
           </v-card>
 
 
-          <div class="card mt-2"
-            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
-            <div class="card-title">
-              RECORDS IN FILE
-            </div>
-            <div class="card-body">
-              <v-row align="start" no-gutters>
-                <template v-for="e in records_opts">
-                  <v-col xs="12" sm="5" md="3" lg="3">
-                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
-                  </v-col>
-                </template>
-
-              </v-row>
-
-            </div>
-          </div>
+       
 
           <div class="card mt-2"
             v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending' && form.mode_of_assistance == 'GL'">
@@ -518,7 +502,7 @@
                 </template>
               </v-autocomplete>
 
-              <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.gl_signatory_id"
+              <v-autocomplete class="rounded-0 my-2" outlined clearable dense v-model="form.gl_signatory_id"
                 :loading="!signatories" label="Signatory" :items="signatories"
                 :error-messages="validationErrors.gl_signatory_id" item-value="id" item-text="name" hide-details="auto">
                 <template v-slot:item="data">
@@ -529,9 +513,10 @@
                 </template>
               </v-autocomplete>
 
-              <v-autocomplete class="mt-2 rounded-0" outlined clearable dense v-model="form.gl_for_signatory_id"
+              <v-autocomplete class="my-2 rounded-0" outlined clearable dense v-model="form.gl_for_signatory_id"
                 :loading="!signatories" label="For Signatory" :items="signatories"
-                :error-messages="validationErrors.gl_for_signatory_id" item-value="id" item-text="name" hide-details="auto">
+                :error-messages="validationErrors.gl_for_signatory_id" item-value="id" item-text="name"
+                hide-details="auto">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.name }}</v-list-item-title>
@@ -540,6 +525,8 @@
                 </template>
               </v-autocomplete>
 
+              <v-text-field class="my-2 rounded-0" v-model="form.initials" outlined dense
+                label="Signatory Initials"></v-text-field>
 
               <hr>
 
@@ -551,6 +538,24 @@
                 {{ selected_provider.company_address }}<br />
 
               </div>
+            </div>
+          </div>
+
+          <div class="card mt-2"
+            v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'">
+            <div class="card-title">
+              RECORDS IN FILE
+            </div>
+            <div class="card-body">
+              <v-row align="start" no-gutters>
+                <template v-for="e in records_opts">
+                  <v-col xs="12" sm="5" md="3" lg="3">
+                    <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
+                  </v-col>
+                </template>
+
+              </v-row>
+
             </div>
           </div>
 
@@ -680,6 +685,8 @@ export default {
         mode_of_admission: "Walk-in",
         interviewed_by: this.user.first_name + " " + this.user.middle_name + " " + this.user.last_name,
         records: [],
+        gl_signatory_id: 6,
+        initials: "",
       },
       assistance_types: {},
       psgc: {},
@@ -740,6 +747,8 @@ export default {
       for_reveresal: [],
       view_url: null,
       loading_view_url: false,
+     
+      signatories_settings: [],
 
     };
   },
@@ -752,6 +761,7 @@ export default {
     selected_assessment_option(val) {
 
       this.form.assessment = val.template;
+      this.form.purpose = val.option;
 
     },
     selected_fund_sources(newVal, oldVal) {
@@ -766,8 +776,16 @@ export default {
         this.for_reveresal.push(cloneDeep(x[0]));
       }
 
-    }
-
+    },
+    sumValue() {
+      this.signatories_settings.forEach(e => {      
+        if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {         
+          this.form.gl_signatory_id = e.names[0].id;
+          this.form.gl_for_signatory_id = "" ;
+          this.form.initials = e.i + this.gis_data.en + "/"+ this.gis_data.sw;
+        }
+      });
+    },
   },
   computed: {
     sumValue() {
@@ -788,9 +806,14 @@ export default {
       ]
     },
 
+
+
   },
 
   methods: {
+    toAcronym(string) {
+      return string.split(' ').map(i => i.charAt(0));
+    },
     submitForm: debounce(function () {
       this.submit = true;
       this.form.gis_id = this.gis_data.id; // FOREIGN KEY
@@ -938,19 +961,17 @@ export default {
             this.form.records = JSON.parse(this.gis_data.assessment.records);
 
             if (this.form.provider_id) {
-
               this.selected_provider = this.providers.find(el => el.id === this.form.provider_id);
-
             }
 
             if (this.gis_data.assessment.fund_sources) {
-              //this.selected_fund_sources = this.gis_data.assessment.fund_sources;
-              //this.selected_fund_sources = [{ "id": 1, "name": "DC1"}]
               this.selected_fund_sources = this.gis_data.selected_fs;
-
             }
 
-
+            if (this.gis_data.assessment.interviewed_by) {
+            
+              this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name ;
+            }
 
 
           }
@@ -1057,30 +1078,41 @@ export default {
       }).catch(err => console.log(err));
     },
 
-    SendSMS()
-    { 
+    SendSMS() {
       let sms_data = {};
       sms_data.assistance = this.gis_data.aics_type.name;
       sms_data.amount = this.gis_data.assessment.amount;
       sms_data.client = this.gis_data.aics_client.full_name;
       sms_data.mobile_no = this.gis_data.aics_client.mobile_number;
-      if(this.gis_data.aics_beneficiary)
-      {
-        sms_data.bene = this.gis_data.aics_beneficiary.first_name + " " + this.gis_data.aics_beneficiary.middle_name + this.gis_data.aics_beneficiary.last_name ;
-      
+      if (this.gis_data.aics_beneficiary) {
+        sms_data.bene = this.gis_data.aics_beneficiary.first_name + " " + this.gis_data.aics_beneficiary.middle_name + this.gis_data.aics_beneficiary.last_name;
+
       };
-      
-      
+
+
       console.log(this.gis_data);
-      axios.post(route("api.assessment.sms", this.gis_data.uuid), sms_data).then(response=> {
+      axios.post(route("api.assessment.sms", this.gis_data.uuid), sms_data).then(response => {
         console.log(response.data);
-      }).catch(e=>console.log(e));
-    }
+      }).catch(e => console.log(e));
+    },
+    getSignatoriesSettings() {
+
+      axios.get(route('signatories_settings.index'))
+        .then(res => {
+
+          this.signatories_settings = res.data;
+
+        })
+        .catch(err => {
+
+        })
+        ;
+    },
 
   },
   mounted() {
 
-
+    this.getSignatoriesSettings();
     this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();

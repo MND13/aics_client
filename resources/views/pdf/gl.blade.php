@@ -17,7 +17,8 @@
         }
 
         body {
-            font-size: 10pt;
+            font-size: 12pt;
+            line-height: 12pt;
             font-family: Arial, sans-serif
         }
 
@@ -185,10 +186,20 @@
 
     <br><br>
 
-    <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
-    {{ $assistance['assessment']['gl_signatory']['position'] }}
+    <table style="width: 100%; table-layout:fixed">
+        <tr>
+            <td style="text-align: center"> <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
+                {{ $assistance['assessment']['gl_signatory']['position'] }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+
 
     <br><br>
+    <small class="initials"> {{ $assistance['assessment']['initials'] }}</small><br><br>
+
 
     <p> Valid within 30 days upon receipt.</p>
 

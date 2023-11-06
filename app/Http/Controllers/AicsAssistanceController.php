@@ -129,9 +129,10 @@ class AicsAssistanceController extends Controller
                 #"aics_client.profile_docs:id,user_id,name,file_directory",
                 #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
                 "assessment.fund_sources.fund_source:id,name", # FS 
-                "verified_by:id,full_name",
+                "verified_by:id,full_name,first_name,middle_name,last_name",
                 "aics_beneficiary",
                 "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
+                
             ])
                 ->where("uuid", "=", $uuid)
                 ->with("assessment.fund_sources", function ($q) {
@@ -177,12 +178,23 @@ class AicsAssistanceController extends Controller
 
                     if ($asst->aics_client->profile_docs) {
                         foreach ($asst->aics_client->profile_docs as $key => $value) {
-
                             $value->file_directory =  User::s3Url($value->file_directory);
                         }
                     }
 
+                    if ($asst->verified_by) {
+                        $asst->en = substr($asst->verified_by["first_name"], 0, 1)
+                            . substr($asst->verified_by["middle_name"], 0, 1)
+                            . substr($asst->verified_by["last_name"], 0, 1);
+                        $asst->en  = strtolower($asst->en);                      
+                    }
 
+                    if (isset($asst->assessment->interviewed_by)) {                      
+                        $asst->sw = substr($asst->assessment->interviewed_by->first_name, 0, 1)
+                            . substr($asst->assessment->interviewed_by->middle_name, 0, 1)
+                            . substr($asst->assessment->interviewed_by->last_name, 0, 1);
+                        $asst->sw  = strtolower($asst->sw);
+                    }
 
                     return $asst;
                 });
@@ -246,8 +258,6 @@ class AicsAssistanceController extends Controller
 
                         $asst->selected_fs = $selected_fund_source;
                         $asst->aa = $r;
-
-                      
                     }
 
                     if ($asst->aics_client->profile_docs) {
@@ -255,7 +265,7 @@ class AicsAssistanceController extends Controller
                             $value->file_directory =  User::s3Url($value->file_directory);
                         }
                     }
-                    
+
                     return $asst;
                 });
 
