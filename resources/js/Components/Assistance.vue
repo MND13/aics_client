@@ -380,7 +380,7 @@
                                             <span v-else>(OPTIONAL)</span>
                                             {{ r.name }}</v-list-item-subtitle>
                                     </v-list-item-title>
-                                    <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
+                                    <v-file-input ref="valid_id" accept="image/png, image/jpeg, image/jpg"
                                         capture="camera" :error-messages="formErrors.valid_id"
                                         v-model="form.documents[r.id]">
                                     </v-file-input>

@@ -211,7 +211,7 @@
             </div>
             <div class="col-md-6">
               <v-file-input ref="valid_id" label="Upload a clear copy of your valid ID"
-                accept="image/png, image/jpeg, application/pdf" capture="camera" :error-messages="formErrors.valid_id"
+                accept="image/png, image/jpeg, image/jpg" capture="camera" :error-messages="formErrors.valid_id"
                 v-model="valid_id"></v-file-input>
 
               <div class="preview">

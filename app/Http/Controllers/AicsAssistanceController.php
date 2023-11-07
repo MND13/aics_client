@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AcisCrimsExport;
 use App\Models\User;
+use Image;
 
 class AicsAssistanceController extends Controller
 {
@@ -88,12 +89,31 @@ class AicsAssistanceController extends Controller
                 foreach ($requirements as $key => $requirement) {
 
                     if (isset($files[$requirement->id])) {
-                        $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
+                        
+                        /*$path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
                         $url = Storage::url($path);
+
+                        $documents[] = new AicsDocument([
+                            'file_directory' => $url,
+                            'aics_requrement_id' => $requirement->id,
+                        ]);*/
+
+
+                        $filesx = $files[$requirement->id]; 
+            
+                        $img = Image::make($filesx->getRealPath())->resize(500, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
+                        $path_OG = "public/uploads/$year/$month/" . $aics_assistance->uuid  ;
+                        $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+                        $url = Storage::url($path_OG);
+
                         $documents[] = new AicsDocument([
                             'file_directory' => $url,
                             'aics_requrement_id' => $requirement->id,
                         ]);
+
+
                     }
                 }
 
