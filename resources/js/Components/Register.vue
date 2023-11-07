@@ -1,97 +1,98 @@
 <template>
-  <v-card flat>
+  <KeepAlive>
+    <v-card flat>
 
 
-    <v-card-title class="text-center">
-      <div class="row">
-        <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" />
-          Assistance to Individuals In Crisis (AICS) - Register
-        </div>
-      </div>
-    </v-card-title>
-    <v-card-text>
-      <!--<form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">-->
-      <v-form ref="form">
-        <input type="hidden" name="_token" :value="csrf">
+      <v-card-title class="text-center">
         <div class="row">
-          <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
-        </div>
-        <div class="row g-2">
-
-          <div class="offset-md-1  col-md-3">
-
-            <v-text-field v-model="form.first_name" label="First Name*" outlined dense
-              :error-messages="formErrors.first_name"></v-text-field>
-
-          </div>
-
-          <div class="col-md-3">
-
-            <v-text-field class="mb-0" v-model="form.middle_name" label="Middle Name" outlined dense
-              :error-messages="formErrors.middle_name"></v-text-field>
-
-            <v-checkbox class="mt-0" label="I have No Middle Name (NMN)" v-model="nmn"></v-checkbox>
-
-
-          </div>
-
-          <div class="col-md-3">
-
-            <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
-              :error-messages="formErrors.last_name"></v-text-field>
-
-
-          </div>
-
-          <div class="col-md-1">
-
-
-            <v-select v-model="form.ext_name" label="Ext Name" outlined dense :items="suffixes" item-value="id"
-              item-text="name" :error-messages="formErrors.ext_name">
-            </v-select>
-
-          </div>
-
-        </div>
-
-
-        <div class="row">
-          <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
-        </div>
-
-        <div class="row g-2">
-          <div class=" offset-md-1  col-md-10">
-
-            <v-text-field v-model="form.street_number" label="House No./Street/Purok*" outlined dense
-              :error-messages="formErrors.street_number"></v-text-field>
-
+          <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" />
+            Assistance to Individuals In Crisis (AICS) - Register
           </div>
         </div>
+      </v-card-title>
+      <v-card-text>
+        <!--<form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">-->
+        <v-form ref="form">
+          <input type="hidden" name="_token" :value="csrf">
+          <div class="row">
+            <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
+          </div>
+          <div class="row g-2">
 
-        <div class="row g-2">
+            <div class="offset-md-1  col-md-3">
 
-          <div class="offset-md-1  col-md-1">
+              <v-text-field v-model="form.first_name" label="First Name*" outlined dense
+                :error-messages="formErrors.first_name"></v-text-field>
+
+            </div>
+
+            <div class="col-md-3">
+
+              <v-text-field class="mb-0" v-model="form.middle_name" label="Middle Name" outlined dense
+                :error-messages="formErrors.middle_name"></v-text-field>
+
+              <v-checkbox class="mt-0" label="I have No Middle Name (NMN)" v-model="nmn"></v-checkbox>
 
 
-            <v-select label="Region" outlined dense :items="['XI']">
-            </v-select>
+            </div>
 
+            <div class="col-md-3">
+
+              <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
+                :error-messages="formErrors.last_name"></v-text-field>
+
+
+            </div>
+
+            <div class="col-md-1">
+
+
+              <v-select v-model="form.ext_name" label="Ext Name" outlined dense :items="suffixes" item-value="id"
+                item-text="name" :error-messages="formErrors.ext_name">
+              </v-select>
+
+            </div>
 
           </div>
-          <div class="col-md-3">
-            <!--<label for="">Province</label>-->
 
-            <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
-              cache-items hide-no-data hide-details label="Province" outlined item-text="province_name" item-value="id"
-              dense></v-autocomplete>
 
-            <!--<select class="form-control" v-model="province_name" @change="getCities()" id="provinces">
+          <div class="row">
+            <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
+          </div>
+
+          <div class="row g-2">
+            <div class=" offset-md-1  col-md-10">
+
+              <v-text-field v-model="form.street_number" label="House No./Street/Purok*" outlined dense
+                :error-messages="formErrors.street_number"></v-text-field>
+
+            </div>
+          </div>
+
+          <div class="row g-2">
+
+            <div class="offset-md-1  col-md-1">
+
+
+              <v-select label="Region" outlined dense :items="['XI']">
+              </v-select>
+
+
+            </div>
+            <div class="col-md-3">
+              <!--<label for="">Province</label>-->
+
+              <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
+                cache-items hide-no-data hide-details label="Province" outlined item-text="province_name" item-value="id"
+                dense></v-autocomplete>
+
+              <!--<select class="form-control" v-model="province_name" @change="getCities()" id="provinces">
             <option selected></option>
             <option v-for="(e, i) in provinces" :key="i">{{ e.province_name }}</option>
           </select>-->
-          </div>
-          <div class="col-md-3">
-            <!--<label for="">City/Municipality</label>
+            </div>
+            <div class="col-md-3">
+              <!--<label for="">City/Municipality</label>
           <select class="form-control" id="cities" v-model="city_name" @change="getBrgys()">
             <option selected></option>
             <option v-for="(e, i) in cities" :key="i">{{ e.city_name }}</option>
@@ -99,64 +100,64 @@
 
           </select>-->
 
-            <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
-              @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined item-text="city_name"
-              item-value="id" dense></v-autocomplete>
+              <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
+                @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined item-text="city_name"
+                item-value="id" dense></v-autocomplete>
 
 
-          </div>
-          <div class="col-md-3">
-            <!-- <label for="">Barangay</label>
+            </div>
+            <div class="col-md-3">
+              <!-- <label for="">Barangay</label>
           <select v-model="form.psgc_id" class="form-control" id="barangays">
             <option></option>
             <option v-for="(e, i) in brgys" :key="i" :value="e.id">{{ e.brgy_name }}</option>
           </select>-->
 
-            <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
-              hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
-              :error-messages="formErrors.psgc_id"></v-autocomplete>
+              <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
+                hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
+                :error-messages="formErrors.psgc_id"></v-autocomplete>
 
 
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
-        </div>
-
-        <div class="row g-2">
-
-          <div class="offset-md-1  col-md-3">
-            <v-text-field type="date" v-model="form.birth_date" label="Birthday*" outlined dense
-              :error-messages="formErrors.birth_date" @input="calculateAge"></v-text-field>
-          </div>
-          <div class="col-md-1">
-
-            <v-text-field v-model="form.age" label="Age" outlined dense :error-messages="formErrors.age"
-              readonly></v-text-field>
+            </div>
           </div>
 
-
-
-          <div class="col-md-3">
-            <v-select v-model="form.gender" label="Sex*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
-              item-text="name" :error-messages="formErrors.gender">
-            </v-select>
-
+          <div class="row">
+            <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
           </div>
-          <div class=" col-md-3">
+
+          <div class="row g-2">
+
+            <div class="offset-md-1  col-md-3">
+              <v-text-field type="date" v-model="form.birth_date" label="Birthday*" outlined dense
+                :error-messages="formErrors.birth_date" @input="calculateAge"></v-text-field>
+            </div>
+            <div class="col-md-1">
+
+              <v-text-field v-model="form.age" label="Age" outlined dense :error-messages="formErrors.age"
+                readonly></v-text-field>
+            </div>
 
 
-            <v-text-field v-model="form.mobile_number" label="Mobile Number*" outlined dense
-              :error-messages="formErrors.mobile_number" counter></v-text-field>
 
+            <div class="col-md-3">
+              <v-select v-model="form.gender" label="Sex*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
+                item-text="name" :error-messages="formErrors.gender">
+              </v-select>
+
+            </div>
+            <div class=" col-md-3">
+
+
+              <v-text-field v-model="form.mobile_number" label="Mobile Number*" outlined dense
+                :error-messages="formErrors.mobile_number" counter></v-text-field>
+
+            </div>
           </div>
-        </div>
 
 
 
 
-        <!-- <div class="row g-2">
+          <!-- <div class="row g-2">
           <div class="offset-md-1 col-md-3">
 
 
@@ -183,94 +184,92 @@
 
           </div>
         </div>-->
-        <div class="row">
-          <div class="col-md-12 offset-md-1">
-            <b>PROOF OF IDENTIFICATION </b> <br>
+          <div class="row">
+            <div class="col-md-12 offset-md-1">
+              <b>PROOF OF IDENTIFICATION </b> <br>
 
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4 offset-md-1 ">
-            <p>Upload a clear copy of your valid ID</p>
-
-            <p> Accepted valid IDS:</p>
-            <ul style=" column-count: 2;">
-              <li>National ID</li>
-              <li>Driver's License</li>
-              <li>Senior Citizen ID</li>
-              <li>Voter's ID/Certificate</li>
-              <li>Person’s With Disability (PWD) ID</li>
-              <li>Phil-health ID</li>
-              <li>NBI Clearance</li>
-              <li>BIR (TIN)</li>
-              <li>Pag-ibig ID</li>
-              <li>Any Government Issued IDs</li>
-            </ul>
-
-          </div>
-          <div class="col-md-6">
-            <v-file-input ref="valid_id" label="Upload a clear copy of your valid ID"
-              accept="image/png, image/jpeg, application/pdf" capture="camera" :error-messages="formErrors.valid_id"
-              v-model="valid_id"></v-file-input>
-
-            <div class="preview">
-              <v-img v-if="url" :src="url" tyle="max-width: 300px;" />
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4 offset-md-1 ">
+              <p>Upload a clear copy of your valid ID</p>
 
-        </div>
+              <p> Accepted valid IDS:</p>
+              <ul style=" column-count: 2;">
+                <li>National ID</li>
+                <li>Driver's License</li>
+                <li>Senior Citizen ID</li>
+                <li>Voter's ID/Certificate</li>
+                <li>Person’s With Disability (PWD) ID</li>
+                <li>Phil-health ID</li>
+                <li>NBI Clearance</li>
+                <li>BIR (TIN)</li>
+                <li>Pag-ibig ID</li>
+                <li>Any Government Issued IDs</li>
+              </ul>
 
-        <div class="row">
-          <div class="col-md-4 offset-md-1 ">
-            <p>Upload/Take a picture of yourself</p>
-          </div>
-          <div class="col-md-6">
-            <v-file-input ref="file_selfie" label="Upload/Take a picture of yourself" accept="image/*" capture="camera"
-              :error-messages="formErrors.client_photo" v-model="client_photo"></v-file-input>
-
-            <div class="preview">
-              <v-img v-if="url_selfie" :src="url_selfie" tyle="max-width: 300px;" />
             </div>
-          </div>
+            <div class="col-md-6">
+              <v-file-input ref="valid_id" label="Upload a clear copy of your valid ID"
+                accept="image/png, image/jpeg, application/pdf" capture="camera" :error-messages="formErrors.valid_id"
+                v-model="valid_id"></v-file-input>
 
-        </div>
-
-
-        <div class="row">
-          <div class="col-md-10 offset-md-1 " v-if="formErrors && formErrors.full_name">
-
-
-            <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
-              {{ e }}
-            </v-alert>
-
-
-          </div>
-
-        </div>
-
-        <div class="row ">
-          <div class="offset-md-1  col-md-10">
-
-            <v-btn color="primary" @click="submitForm" :disabled="submit" :loading="submit" block>
-              REGISTER
-            </v-btn>
-
-            <div class="m-5 text-center">
-              Already have an account? Please <a href="/login">Login</a>
+              <div class="preview">
+                <v-img v-if="url" :src="url" tyle="max-width: 300px;" />
+              </div>
             </div>
 
+          </div>
 
+          <div class="row">
+            <div class="col-md-4 offset-md-1 ">
+              <p>Upload/Take a picture of yourself</p>
+            </div>
+            <div class="col-md-6">
+              <v-file-input ref="file_selfie" label="Upload/Take a picture of yourself" accept="image/*" capture="camera"
+                :error-messages="formErrors.client_photo" v-model="client_photo"></v-file-input>
 
+              <div class="preview">
+                <v-img v-if="url_selfie" :src="url_selfie" tyle="max-width: 300px;" />
+              </div>
+            </div>
 
           </div>
-        </div>
-      </v-form>
+
+
+          <div class="row">
+            <div class="col-md-10 offset-md-1 " v-if="formErrors && formErrors.full_name">
+
+
+              <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
+                {{ e }}
+              </v-alert>
+
+
+            </div>
+
+          </div>
+
+          <div class="row ">
+            <div class="offset-md-1  col-md-10">
+
+              <v-btn color="primary" @click="submitForm" :disabled="submit" :loading="submit" block>
+                REGISTER
+              </v-btn>
+
+              <div class="m-5 text-center">
+                Already have an account? Please <a href="/login">Login</a>
+              </div>
+
+            </div>
+          </div>
+        </v-form>
 
 
 
-    </v-card-text>
-  </v-card>
+      </v-card-text>
+    </v-card>
+  </KeepAlive>
 </template>
 
 <script>
@@ -359,7 +358,7 @@ export default
       getBrgys() {
         this.loading = true;
         let fields = [{ field: "city_name", value: this.city_name }, { field: "province_name", value: this.province_name, }];
-      
+
         axios.get(route("api.psgc.show", { type: "brgy", fields })).then(response => {
           this.brgys = response.data;
           this.loading = false;
@@ -389,6 +388,7 @@ export default
         this.submit = true;
 
         axios.post("register", formData).then(response => {
+          console.log(response.data);
           this.submit = false;
           location.reload();
         }).catch(error => {
@@ -407,7 +407,7 @@ export default
         console.log(this.file);
         console.log(this.url);
       }*/
-    }
+    },
   }
 </script>
 

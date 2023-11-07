@@ -19,6 +19,7 @@ use Illuminate\Validation\Rule;
 
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\OtpController;
+use Image;
 
 
 
@@ -73,8 +74,8 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
-    {   
-      
+    {
+
         if (!isset($data['middle_name'])) {
             $data['middle_name'] = NULL;
         }
@@ -93,8 +94,8 @@ class RegisterController extends Controller
             'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
             'full_name' => ['unique:users'],
             'gender' => ['required'],
-            'psgc_id' => ['required','exists:psgcs,id'],
-            'mobile_number' => ['required', 'numeric', 'digits:11','unique:users'],
+            'psgc_id' => ['required', 'exists:psgcs,id'],
+            'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users'],
             #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'street_number' => ['required', 'string', 'max:255'],
             #'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -151,7 +152,7 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'mobile_number' => $data['mobile_number'],
             'email' => isset($data['email']) ?  $data['email'] : NULL,
-            'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime( $data['birth_date'])),
+            'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
             'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
             'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
             'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
@@ -161,9 +162,15 @@ class RegisterController extends Controller
             $year = date("Y");
             $month = date("m");
 
-            $files = request('valid_id');
-            $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $user->uuid, $files);
-            $url = Storage::url($path);
+            $files = request('valid_id');          
+            $filename = $files->hashName();
+
+            $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/".$filename ;
+            $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $url = Storage::url($path_OG);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
                 'user_id' => $user->id,
@@ -171,7 +178,23 @@ class RegisterController extends Controller
             ]);
             $doc->save();
 
-            $files = request('client_photo');
+            $files = request('client_photo');          
+            $filename = $files->hashName();
+
+            $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/".$filename ;
+            $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $url = Storage::url($path_OG);
+            $doc = new ProfileDocuments([
+                'file_directory' => $url,
+                'user_id' => $user->id,
+                'name' => "client_photo",
+            ]);
+            $doc->save();
+
+            /*$files = request('client_photo');
             $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $user->uuid, $files);
             $url = Storage::url($path);
             $doc = new ProfileDocuments([
@@ -179,17 +202,15 @@ class RegisterController extends Controller
                 'user_id' => $user->id,
                 'name' => "client_photo",
             ]);
-            $doc->save();
+            $doc->save();*/
             $user->assignRole('user');
 
             $msg = "Salamat sa pag registro sa DSWD Davao Region! Kni ang detalye sa imong account. 
-USERNAME: " . strtoupper($username)  ." 
-Ang initial na password ay Apelyedo at Birthay example: DELA-CRUZ".date('md', strtotime( $data['birth_date'])).". 
-ANG PAG PROSESO AY LIBRE." ;
-            $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr( $data['mobile_number'], 1));
-            $res = $response->collect();               
-            
-           
+USERNAME: " . strtoupper($username)  . " 
+Ang initial na password ay Apelyedo at Birthay example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
+ANG PAG PROSESO AY LIBRE.";
+           # $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
+          #  $res = $response->collect();
         }
 
         return $user;
