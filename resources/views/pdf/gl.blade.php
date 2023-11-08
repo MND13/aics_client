@@ -17,8 +17,8 @@
         }
 
         body {
-            font-size: 10pt;
-            line-height: 1.5em;
+            font-size: 11pt;
+            line-height: 1.3em;
             font-family: Arial, sans-serif
         }
 
@@ -82,6 +82,10 @@
         table.table-bordered td {
             border: solid 1px #000
         }
+
+        .initials {
+            font-size: 8pt;
+        }
     </style>
 </head>
 
@@ -104,7 +108,7 @@
     </table>
 
     <p style="text-align:right">
-        <small> CONTROL NO: {{ $assistance['assessment']['control_no'] }}</small>
+        <small> CONTROL NO: {{ $assistance['assessment']['control_no'] }} R</small>
     </p>
 
     <p style="text-align:left">
@@ -123,6 +127,7 @@
     </p>
 
     <p>Dear <b> Sir/Madam</b>,<br></p>
+    <p></p>
 
     <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
         <span
@@ -177,50 +182,47 @@
         account. Should you have any query, you may coordinate with DSWD FO XI Crisis
         Intervention Section with the telephone number 227-1964 local 1133.
     </p>
-    <p>
-        Thank you for your consideration.</p>
+    <p>Thank you for your consideration. </p>
+    <p style="margin-bottom:0px;"> Very truly yours,</p>
 
-   
-
- 
-
-    <table style="width: 100%; table-layout:fixed">
+    <table style="width: 100%; table-layout:fixed; margin-top:0px; ">
         <tr>
-            <td> <p> Very truly yours,</p> <br>  </td>
             <td></td>
-            <td>@if ($assistance['assessment']['gl_for_signatory_id']) <p> For the: </p> <br> @endif</td>
+            <td>
+                @if ($assistance['assessment']['gl_for_signatory_id'])
+                    For the {{ $assistance['assessment']['gl_signatory']['position'] }}:
+                    <p></p>
+                @endif
+            </td>
         </tr>
         <tr>
-            <td style="text-align: center">
-              
+            <td style="text-align: center; ">
+                <p></p>
                 <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
-                {{ $assistance['assessment']['gl_signatory']['position'] }}</td>
-            <td></td>
-            <td  style="text-align: center">
+                {{ $assistance['assessment']['gl_signatory']['position'] }}
+            </td>
+
+            <td style="text-align: center">
                 @if ($assistance['assessment']['gl_for_signatory_id'])
-               
-                   
-               <b> {{ $assistance['assessment']['gl_for_signatory']['name'] }}</b><br>
-                {{ $assistance['assessment']['gl_for_signatory']['position'] }}
-                        
-                       
+                    <p></p>
+                    <b> {{ $assistance['assessment']['gl_for_signatory']['name'] }}</b><br>
+                    {{ $assistance['assessment']['gl_for_signatory']['position'] }}
                 @endif
 
             </td>
         </tr>
     </table>
+    <p></p>
+    <p> Valid within 30 days upon receipt.</p>
+    <p></p>
+    <p> <small class="initials"> {{ $assistance['assessment']['initials'] }}</small><br></p>
+    <p>    Not valid without seal</p>
+    
+
 
     <br>
-    <small class="initials"> {{ $assistance['assessment']['initials'] }}<br>
 
 
-    <p> Valid within 30 days upon receipt. <br>
-    Not valid without seal </p></small>
-
-
-    <br>
-
-    <hr>
     <!--<small style="font-size:8pt"> QR CODE IN LIEU OF SEAL. This letter is system generated.
         Kindly scan the QR Code and crossmatch the contents of this document versus
         within the Official Website for its validity.
