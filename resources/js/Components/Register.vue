@@ -1,8 +1,6 @@
 <template>
   <KeepAlive>
     <v-card flat>
-
-
       <v-card-title class="text-center">
         <div class="row">
           <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" />
@@ -11,7 +9,6 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <!--<form method="POST" @submit.prevent="submit" enctype="multipart/form-data" action="">-->
         <v-form ref="form">
           <input type="hidden" name="_token" :value="csrf">
           <div class="row">
@@ -20,39 +17,26 @@
           <div class="row g-2">
 
             <div class="offset-md-1  col-md-3">
-
               <v-text-field v-model="form.first_name" label="First Name*" outlined dense
                 :error-messages="formErrors.first_name"></v-text-field>
-
             </div>
 
             <div class="col-md-3">
-
               <v-text-field class="mb-0" v-model="form.middle_name" label="Middle Name" outlined dense
                 :error-messages="formErrors.middle_name"></v-text-field>
-
               <v-checkbox class="mt-0" label="I have No Middle Name (NMN)" v-model="nmn"></v-checkbox>
-
-
             </div>
 
             <div class="col-md-3">
-
               <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
                 :error-messages="formErrors.last_name"></v-text-field>
-
-
             </div>
 
             <div class="col-md-1">
-
-
               <v-select v-model="form.ext_name" label="Ext Name" outlined dense :items="suffixes" item-value="id"
                 item-text="name" :error-messages="formErrors.ext_name">
               </v-select>
-
             </div>
-
           </div>
 
 
@@ -72,52 +56,23 @@
           <div class="row g-2">
 
             <div class="offset-md-1  col-md-1">
-
-
               <v-select label="Region" v-model="region" outlined dense :items="['XI']">
               </v-select>
-
-
             </div>
             <div class="col-md-3">
-              <!--<label for="">Province</label>-->
-
               <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
                 cache-items hide-no-data hide-details label="Province" outlined item-text="province_name" item-value="id"
                 dense></v-autocomplete>
-
-              <!--<select class="form-control" v-model="province_name" @change="getCities()" id="provinces">
-            <option selected></option>
-            <option v-for="(e, i) in provinces" :key="i">{{ e.province_name }}</option>
-          </select>-->
             </div>
             <div class="col-md-3">
-              <!--<label for="">City/Municipality</label>
-          <select class="form-control" id="cities" v-model="city_name" @change="getBrgys()">
-            <option selected></option>
-            <option v-for="(e, i) in cities" :key="i">{{ e.city_name }}</option>
-
-
-          </select>-->
-
               <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
                 @change="getBrgys()" hide-no-data hide-details label="City/Municipality" outlined item-text="city_name"
                 item-value="id" dense></v-autocomplete>
-
-
             </div>
             <div class="col-md-3">
-              <!-- <label for="">Barangay</label>
-          <select v-model="form.psgc_id" class="form-control" id="barangays">
-            <option></option>
-            <option v-for="(e, i) in brgys" :key="i" :value="e.id">{{ e.brgy_name }}</option>
-          </select>-->
-
               <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
                 hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
                 :error-messages="formErrors.psgc_id"></v-autocomplete>
-
-
             </div>
           </div>
 
@@ -137,8 +92,6 @@
                 readonly></v-text-field>
             </div>
 
-
-
             <div class="col-md-3">
               <v-select v-model="form.gender" label="Sex*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
                 item-text="name" :error-messages="formErrors.gender">
@@ -153,8 +106,6 @@
 
             </div>
           </div>
-
-
 
 
           <!-- <div class="row g-2">
@@ -365,11 +316,6 @@ export default
           this.loading = false;
         }).catch(error => { console.log(error); this.loading = false; });
 
-        /*this.loading = true;
-        axios.get(route("api.psgc.show", { type: "brgy", field: "city_name", value: this.city_name })).then(response => {
-          this.brgys = response.data;
-          this.loading = false;
-        }).catch(error => { console.log(error); this.loading = false; });*/
       },
 
       submitForm: debounce(function () {
@@ -394,22 +340,14 @@ export default
           location.reload();
         }).catch(error => {
           this.submit = false;
-         console.log(this.submit);
+          console.log(this.submit);
           if (error.response.data.errors) { this.formErrors = error.response.data.errors; }
 
         });
 
 
       }, 250),
-      /*uploadFile(event) {
 
-        console.log(event);
-        this.file = this.$refs.file.files[0];
-        this.url = URL.createObjectURL(this.file);
-
-        console.log(this.file);
-        console.log(this.url);
-      }*/
     },
   }
 </script>

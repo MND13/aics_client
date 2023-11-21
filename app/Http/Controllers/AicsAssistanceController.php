@@ -139,7 +139,7 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                #"aics_client.profile_docs:id,user_id,name,file_directory",
+                "aics_client.profile_docs:id,user_id,name,file_directory",
                 #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
                 "assessment.fund_sources.fund_source:id,name", # FS 
                 "verified_by:id,full_name,first_name,middle_name,last_name",
@@ -227,7 +227,7 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                #"aics_client.profile_docs:id,user_id,name,file_directory",
+                "aics_client.profile_docs:id,user_id,name,file_directory",
                 #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
                 "assessment.fund_sources.fund_source:id,name", # FS 
                 "verified_by:id,full_name",
