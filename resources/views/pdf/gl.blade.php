@@ -126,7 +126,7 @@
         <br><br>
     </p>
 
-    <p>Dear <b> Sir/Madam</b>,<br></p>
+    <p>Dear <b>Sir/Madam</b>,<br></p>
     <p></p>
 
     <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,

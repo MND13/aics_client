@@ -74,7 +74,7 @@
             <div class="offset-md-1  col-md-1">
 
 
-              <v-select label="Region" outlined dense :items="['XI']">
+              <v-select label="Region" v-model="region" outlined dense :items="['XI']">
               </v-select>
 
 
@@ -306,6 +306,7 @@ export default
           "X"],
         loading: false,
         submit: false,
+        region: "XI"
 
       }
     },
@@ -388,12 +389,14 @@ export default
         this.submit = true;
 
         axios.post("register", formData).then(response => {
-          console.log(response.data);
+
           this.submit = false;
           location.reload();
         }).catch(error => {
           this.submit = false;
-          this.formErrors = error.response.data.errors;
+         console.log(this.submit);
+          if (error.response.data.errors) { this.formErrors = error.response.data.errors; }
+
         });
 
 

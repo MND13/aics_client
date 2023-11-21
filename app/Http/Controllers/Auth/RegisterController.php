@@ -181,6 +181,8 @@ class RegisterController extends Controller
             $files = request('client_photo');
             $filename = $files->hashName();
 
+         
+
             $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
@@ -209,8 +211,8 @@ class RegisterController extends Controller
 USERNAME: " . strtoupper($username)  . " 
 Ang initial na password ay Apelyedo at Birthay example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
 ANG PAG PROSESO AY LIBRE.";
-            # $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
-            #  $res = $response->collect();
+            $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
+            $res = $response->collect();
         }
 
         return $user;

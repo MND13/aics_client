@@ -88,32 +88,25 @@ class AicsAssistanceController extends Controller
 
                 foreach ($requirements as $key => $requirement) {
 
+
+
                     if (isset($files[$requirement->id])) {
-                        
-                        /*$path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $aics_assistance->uuid, $files[$requirement->id]);
-                        $url = Storage::url($path);
 
-                        $documents[] = new AicsDocument([
-                            'file_directory' => $url,
-                            'aics_requrement_id' => $requirement->id,
-                        ]);*/
+                        $file = $files[$requirement->id];
+                        $filename = $file->hashName();
 
-
-                        $filesx = $files[$requirement->id]; 
-            
-                        $img = Image::make($filesx->getRealPath())->resize(500, null, function ($constraint) {
+                        $img = Image::make($file->getRealPath())->resize(450, null, function ($constraint) {
                             $constraint->aspectRatio();
                         });
-                        $path_OG = "public/uploads/$year/$month/" . $aics_assistance->uuid  ;
+
+                        $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
                         $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
-                        $url = Storage::url($path_OG);
+                        $url = Storage::url($path_OG);                     
 
                         $documents[] = new AicsDocument([
                             'file_directory' => $url,
                             'aics_requrement_id' => $requirement->id,
                         ]);
-
-
                     }
                 }
 
@@ -152,7 +145,7 @@ class AicsAssistanceController extends Controller
                 "verified_by:id,full_name,first_name,middle_name,last_name",
                 "aics_beneficiary",
                 "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
-                
+
             ])
                 ->where("uuid", "=", $uuid)
                 ->with("assessment.fund_sources", function ($q) {
@@ -206,10 +199,10 @@ class AicsAssistanceController extends Controller
                         $asst->en = substr($asst->verified_by["first_name"], 0, 1)
                             . substr($asst->verified_by["middle_name"], 0, 1)
                             . substr($asst->verified_by["last_name"], 0, 1);
-                        $asst->en  = strtolower($asst->en);                      
+                        $asst->en  = strtolower($asst->en);
                     }
 
-                    if (isset($asst->assessment->interviewed_by)) {                      
+                    if (isset($asst->assessment->interviewed_by)) {
                         $asst->sw = substr($asst->assessment->interviewed_by->first_name, 0, 1)
                             . substr($asst->assessment->interviewed_by->middle_name, 0, 1)
                             . substr($asst->assessment->interviewed_by->last_name, 0, 1);

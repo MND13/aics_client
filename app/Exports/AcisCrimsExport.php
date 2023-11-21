@@ -47,7 +47,9 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
      * @return \Illuminate\Support\Collection
      */
     public function collection()
-    {
+    {   
+      
+
         $collection = AicsAssistance::with(
             "aics_type:id,name",
             "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
@@ -62,16 +64,15 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
                 ->orWhereNull("remarks");
             return $q;
         })
-            ->where("status", "=", "served")
+            ->where("status", "=", "Served")
             ->orderBy("status_date");
-
+        
+     
         if ($this->end_date) {
             $collection->whereBetween("status_date", [$this->start_date, $this->end_date]);
         } else {
             $collection->where("status_date", "=", $this->start_date);
         }
-
-
         return $collection->get()->map(function ($item, $key) {
             $item->key = $key;
             return $item;
@@ -141,7 +142,7 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
             }
             $total = $assistance->assessment->fund_sources->sum("amount");
         }
-        
+      
         return [
             $assistance->created_at->format("m/d/Y h:i:s"),
             $assistance->assessment->interviewed_by,
