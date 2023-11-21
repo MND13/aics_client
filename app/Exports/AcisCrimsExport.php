@@ -39,16 +39,14 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
                 $this->start_date = Carbon::now()->format('Y-m-d');
                 break;
         }
-
-       
     }
 
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
-    {   
-      
+    {
+
 
         $collection = AicsAssistance::with(
             "aics_type:id,name",
@@ -66,8 +64,8 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
         })
             ->where("status", "=", "Served")
             ->orderBy("status_date");
-        
-     
+
+
         if ($this->end_date) {
             $collection->whereBetween("status_date", [$this->start_date, $this->end_date]);
         } else {
@@ -135,17 +133,25 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
     {
         $fs = array();
         $total =  0;
-       
+
         if ($assistance->assessment->fund_sources) {
-            foreach ($assistance->assessment->fund_sources as $key => $value) {               
-                $fs[] = $value->fund_source->name."=". $value->amount;              
+            foreach ($assistance->assessment->fund_sources as $key => $value) {
+                $fs[] = $value->fund_source->name . "=" . $value->amount;
             }
             $total = $assistance->assessment->fund_sources->sum("amount");
         }
-      
+
+       
+        $entered_by = "";
+        if ($assistance->assessment->interviewed_by) {
+            $entered_by =  $assistance->assessment->interviewed_by->first_name  ? $assistance->assessment->interviewed_by->first_name . " " : "";
+            $entered_by .= $assistance->assessment->interviewed_by->middle_name ? $assistance->assessment->interviewed_by->middle_name  . " " : "";
+            $entered_by .= $assistance->assessment->interviewed_by->last_name   ? $assistance->assessment->interviewed_by->last_name . " " : "";
+            $entered_by .= $assistance->assessment->interviewed_by->ext_name    ?  $assistance->assessment->interviewed_by->ext_name . " " : "";
+        }
         return [
             $assistance->created_at->format("m/d/Y h:i:s"),
-            $assistance->assessment->interviewed_by,
+            $entered_by,
             "",
             $assistance->status_date,
             $assistance->aics_client->psgc->region_name . "/" . $assistance->aics_client->psgc->region_psgc,

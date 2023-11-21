@@ -435,14 +435,13 @@ class AicsAssistanceController extends Controller
                 break;
         }
 
-        $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
-        return $response->collect();
+       $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
+       return $response->collect();
+   
     }
 
     public function export(Request $request)
     {
-
-
         $filename = "";
         $filename = "aics-app-client-" . \Str::slug(Carbon::now());
         $export_file_name = "$filename.xlsx";

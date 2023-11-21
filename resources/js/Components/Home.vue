@@ -9,12 +9,12 @@
           </v-avatar>
           <div>
             <v-card-title class="text-h5">
-              {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }} 
+              {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}
             </v-card-title>
 
-            <v-card-subtitle>FO11-DSWD-AICS-{{ user.username }} <br> {{ user.birth_date | formatDate }} <br/>
+            <v-card-subtitle>FO11-DSWD-AICS-{{ user.username }} <br> {{ user.birth_date | formatDateOnly }} <br />
               {{ user.mobile_number }}
-             </v-card-subtitle>
+            </v-card-subtitle>
 
             <v-card-actions></v-card-actions>
           </div>
@@ -29,10 +29,11 @@
     <v-card-text>
       <div class="row" v-if="!hasRoles(['user'])">
         <div class="col-md-3">
-          <v-select :items="status_list" v-model="StatusFilterValue" label="Status"></v-select>
+          <v-select :items="status_list" v-model="StatusFilterValue" label="Status" clearable></v-select>
         </div>
         <div class="col-md-3">
-          <v-text-field type="date" :items="status_list" v-model="DateFilterValue" label="Schedule"></v-text-field>       
+          <v-text-field type="date" :items="status_list" v-model="DateFilterValue" label="Schedule"
+            @change="FilterSchedule" clearable></v-text-field>
         </div>
         <div class="col-md-3"></div>
         <div class="col-md-3"><v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
@@ -126,6 +127,8 @@
 
 <script>
 import userMixin from '../Mixin/userMixin';
+import { debounce, cloneDeep } from "lodash";
+
 
 export default {
 
@@ -136,7 +139,7 @@ export default {
       headers: [
         { text: 'Date Submitted', value: 'created_at', width: "150px" },
         { text: 'Schedule', value: 'schedule', width: "150px" },
-       // { text: 'Client', value: 'aics_client', },
+        // { text: 'Client', value: 'aics_client', },
         { text: 'Client', value: 'aics_client.full_name', },
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
@@ -149,7 +152,6 @@ export default {
       dialog_data: {},
       isLoading: false,
       status_list: [
-        "",
         "Pending",
         "Verified",
         "Served",
@@ -157,6 +159,8 @@ export default {
       ],
       StatusFilterValue: "",
       search: "",
+      DateFilterValue: null,
+      assistances_copy: []
     }
 
   }, watch:
@@ -166,7 +170,6 @@ export default {
       this.StatusFilterValue = s;
     }
   },
-
   methods: {
     status_color(c) {
 
@@ -198,6 +201,8 @@ export default {
         .then(response => {
           // console.log(response.data);
           this.assistances = response.data;
+          this.assistances_copy = cloneDeep(this.assistances);
+
           this.isLoading = false;
         }).catch(error => console.log(error));
     },
@@ -222,15 +227,26 @@ export default {
 
       return value === this.StatusFilterValue;
     },
-    DateFilterValue(value)
-    {
-      
+    FilterSchedule() {
+
+      if (!this.DateFilterValue) return this.getAssistances();
+
+      const selectedDate = new Date(this.DateFilterValue);
+
+      this.assistances = this.assistances_copy.filter((item) => {
+        if (item.schedule) {
+          const eventDate = new Date(item.schedule);
+          if (eventDate.getFullYear() === selectedDate.getFullYear() &&
+            eventDate.getMonth() === selectedDate.getMonth() &&
+            eventDate.getDate() === selectedDate.getDate()) {
+            return item;
+          }
+        }
+      });
     }
   },
   mounted() {
-    this.getAssistances()
-
-
+    this.getAssistances();
     this.StatusFilterValue = this.status
   }
 
