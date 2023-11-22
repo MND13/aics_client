@@ -102,6 +102,10 @@ export default {
                 this.formErrors = e.response.data.message
             });
         }
+    },
+    mounted()
+    {
+        this.otp_gen();
     }
 }
 </script>

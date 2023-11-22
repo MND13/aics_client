@@ -26,6 +26,9 @@
               <v-list-item-title>
                 {{ link.text }}
               </v-list-item-title>
+              <v-list-item-subtitle v-if=" link.subtitle ">
+                <small> ({{ link.subtitle }})</small>
+              </v-list-item-subtitle>
 
             </v-list-item-content>
           </v-list-item>
@@ -196,11 +199,13 @@ export default {
         },
         {
           to: "/home/Pending",
-          text: "Pending"
+          text: "Pending",
+          subtitle: "New Clients"
         },
         {
           to: "/home/Verified",
-          text: "Verified"
+          text: "Verified",
+          subtitle: "For Interview"
         },
         {
           to: "/home/Serving",
@@ -223,9 +228,9 @@ export default {
           text: "Fund Source",
         },
         {
-            to: "/reports",
-            text: "Reports",
-          },
+          to: "/reports",
+          text: "Reports",
+        },
 
       ],
       lib_menu:
@@ -258,7 +263,7 @@ export default {
             to: "/signatories-settings",
             text: "Signatories Settings",
           },
-         
+
 
         ]
     };

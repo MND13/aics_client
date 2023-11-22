@@ -64,8 +64,26 @@
           {{ item.schedule | formatDate }}
         </template>
 
+
         <template v-slot:item.aics_type="{ item }">
           {{ item.aics_type.name }}
+        </template>
+
+        <template v-slot:item.aics_client="{ item }">
+          <span v-if="item.aics_client">
+            {{ item.aics_client.full_name }}
+          </span>
+        </template>
+
+        <template v-slot:item.aics_beneficiary="{ item }">
+          <span v-if="item.aics_beneficiary">
+            {{ item.aics_beneficiary.first_name }}
+            {{ item.aics_beneficiary.middle_name }}
+            {{ item.aics_beneficiary.last_name }}
+          </span>
+          <span v-else-if="item.aics_client">
+            {{ item.aics_client.full_name }}
+          </span>
         </template>
 
         <template v-slot:item.office="{ item }">
@@ -137,13 +155,12 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Date Submitted', value: 'created_at', width: "150px" },
-        { text: 'Schedule', value: 'schedule', width: "150px" },
-        // { text: 'Client', value: 'aics_client', },
-        { text: 'Client', value: 'aics_client.full_name', },
+        { text: 'Client', value: 'aics_client', },
+        { text: 'Beneficiary', value: 'aics_beneficiary', },    
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
-        { text: 'Office', value: 'office' },
+        { text: 'Date Submitted', value: 'created_at', width: "150px" },
+        { text: 'Schedule', value: 'schedule', width: "150px" },
         { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },
         { text: 'Actions', value: 'actions', width: "150px" },
       ],

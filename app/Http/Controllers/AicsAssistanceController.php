@@ -319,14 +319,11 @@ class AicsAssistanceController extends Controller
             return AicsAssistance::with([
 
                 "aics_type:id,name",
-                "aics_documents",
-                "aics_documents.requirement:id,name",
                 "office:id,name,address",
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment",
-
-
+                "aics_beneficiary",
             ])
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
@@ -344,8 +341,8 @@ class AicsAssistanceController extends Controller
                 "aics_documents.requirement:id,name",
                 "office:id,name,address",
                 "aics_client",
-                "assessment"
-
+                "assessment",
+                "aics_beneficiary",
 
             )->orderBy("created_at",  "desc")
                 ->where("user_id", "=", Auth::id())->get();
@@ -358,19 +355,17 @@ class AicsAssistanceController extends Controller
 
             return AicsAssistance::with([
 
-                "aics_type:id,name",
-                "aics_documents",
-                "aics_documents.requirement:id,name",
+                "aics_type:id,name",               
                 "office:id,name,address",
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "assessment"
+                "assessment",
+                "aics_beneficiary",
 
             ])
 
                 ->orderBy("created_at",  "desc")
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
-
                 ->get();
         }
     }

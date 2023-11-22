@@ -9,6 +9,10 @@
         </div>
       </v-card-title>
       <v-card-text>
+        <pre>
+        {{ form }}
+      </pre>
+      
         <v-form ref="form">
           <input type="hidden" name="_token" :value="csrf">
           <div class="row">
@@ -271,7 +275,16 @@ export default
 
         }
 
-      }
+      },
+      /*form(val, nw) {
+
+        console.log("nnnnnn");
+        console.log(nw);
+        console.log("this.form");
+        console.log(val);
+        // console.log(issessionStorage());
+
+      },*/
     },
     computed: {
       url() {
@@ -285,6 +298,11 @@ export default
     },
     methods:
     {
+      /*storeSession() {
+
+        sessionStorage.setItem('form_stored', JSON.stringify(val));
+
+      },*/
       calculateAge: function () {
         if (!this.form.birth_date) {
           this.form.age = 0;
@@ -334,6 +352,8 @@ export default
         });
         this.submit = true;
 
+        sessionStorage.setItem('form_stored', JSON.stringify(this.form));
+
         axios.post("register", formData).then(response => {
 
           this.submit = false;
@@ -349,6 +369,18 @@ export default
       }, 250),
 
     },
+    mounted() {
+
+      if (sessionStorage.getItem('form_stored')) {
+        try {
+          let x = JSON.parse(sessionStorage.getItem('form_stored'));
+          this.form = cloneDeep(x);
+        } catch (error) {
+          sessionStorage.removeItem('form_stored');
+        }
+
+      }
+    }
   }
 </script>
 

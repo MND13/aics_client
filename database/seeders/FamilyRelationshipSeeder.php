@@ -14,7 +14,8 @@ class FamilyRelationshipSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {   
+        
         $json = $this->json();
         // dd($json);
         // return false;
@@ -33,7 +34,7 @@ class FamilyRelationshipSeeder extends Seeder
         
             $data = FamilyRelationships::create($insert_data);
            
-            echo "created: $data->name \n";
+            echo "created: $data->relationship \n";
         }
     }
 
