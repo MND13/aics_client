@@ -99,8 +99,8 @@ class RegisterController extends Controller
             #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'street_number' => ['required', 'string', 'max:255'],
             #'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'valid_id' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
-            'client_photo' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
+            'valid_id' => 'required|file|mimes:jpeg,jpg,png',
+            'client_photo' => 'required|file|mimes:jpeg,jpg,png',
         ]);
 
         $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
