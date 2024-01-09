@@ -32,6 +32,7 @@ import Signatories from "./Components/Signatories.vue"
 import Charging from "./Components/Charging.vue"
 import Reports from "./Components/Reports.vue"
 import SignatoriesSettings from "./Components/SignatoriesSettings.vue"
+import UsersClientList from "./Components/UsersClientList.vue"
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -100,6 +101,15 @@ const router = new VueRouter({
                 requiresRoles: ["super-admin", "admin"]
             }
         },
+        {
+            path: "/clients",
+            name: "clients",
+            component: UsersClientList,
+            meta: {
+                requiresAuth: true,
+                requiresRoles: ["super-admin", "admin"]
+            }
+        },        
         {
             path: "/providers",
             name: "Providers",
