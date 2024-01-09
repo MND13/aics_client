@@ -196,7 +196,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; ">
+            <td >
                 <p></p>
                 <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
                 {{ $assistance['assessment']['gl_signatory']['position'] }}
