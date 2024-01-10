@@ -112,7 +112,7 @@
     </p>
 
     <p style="text-align:left">
-        <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }} <br> <br>
+        <b> Date:</b> {{ date('M d, Y', strtotime($assistance['schedule'])) }} <br> <br>
 
         <b>{{ $assistance['assessment']['provider']['addressee_name'] }} </b><br>
         @if (
