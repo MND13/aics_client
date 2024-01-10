@@ -61,9 +61,10 @@
         }
 
         .sig {
-            height: 30px;
+            min-height: 50px;
             vertical-align: bottom;
-            line-height: 30px;
+            line-height: 50px;
+            
         }
 
 
@@ -244,7 +245,7 @@
             <tr>
                 <td><b>Beneficiary/Representative</b><br>Signature Over Printed Name</td>
                 <td><b>Social Worker</b><br>Signature Over Printed Name</td>
-                <td><b>SWADO</b><br>Signature Over Printed Name</td>
+                <td><b>{{ $assistance['assessment']['signatory']['position'] }}</b><br>Signature Over Printed Name</td>
             </tr>
         </tbody>
     </table>
