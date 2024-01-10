@@ -217,12 +217,12 @@
             </tr>
             <tr>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
                     </div>
                 </td>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $assistance['assessment']['interviewed_by']['first_name'] .
                             ' ' .
                             $assistance['assessment']['interviewed_by']['middle_name'] .
@@ -233,7 +233,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $assistance['assessment']['signatory']['name'] }}
 
 
@@ -247,6 +247,26 @@
             </tr>
         </tbody>
     </table>
+
+    @if($assistance['assessment']['amount'] >= 50000) <br><br>:
+    <table  class="table text-center " style="table-layout: fixed">
+        <tr>
+            <td></td>
+            <td style="text-align:left;">Approved by:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td> <div class="sig"><br>GEMMA D. DELA CRUZ</div></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b>SWO V/PSD CHIEF</b><br>Signature Over Printed Name</td>
+            <td></td>
+        </tr>
+    </table>
+    @endif
     <br><br>
 
     @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')
