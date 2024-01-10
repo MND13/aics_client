@@ -107,7 +107,7 @@
         <tr>
             <td></td>
             <td></td>
-            <td style="text-align:right"> Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
+            <td style="text-align:right"> Date: {{ date('M d, Y', strtotime($assistance['schedule'])) }}
             </td>
         </tr>
     </table>
