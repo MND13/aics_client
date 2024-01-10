@@ -61,10 +61,8 @@
         }
 
         .sig {
-            min-height: 50px;
-            vertical-align: bottom;
-            line-height: 50px;
             
+            vertical-align: bottom;
         }
 
 
