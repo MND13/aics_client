@@ -190,7 +190,7 @@
 
     <p class="text-center" style="line-height:2em">
         The client is hereby recommended to receive <span
-            class="underline">{{ $assistance['aics_type']['name'] }}</span> assistance <br>
+            class="underline">{{ $assistance_type }}  </span><br>
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
             ONLY</span>,
         PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>

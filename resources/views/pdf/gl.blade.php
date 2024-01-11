@@ -129,7 +129,7 @@
     <p>Dear <b>Sir/Madam</b>,<br></p>
     <p></p>
 
-    <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
+    <p> This has reference to the request for <b> {{$assistance_type}}</b> of herein client,
         <span
             class="upper bold">{{ trim($client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name']) }},
         </span>
