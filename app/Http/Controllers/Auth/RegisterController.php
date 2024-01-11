@@ -170,6 +170,7 @@ class RegisterController extends Controller
             });
             $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
             $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $img->destroy();
             $url = Storage::url($path_OG);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
@@ -188,6 +189,7 @@ class RegisterController extends Controller
             });
             $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
             $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $img->destroy();
             $url = Storage::url($path_OG);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
