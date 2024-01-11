@@ -4,7 +4,11 @@
     <v-row no-gutters>
 
       <v-col cols="12" sm="4">
-        {{ formData }}
+
+        <pre>
+          {{ formData }}
+        </pre>
+       
 
         <v-form ref="form_settings">
           <v-text-field v-model="formData.min_range" label="Min Range" :error-messages="formErrors.name"></v-text-field>
@@ -187,6 +191,7 @@ export default {
     editSignatory(signatory) {
       this.formType = "Update";
       this.formData = cloneDeep(signatory);
+      this.formData.signatories = this.formData.names;
 
     },
     deleteSignatory(signatory) {

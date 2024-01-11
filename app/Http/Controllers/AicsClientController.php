@@ -191,7 +191,7 @@ class AicsClientController extends Controller
                     "assistance" => $res,
                     "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
                     "records" => json_decode($res['assessment']['records']),
-                    "records_others" => $res['assessment']['records_others'],
+                    "records_others" => isset($res['assessment']['records_others']) ? $res['assessment']['records_others'] : "" ,
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
                     "bene"=> $res["aics_beneficiary"],
                     "relationship" => $res["rel_beneficiary"]

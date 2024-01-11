@@ -95,7 +95,7 @@ class SignatoriesSettingsController extends Controller
      */
     public function update(Request $request, SignatoriesSettings $signatoriesSettings)
     {
-        //
+        
     }
 
     /**
