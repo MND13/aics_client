@@ -441,7 +441,7 @@
                         <td>TOTAL</td>
                         <td>{{ sumValue }}</td>
                         <td>
-                      
+
                         </td>
                       </tr>
                     </tfoot>
@@ -484,7 +484,7 @@
           </v-card>
 
 
-       
+
 
           <div class="card mt-2"
             v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending' && form.mode_of_assistance == 'GL'">
@@ -547,12 +547,23 @@
               RECORDS IN FILE
             </div>
             <div class="card-body">
+
               <v-row align="start" no-gutters>
                 <template v-for="e in records_opts">
                   <v-col xs="12" sm="5" md="3" lg="3">
                     <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                   </v-col>
+
+
                 </template>
+
+                <v-col xs="12" sm="5" md="3" lg="3">
+                  <v-text-field outlined dense class="rounded-0" v-model="form.records_others"
+                    v-if="form.records.includes('Others')" label="Others"></v-text-field>
+                </v-col>
+
+              </v-row>
+              <v-row>
 
               </v-row>
 
@@ -747,8 +758,8 @@ export default {
       for_reveresal: [],
       view_url: null,
       loading_view_url: false,
-     
       signatories_settings: [],
+      
 
     };
   },
@@ -778,13 +789,22 @@ export default {
 
     },
     sumValue() {
-      this.signatories_settings.forEach(e => {      
-        if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {         
+      const user_initials =  this.my_initials;
+      let sw = this.gis_data.sw ? this.gis_data.sw : user_initials;
+
+      this.signatories_settings.forEach(e => {
+        if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {
           this.form.gl_signatory_id = e.names[0].id;
-          this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "" ;
-          this.form.initials = e.i + this.gis_data.en + "/"+ this.gis_data.sw;
+          this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "";
+          this.form.initials = e.i + this.gis_data.en + "/" + sw; 
         }
       });
+    },
+    "form.records": function (newVal, oldVal) {
+      if (!newVal.includes("Others")) {
+
+        this.form.records_others = "";
+      }
     },
   },
   computed: {
@@ -805,9 +825,12 @@ export default {
         { title: "Interviewed by:", value: this.gis_data.assessment ? this.gis_data.assessment.interviewed_by : "---" },
       ]
     },
-
-
-
+    my_initials() {     
+      let fn = this.user.first_name ? this.user.first_name.charAt(0) : ""
+      let mn = this.user.middle_name ? this.user.middle_name.charAt(0) : ""
+      let ln = this.user.last_name ? this.user.last_name.charAt(0) : ""     
+      return  fn + mn + ln ;
+    },
   },
 
   methods: {
@@ -969,8 +992,8 @@ export default {
             }
 
             if (this.gis_data.assessment.interviewed_by) {
-            
-              this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name ;
+
+              this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name;
             }
 
 

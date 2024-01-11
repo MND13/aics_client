@@ -172,9 +172,12 @@
                             @foreach ($records as $record)
                                 <li>
                                     {{ $record }}
+                                    @if($record == "Others")
+                                    :  {{$records_others}} 
+                                    @endif
                                 </li>
                             @endforeach
-
+                            
 
 
                         </ul>

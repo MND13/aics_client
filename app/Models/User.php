@@ -110,14 +110,11 @@ class User extends Authenticatable
             $foo  = Storage::disk("s3")->get($path);
             $base64 = "data:" . $mimtype . ";base64," . base64_encode($foo);
             return $base64;
-
-        } else if(Storage::exists($path))
-        {
+        } else if (Storage::exists($path)) {
             $mimtype  = Storage::mimeType($path);
             $foo  = Storage::get($path);
             $base64 = "data:" . $mimtype . ";base64," . base64_encode($foo);
             return $base64;
-
         } else return url("images/broken-link.png");
     }
 }
