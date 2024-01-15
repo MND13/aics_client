@@ -38,7 +38,7 @@
                 <v-list-item-title> {{ e.title }} </v-list-item-title>
                 <v-list-item-subtitle v-if="e.title == 'Status'">
 
-                  <v-chip class="white--text" dark small :color="status_color(e.value)"> {{
+                  <v-chip class="white--text" dark :color="status_color(e.value)"> {{
                     e.value
                   }} </v-chip> as of {{ gis_data.status_date | formatDateOnly }}</v-list-item-subtitle>
 
@@ -104,7 +104,7 @@
       </div>
       <div class="col-md-9">
 
-        <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
+        <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS" >
 
 
 
@@ -570,27 +570,29 @@
             </div>
           </div>
 
+          <!-- ACTION BUTTONS -->
+
           <div class="text-center col-md-12" style="padding: 10px 0px">
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['encoder']) && gis_data.status == 'Pending'">
+              v-if="hasRoles(['encoder', 'social-worker']) && gis_data.status == 'Pending'">
               VERIFY
             </v-btn>
 
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving' || gis_data.status == 'Served')">
+              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Rejected' || gis_data.status == 'Verified' || gis_data.status == 'Serving' || gis_data.status == 'Served')">
 
               <span v-if="form.id">UPDATE</span>
               <span v-else>SUBMIT</span>
 
             </v-btn>
 
-            <v-btn @click="MarkServed" dark large class="--white-text" color="red" :disabled="submit"
+            <v-btn @click="MarkServed" dark large class="--white-text" color="green" :disabled="submit"
               v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
               Mark as Served
             </v-btn>
 
-            <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
-              @click="dialog_reject = true" :disabled="submit">
+            <v-btn large class="--white-text" color="red" dark @click="dialog_reject = true" :disabled="submit"
+              v-if="hasRoles(['social-worker']) && gis_data.status != 'Served'">
               REJECT
             </v-btn>
 
@@ -632,20 +634,20 @@
 
           </div>
 
-          <v-dialog v-model="dialog_reject" width="50%">
+          <v-dialog v-model="dialog_reject" width="50%" app>
             <v-card>
-              <v-card-title>Reject GIS</v-card-title>
+              <v-card-title>Reject</v-card-title>
               <v-card-text>
-                Reason
-                <select class="form-control" v-model="rejectform.reason">
-                  <option :value="e" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
-                </select>
-                Message
-                <textarea v-model="rejectform.remarks" id="" cols="10" rows="5" class="form-control"></textarea>
-
+                <v-text-field v-model="rejectform.reason" label="Reason" outlined dense></v-text-field>
+                <v-textarea outlined dense v-model="rejectform.remarks" label="Message" cols="30" rows="10"></v-textarea>
                 <v-btn @click="RejectGIS" dark color="red">
                   Reject
                 </v-btn>
+
+                <v-btn @click="dialog_reject = !dialog_reject" outlined>
+                  Close
+                </v-btn>
+
               </v-card-text>
 
             </v-card>
@@ -759,7 +761,7 @@ export default {
       view_url: null,
       loading_view_url: false,
       signatories_settings: [],
-      
+
 
     };
   },
@@ -789,14 +791,14 @@ export default {
 
     },
     sumValue() {
-      const user_initials =  this.my_initials;
+      const user_initials = this.my_initials;
       let sw = this.gis_data.sw ? this.gis_data.sw : user_initials;
 
       this.signatories_settings.forEach(e => {
         if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {
           this.form.gl_signatory_id = e.names[0].id;
           this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "";
-          this.form.initials = e.i + this.gis_data.en + "/" + sw; 
+          this.form.initials = e.i + this.gis_data.en + "/" + sw;
         }
       });
     },
@@ -825,11 +827,11 @@ export default {
         { title: "Interviewed by:", value: this.gis_data.assessment ? this.gis_data.assessment.interviewed_by : "---" },
       ]
     },
-    my_initials() {     
+    my_initials() {
       let fn = this.user.first_name ? this.user.first_name.charAt(0) : ""
       let mn = this.user.middle_name ? this.user.middle_name.charAt(0) : ""
-      let ln = this.user.last_name ? this.user.last_name.charAt(0) : ""     
-      return  fn + mn + ln ;
+      let ln = this.user.last_name ? this.user.last_name.charAt(0) : ""
+      return fn + mn + ln;
     },
   },
 
