@@ -144,6 +144,7 @@ export default {
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
+        { text: 'Verified By', value: 'verified_by.full_name', },
         { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },
         { text: 'Actions', value: 'actions', width: "150px" },
       ],

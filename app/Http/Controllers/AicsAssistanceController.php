@@ -312,11 +312,11 @@ class AicsAssistanceController extends Controller
 
     public function index()
     {
-        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker','super-admin'])) {
 
-            // var_dump(Auth::user());
+         
 
-            return AicsAssistance::with([
+            $assistance = AicsAssistance::with([
 
                 "aics_type:id,name",
                 "aics_documents",
@@ -324,14 +324,15 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "assessment",
-
+                "assessment:id,mode_of_assistance",
+                "verified_by:id,full_name,first_name,middle_name,last_name",
 
             ])
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
-                ->orderBy("created_at",  "desc")
-                ->get();
+                ->orderBy("created_at",  "desc");
+
+             return $assistance->get();
         }
 
 
@@ -351,7 +352,7 @@ class AicsAssistanceController extends Controller
                 ->where("user_id", "=", Auth::id())->get();
         }
 
-        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+        /*if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
             // var_dump(Auth::user());
 
@@ -364,7 +365,9 @@ class AicsAssistanceController extends Controller
                 "office:id,name,address",
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "assessment"
+                "assessment",
+                "verified_by:id,full_name,first_name,middle_name,last_name",
+
 
             ])
 
@@ -372,7 +375,7 @@ class AicsAssistanceController extends Controller
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
 
                 ->get();
-        }
+        }*/
     }
 
     public function update(request $request)
