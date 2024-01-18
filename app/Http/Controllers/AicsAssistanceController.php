@@ -189,11 +189,11 @@ class AicsAssistanceController extends Controller
                     }
 
 
-                    if ($asst->aics_client->profile_docs) {
+                    /*if ($asst->aics_client->profile_docs) {
                         foreach ($asst->aics_client->profile_docs as $key => $value) {
                             $value->file_directory =  User::s3Url($value->file_directory);
                         }
-                    }
+                    }*/
 
                     if ($asst->verified_by) {
                         $asst->en = substr($asst->verified_by["first_name"], 0, 1)

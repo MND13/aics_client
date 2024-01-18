@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\AicsAssistance;
 
 class UserController extends Controller
 {
@@ -101,5 +102,44 @@ class UserController extends Controller
         $user->delete();
     }
 
+    public function photos(Request $request)
+    {
+        $asst =  AicsAssistance::with("aics_client")
+            ->where("uuid", "=", $request->assistance)
+            ->firstOrFail();
 
+
+        if ($asst->aics_client->profile_docs) {
+
+            foreach ($asst->aics_client->profile_docs as $key => $value) {
+                $value->file_directory =  User::s3Url($value->file_directory);
+            }
+
+            return $asst->aics_client->profile_docs;
+
+        }
+
+        
+
+
+
+
+        /*$aaa =  AicsAssistance::with("aics_client")
+            ->where("uuid", "=", $request->assistance)
+            ->get()
+            ->transform(function ($asst) {
+
+               
+                if ($asst->aics_client->profile_docs) {
+
+                    foreach ($asst->aics_client->profile_docs as $key => $value) {
+                        $value->file_directory =  User::s3Url($value->file_directory);
+                    }
+                }
+
+                return $asst;
+            });
+
+        return $aaa[0];*/
+    }
 }

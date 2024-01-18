@@ -18,8 +18,8 @@
 
         <v-card flat outlined tile>
           <v-card-text>
-            <v-row v-if="gis_data.aics_client">
-              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in gis_data.aics_client.profile_docs"
+            <v-row v-if="photos">
+              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in photos"
                 :key="i">
                 <a :href="images.file_directory" target="_blank">
                   <v-img :src="images.file_directory" max-height="100px" height="auto" width="100%"></v-img>
@@ -104,7 +104,7 @@
       </div>
       <div class="col-md-9">
 
-        <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS" >
+        <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
 
 
@@ -761,6 +761,7 @@ export default {
       view_url: null,
       loading_view_url: false,
       signatories_settings: [],
+      photos : []
 
 
     };
@@ -934,11 +935,11 @@ export default {
       return _.isEmpty(value);
     },
 
-    getAssistanceTypes() {
+    /*getAssistanceTypes() {
       axios.get(route("api.aics.assistance-types")).then((response) => {
         this.assistance_types = response.data;
       });
-    },
+    },*/
 
     getCategories() {
       axios.get(route("api.categories")).then((response) => {
@@ -970,7 +971,7 @@ export default {
     },
 
     getGISData() {
-      // console.log({ "assistance": this.$route.params.uuid });
+
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
 
@@ -997,6 +998,7 @@ export default {
 
               this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name;
             }
+
 
 
           }
@@ -1133,18 +1135,31 @@ export default {
         })
         ;
     },
+    getPhotos() {
+
+      axios.get(route("user.photos", { "assistance": this.$route.params.uuid })).then(res => {
+       
+        this.photos = res.data;
+
+      }).catch(error => console.log(error));
+
+    }
+
 
   },
   mounted() {
 
     this.getSignatoriesSettings();
-    this.getAssistanceTypes();
+    // this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
     this.getFundSrc();
     this.getProviders();
     this.getSignatories();
     this.getGISData();
+    this.getPhotos();
+
+
 
   },
 };
