@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class AicsAssessment extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     protected $guarded = ["id"];
 
     public function assistance()
@@ -57,5 +59,8 @@ class AicsAssessment extends Model
         return $this->belongsTo(Signatories::class, "gl_for_signatory_id");
     }
 
-   
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logUnguarded()->logOnlyDirty()->dontSubmitEmptyLogs();
+    }
 }
