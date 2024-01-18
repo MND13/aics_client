@@ -193,6 +193,7 @@ export default {
         axios.delete(route('signatories_settings.destroy', signatory.id))
           .then(res => {
             this.getSignatories();
+            alert('Signatory has been deleted');
           })
           .catch(err => { })
           ;
