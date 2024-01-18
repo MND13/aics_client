@@ -200,14 +200,14 @@ export default {
       this.isLoading = true;
       axios.get(route("assistances.index"))
         .then(response => {
-         
+
           this.assistances = response.data;
           this.assistances_copy = cloneDeep(this.assistances);
 
           this.isLoading = false;
         }).catch(error => console.log(error));
     },
-    
+
     openDetails(item) {
 
       this.dialog_data = {};
