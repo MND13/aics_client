@@ -557,8 +557,6 @@
                   <v-col xs="12" sm="5" md="3" lg="3">
                     <v-checkbox v-model="form.records" :label="e" :value="e" class="shrink mr-0 mt-0"></v-checkbox>
                   </v-col>
-
-
                 </template>
 
                 <v-col xs="12" sm="5" md="3" lg="3">
@@ -1147,6 +1145,10 @@ export default {
 
       }).catch(error => console.log(error));
 
+    },
+    getActivityLog()
+    {
+      axios.get(route("")).then(res=>{console.log(res.data)}).catch(error=>console.log(error))
     }
 
 
@@ -1162,6 +1164,7 @@ export default {
     this.getSignatories();
     this.getGISData();
     this.getPhotos();
+    this.getActivityLog();
 
 
 
