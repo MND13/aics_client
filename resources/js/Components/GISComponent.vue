@@ -15,20 +15,23 @@
     </div>
     <div class="row g-2">
       <div class="col-md-3">
-
-        <v-card flat outlined tile>
-          <v-card-text>
-            <v-row v-if="photos">
-              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in photos"
-                :key="i">
+        <v-card flat outlined tile >
+          <v-card-text v-if="photos.length > 0">
+            <v-row>
+              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in photos" :key="i">
+               
                 <a :href="images.file_directory" target="_blank">
                   <v-img :src="images.file_directory" max-height="100px" height="auto" width="100%"></v-img>
                 </a>
               </v-col>
             </v-row>
-            <v-skeleton-loader v-else type="list-item-avatar-three-line"></v-skeleton-loader>
           </v-card-text>
+          <v-card-text v-else >
+            <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
+          </v-card-text>
+         
         </v-card>
+        
 
         <v-card tile flat outlined class="mt-2">
           <v-card-subtitle class="indigo--text">Submission Info</v-card-subtitle>
@@ -502,7 +505,7 @@
                 </template>
               </v-autocomplete>
 
-              <v-autocomplete class="rounded-0 my-2" outlined clearable dense v-model="form.gl_signatory_id"
+              <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.gl_signatory_id"
                 :loading="!signatories" label="Signatory" :items="signatories"
                 :error-messages="validationErrors.gl_signatory_id" item-value="id" item-text="name" hide-details="auto">
                 <template v-slot:item="data">
@@ -531,6 +534,7 @@
               <hr>
 
               <div class="mt-2" v-if="selected_provider">
+                Preview <br/> 
 
                 {{ selected_provider.addressee_name }} <br />
                 {{ selected_provider.addressee_position }}<br />
@@ -761,7 +765,7 @@ export default {
       view_url: null,
       loading_view_url: false,
       signatories_settings: [],
-      photos : []
+      photos: {}
 
 
     };
@@ -1138,7 +1142,7 @@ export default {
     getPhotos() {
 
       axios.get(route("user.photos", { "assistance": this.$route.params.uuid })).then(res => {
-       
+
         this.photos = res.data;
 
       }).catch(error => console.log(error));

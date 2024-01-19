@@ -108,8 +108,8 @@ class UserController extends Controller
             ->where("uuid", "=", $request->assistance)
             ->firstOrFail();
 
-
-        if ($asst->aics_client->profile_docs) {
+        
+        if ($asst->aics_client && $asst->aics_client->profile_docs) {
 
             foreach ($asst->aics_client->profile_docs as $key => $value) {
                 $value->file_directory =  User::s3Url($value->file_directory);
@@ -118,28 +118,5 @@ class UserController extends Controller
             return $asst->aics_client->profile_docs;
 
         }
-
-        
-
-
-
-
-        /*$aaa =  AicsAssistance::with("aics_client")
-            ->where("uuid", "=", $request->assistance)
-            ->get()
-            ->transform(function ($asst) {
-
-               
-                if ($asst->aics_client->profile_docs) {
-
-                    foreach ($asst->aics_client->profile_docs as $key => $value) {
-                        $value->file_directory =  User::s3Url($value->file_directory);
-                    }
-                }
-
-                return $asst;
-            });
-
-        return $aaa[0];*/
     }
 }
