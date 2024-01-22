@@ -205,7 +205,7 @@
                                 <li><span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                     {{ $record }}
                                     @if($record == "Others")
-                                    :  {{$records_others}} 
+                                    :  <span style="text-decoration: underline;"> {{$records_others}} </span>
                                     @endif
                                 </li>
                             @endforeach

@@ -28,9 +28,6 @@ Route::group(['prefix' => '/aics'], function () {
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::get('users-clients', [\App\Http\Controllers\UserController::class, 'clients'])->name("users.clients");
     Route::get('photos', [\App\Http\Controllers\UserController::class, 'photos'])->name("user.photos");
-    Route::get('photos', [\App\Http\Controllers\UserController::class, 'photos'])->name("user.photos");
-
-    
   
     Route::get('assistance-types', [\App\Http\Controllers\AicsTypeController::class, 'index'])->name("api.aics.assistance-types");
     Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
@@ -40,8 +37,9 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
     Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
     Route::resource('signatories_settings', \App\Http\Controllers\SignatoriesSettingsController::class);
- 
+    Route::get('assessment/activity/{assistance}', [\App\Http\Controllers\AicsAssistanceController::class, 'activity_logs'])->name("api.assistance.activity_log");
 
+   
 });
 
 

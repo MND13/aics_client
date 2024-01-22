@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AcisCrimsExport;
+use App\Models\AicsAssessment;
 use App\Models\User;
 use Image;
+use Spatie\Activitylog\Models\Activity;
+
 
 class AicsAssistanceController extends Controller
 {
@@ -161,12 +164,12 @@ class AicsAssistanceController extends Controller
                     return $q;
                 });
 
-            if (Auth::check() &&  !Auth::user()->hasRole(['super-admin','user'])) {
+            if (Auth::check() &&  !Auth::user()->hasRole(['super-admin', 'user'])) {
 
                 $assisstance->whereRelation("office", "office_id", "=", Auth::user()->office_id);
             }
 
-           return $assisstance->get()->transform(function ($asst) {
+            return $assisstance->get()->transform(function ($asst) {
 
                 if (isset($asst->assessment->fund_sources)) {
                     $selected_fund_source = array();
@@ -189,7 +192,7 @@ class AicsAssistanceController extends Controller
                     }
 
                     $asst->selected_fs = $selected_fund_source;
-                    $asst->aa = $r;
+                   
                 }
 
 
@@ -203,7 +206,6 @@ class AicsAssistanceController extends Controller
 
                 return $asst;
             })->firstOrFail();
-
         }
 
 
@@ -376,5 +378,12 @@ class AicsAssistanceController extends Controller
     public function view_attachment(Request $request)
     {
         return  User::s3Url($request->file_directory);
+    }
+
+    public function activity_logs(Request $request)
+    {
+      
+       $a = AicsAssistance::where("uuid", "=", $request->assistance)->firstOrFail();    
+       return $a->activities;
     }
 }

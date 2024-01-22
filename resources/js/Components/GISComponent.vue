@@ -2,7 +2,9 @@
   <div class="container-fluid">
 
     <div class="row">
-    
+    <pre>
+      {{ gis_data.activity }}
+    </pre>
            
     </div>
     <div class="row g-2">
@@ -1160,7 +1162,7 @@ export default {
         ;
     },
     getPhotos() {
-
+     
       axios.get(route("user.photos", { "assistance": this.$route.params.uuid })).then(res => {
 
         this.photos = res.data;
@@ -1168,10 +1170,12 @@ export default {
       }).catch(error => console.log(error));
 
     },
-    /*getActivityLog()
-    {
-      axios.get(route("")).then(res=>{console.log(res.data)}).catch(error=>console.log(error))
-    }*/
+    getActivityLog()
+    { console.log("aaaaa");
+      axios.get(route("api.assistance.activity_log",{ "assistance": this.$route.params.uuid }))
+      .then(res=>{console.log(res.data)})
+      .catch(error=>console.log(error))
+    }
 
 
   },
@@ -1186,7 +1190,7 @@ export default {
     this.getSignatories();
     this.getGISData();
     this.getPhotos();
-    // this.getActivityLog();
+    this.getActivityLog();
 
 
 
