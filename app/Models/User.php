@@ -117,4 +117,23 @@ class User extends Authenticatable
             return $base64;
         } else return url("images/broken-link.png");
     }
+
+    public function getInitialsAttribute()
+    {
+        $initials = '';       
+        if ($this->first_name) {
+            $initials .= substr($this->first_name, 0, 1);
+        }
+
+        if ($this->middle_name) {
+            $initials .= substr($this->middle_name, 0, 1);
+        }
+
+        if ($this->last_name) {
+            $initials .= substr($this->last_name, 0, 1);
+        }
+
+        return $initials;
+    }
+
 }

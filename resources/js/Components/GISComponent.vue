@@ -2,39 +2,63 @@
   <div class="container-fluid">
 
     <div class="row">
-      <div class="col-md-12"
-        v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
-        <v-spacer></v-spacer>
-        <v-btn dark @click="SendSMS()">Send SMS</v-btn>
-        <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
-        <v-btn dark @click="PrintCOE()">Print COE</v-btn>
-        <v-btn dark @click="PrintCAV()"
-          v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">Print CAV</v-btn>
-        <v-btn dark @click="PrintGL()" v-else>Print GL</v-btn>
-      </div>
+    
+           
     </div>
     <div class="row g-2">
       <div class="col-md-3">
-        <v-card flat outlined tile >
+        <v-card flat outlined tile>
           <v-card-text v-if="photos.length > 0">
             <v-row>
               <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in photos" :key="i">
-               
+
                 <a :href="images.file_directory" target="_blank">
                   <v-img :src="images.file_directory" max-height="100px" height="auto" width="100%"></v-img>
                 </a>
               </v-col>
             </v-row>
           </v-card-text>
-          <v-card-text v-else >
+          <v-card-text v-else>
             <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
           </v-card-text>
-         
+
         </v-card>
-        
+
 
         <v-card tile flat outlined class="mt-2">
           <v-card-subtitle class="indigo--text">Submission Info</v-card-subtitle>
+          <v-card-text>
+          <v-menu v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn block dark v-bind="attrs" v-on="on">
+              <v-icon> mdi-printer </v-icon> Print
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="PrintGIS()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon>Print GIS <v-chip label small>CTLR + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintCOE()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print COE <v-chip label small>CTLR + SHIFT + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintCAV()"
+              v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print CAV <v-chip label small>CTLR + ALT + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintGL()" v-else>
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print GL <v-chip label small>CTLR + SPACE</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+
+          </v-list>
+        </v-menu>  
           <v-list dense v-if="gis_data.status">
             <v-list-item two-line v-for="(e, i) in submission_info" :key="i">
               <v-list-item-content>
@@ -52,6 +76,7 @@
             </v-list-item>
           </v-list>
           <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+        </v-card-text>
         </v-card>
 
 
@@ -105,7 +130,12 @@
         </v-card>
 
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9" v-if="loading_gis">
+        <v-card flat outlined tile>
+          <v-skeleton-loader type="article, actions"></v-skeleton-loader>
+        </v-card>
+      </div>
+      <div class="col-md-9" v-else>
 
         <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
@@ -334,6 +364,7 @@
           </v-card>
 
 
+
           <v-row v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'" class="g-2">
             <v-col cols="12" md="4">
               <v-card flat outlined tile>
@@ -496,7 +527,7 @@
             </div>
             <div class="card-body">
               <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
-                return-object outlined item-text="company_name" dense class="rounded-0">
+                return-object outlined item-text="company_name" dense class="rounded-0" track-by="id">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>
@@ -534,7 +565,7 @@
               <hr>
 
               <div class="mt-2" v-if="selected_provider">
-                Preview <br/> 
+                Preview <br />
 
                 {{ selected_provider.addressee_name }} <br />
                 {{ selected_provider.addressee_position }}<br />
@@ -763,7 +794,8 @@ export default {
       view_url: null,
       loading_view_url: false,
       signatories_settings: [],
-      photos: {}
+      photos: {},
+      loading_gis: false,
 
 
     };
@@ -923,25 +955,15 @@ export default {
       }
 
     },
-
     resetForm() {
       this.form = {
         mode_of_admission: "Walk-in",
         records: [],
-
-
       };
     },
-
     isEmpty(value) {
       return _.isEmpty(value);
     },
-
-    /*getAssistanceTypes() {
-      axios.get(route("api.aics.assistance-types")).then((response) => {
-        this.assistance_types = response.data;
-      });
-    },*/
 
     getCategories() {
       axios.get(route("api.categories")).then((response) => {
@@ -961,7 +983,6 @@ export default {
       this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
       this.rejectform.task = "update_status";
 
-
       axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
 
         console.log(response);
@@ -973,7 +994,7 @@ export default {
     },
 
     getGISData() {
-
+      this.loading_gis = true;
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
 
@@ -1004,12 +1025,13 @@ export default {
 
 
           }
+
+          this.loading_gis = false;
+
         }).catch(error => {
-          console.log("error");
-          console.log(error);
 
+          this.loading_gis = false;
           if (error.response.status === 404) {
-
             this.$router.push({ name: 'NotFound' });
           }
         })
@@ -1146,10 +1168,10 @@ export default {
       }).catch(error => console.log(error));
 
     },
-    getActivityLog()
+    /*getActivityLog()
     {
       axios.get(route("")).then(res=>{console.log(res.data)}).catch(error=>console.log(error))
-    }
+    }*/
 
 
   },
@@ -1164,7 +1186,7 @@ export default {
     this.getSignatories();
     this.getGISData();
     this.getPhotos();
-    this.getActivityLog();
+    // this.getActivityLog();
 
 
 

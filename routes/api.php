@@ -28,6 +28,7 @@ Route::group(['prefix' => '/aics'], function () {
     Route::resource('users', \App\Http\Controllers\UserController::class);
     Route::get('users-clients', [\App\Http\Controllers\UserController::class, 'clients'])->name("users.clients");
     Route::get('photos', [\App\Http\Controllers\UserController::class, 'photos'])->name("user.photos");
+    Route::get('photos', [\App\Http\Controllers\UserController::class, 'photos'])->name("user.photos");
 
     
   
@@ -80,7 +81,6 @@ Route::get('charging/txn/{id}', [\App\Http\Controllers\AicsAssessmentFundSourceC
 
 
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
-Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
 Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
 
 Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate");

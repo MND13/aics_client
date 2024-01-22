@@ -14,14 +14,19 @@
 
         }
 
-        body {
-            font-size: 10pt;
+        body,
+        th {
+            font-size: 9pt;
             font-family: Arial, sans-serif
+        }
+
+        h2 {
+            font-size: 12pt
         }
 
         h1>small,
         h2>small {
-            font-size: 13pt;
+            font-size: 10pt;
             font-weight: normal;
         }
 
@@ -30,6 +35,7 @@
             margin: 0 auto;
             border-bottom: solid 1px #000;
             text-transform: uppercase;
+            vertical-align: bottom;
         }
 
         .table {
@@ -41,9 +47,14 @@
             text-transform: uppercase;
         }
 
+        .dotted-table
+        {   padding-bottom: 10px;
+            border-bottom: dashed 1px #000;
+        }
+
         @page {
-            size: 8.27in 11.69in;
-            margin: 5%;
+            size: 8.27in 12in;
+            margin: 0.5in;
             opacity: 0.75;
             padding: 0 !important;
             font-size: 10pt;
@@ -60,15 +71,36 @@
             display: inline-block
         }
 
-        .sig {
-            
-            vertical-align: bottom;
+
+        table.table-bordered td,
+        {
+        border: solid 1px #000
         }
 
+        .footer-ds {
+            font-size: 9pt;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif
+        }
 
+        .signatories .sig {
+            font-size: 1vw;
+            vertical-align: bottom
+        }
 
-        table.table-bordered td {
-            border: solid 1px #000
+        ul {
+            list-style: none;
+            padding: 5px; margin: 0;
+
+        }
+
+        ul li {
+            display: inline;
+        }
+
+        p {
+            margin-top: 5px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -168,9 +200,9 @@
                 <td>
                     <div>
                         <ul>
-                            <li>General Intake Sheet</li>
+                            <li><span style="font-family: DejaVu Sans, sans-serif;">✔</span>General Intake Sheet</li>
                             @foreach ($records as $record)
-                                <li>
+                                <li><span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                     {{ $record }}
                                     @if($record == "Others")
                                     :  {{$records_others}} 
@@ -251,7 +283,7 @@
         </tbody>
     </table>
 
-    @if($assistance['assessment']['amount'] >= 50000) <br><br>:
+    @if($assistance['assessment']['amount'] >= 50000) <br><br>
     <table  class="table text-center " style="table-layout: fixed">
         <tr>
             <td></td>
