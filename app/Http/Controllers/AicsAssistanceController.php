@@ -383,7 +383,17 @@ class AicsAssistanceController extends Controller
     public function activity_logs(Request $request)
     {
       
-       $a = AicsAssistance::where("uuid", "=", $request->assistance)->firstOrFail();    
-       return $a->activities;
+       $assistance = AicsAssistance::where("uuid", "=", $request->assistance)->with("assessment")->firstOrFail();  
+       if($assistance)
+       {    
+            $assessment = array();
+            if($assistance->assesment)
+            {   
+               
+                $assessment = $assistance->assesment->activities;
+            }
+          return ["assistance"=>$assistance->activities,"assessment"=>$assessment ];
+       }  
+       
     }
 }

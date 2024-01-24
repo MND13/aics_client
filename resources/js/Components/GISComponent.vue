@@ -2,10 +2,7 @@
   <div class="container-fluid">
 
     <div class="row">
-    <pre>
-      {{ gis_data.activity }}
-    </pre>
-           
+ 
     </div>
     <div class="row g-2">
       <div class="col-md-3">
@@ -627,7 +624,7 @@
             </v-btn>
 
             <v-btn large class="--white-text" color="red" dark @click="dialog_reject = true" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && gis_data.status != 'Served'">
+              v-if="hasRoles(['social-worker'])">
               REJECT
             </v-btn>
 
