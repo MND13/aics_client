@@ -40,7 +40,7 @@ class PsgcSeeder extends Seeder
             $insert_data['region_psgc'] = $psgc_data[9];
             $insert_data['region_name_short'] = $psgc_data[10];
             $psgc = Psgc::create($insert_data);
-            echo "created psgc: $psgc->brgy_psgc - $psgc->brgy_name \n";
+          #  echo "created psgc: $psgc->brgy_psgc - $psgc->brgy_name \n";
         }
     }
 

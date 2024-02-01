@@ -4,6 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Offices;
+use App\Models\Psgc;
+use App\Models\User;
 
 class UserFactory extends Factory
 {
@@ -12,13 +15,30 @@ class UserFactory extends Factory
      *
      * @return array
      */
+
+     protected $model = User::class;
+
+
     public function definition()
-    {
+    {   
+        $office = Offices::factory()->create();
+        $psgc = Psgc::factory()->create();
+
         return [
-            'name' => $this->faker->name(),
+            'first_name' => $this->faker->firstName(),
+            'middle_name' => $this->faker->lastName(),
+            'last_name' => $this->faker->lastName(),
+            'ext_name' => $this->faker->suffix(),
+            'gender' => "Lalake",
+            'mobile_number' => preg_replace('/[^0-9]/', '', $this->faker->phoneNumber()) ,
+            'birth_date' =>$this->faker->date(),
+            'street_number' => $this->faker->streetAddress(),            
+            'psgc_id' =>$psgc->id,
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'username' => $this->faker->userName(),                
+            'office_id' => $office->id,
+            'full_name' => $this->faker->name(),  
+            'mobile_verified' => "1",            
             'password' => 'password', // password
             'remember_token' => Str::random(10),
         ];

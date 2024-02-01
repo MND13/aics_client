@@ -97,6 +97,11 @@ class AicsAssistance extends Model
     {
         return LogOptions::defaults()->logFillable()->logOnlyDirty()->dontSubmitEmptyLogs();
     }
+
+    public function getActivityDescriptionForEvent(string $eventName): string
+    {
+        return "Assistance with description '{$this->description}' was {$eventName} for assessment: '{$this->assessment->name}'";
+    }
     
    
 }

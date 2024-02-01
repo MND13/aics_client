@@ -34,7 +34,7 @@ class FundSourceSeeder extends Seeder
             $insert_data['type'] = $psgc_data[3];          
         
             $fs = FundSource::create($insert_data);           
-            echo "created Fund Source: $fs->name \n";
+           # echo "created Fund Source: $fs->name \n";
         }
     }
 
