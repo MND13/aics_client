@@ -182,7 +182,7 @@ class RegisterController extends Controller
             $files = request('client_photo');
             $filename = $files->hashName();
 
-         
+
 
             $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
                 $constraint->aspectRatio();
@@ -234,13 +234,6 @@ ANG PAG PROSESO AY LIBRE.";
 
     public function generateUserName($name)
     {
-        /* $username = Str::lower(Str::slug($name));
-        if (User::where('username', '=', $username)->exists()) {
-            $uniqueUserName = $username . '-' . mt_rand(0000, 9999);
-            $username = $this->generateUserName($uniqueUserName);
-        }
-        return $username;*/
-
         $username = Str::random(8);
         if (User::where('username', '=', $username)->exists()) {
             $uniqueUserName = Str::random(8);

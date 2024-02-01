@@ -15,7 +15,7 @@ class AicsProvidersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->artisan('db:seed');
+       # $this->artisan('db:seed');
     }
 
     public function test_it_can_create_a_provider()
