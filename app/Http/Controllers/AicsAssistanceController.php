@@ -29,16 +29,18 @@ class AicsAssistanceController extends Controller
     public function store(Request $request)
     {
 
+
         DB::beginTransaction();
         $user = Auth::user();
         $year = date("Y");
         $month = date("m");
-
         if (Auth::check() &&   Auth::user()->hasRole('admin')) {
         }
 
 
-        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+
+        if (Auth::check() && Auth::user()->hasRole('user')) {
+
             try {
                 $form_data = $request->all();
                 $errors = ["assistance" => []];
@@ -119,11 +121,14 @@ class AicsAssistanceController extends Controller
 
 
                 DB::commit();
-                return ["message" => "Saved"];
+                return ["message" => "Saved", "documents" => $documents];
             } catch (\Throwable $th) {
                 DB::rollBack();
                 throw $th;
+                return response()->json(['error' => 'failed', 'message' => $th->getMessage()], 500);
             }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
 
@@ -192,7 +197,6 @@ class AicsAssistanceController extends Controller
                     }
 
                     $asst->selected_fs = $selected_fund_source;
-                   
                 }
 
 
@@ -236,9 +240,7 @@ class AicsAssistanceController extends Controller
         if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker', 'super-admin'])) {
 
 
-
             $assistance = AicsAssistance::with([
-
                 "aics_type:id,name",
                 "aics_documents",
                 "aics_documents.requirement:id,name",
@@ -247,7 +249,6 @@ class AicsAssistanceController extends Controller
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment:id,mode_of_assistance",
                 "verified_by:id,full_name,first_name,middle_name,last_name",
-
             ])
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
@@ -328,6 +329,10 @@ class AicsAssistanceController extends Controller
                         $sms_response = $this->sms($a);
                     }
                     return ["message" => "saved", "sms_response" => $sms_response];
+                } else {
+                    $a->fill($request);
+                    $a->save();
+                    return ["message" => "saved"];
                 }
             } else {
                 return ["message" => "Assistance Request Not Found",];
@@ -382,13 +387,11 @@ class AicsAssistanceController extends Controller
 
     public function activity_logs(Request $request)
     {
-      
-       $assistance = AicsAssistance::where("uuid", "=", $request->assistance)->with("assessment","assessment.activities")->firstOrFail();  
-   
-       if($assistance)
-       {    
-          return ["assistance"=>$assistance->activities,"assessment"=> $assistance->assessment->activities ];
-       }  
-       
+
+        $assistance = AicsAssistance::where("uuid", "=", $request->assistance)->with("assessment", "assessment.activities")->firstOrFail();
+
+        if ($assistance) {
+            return ["assistance" => $assistance->activities, "assessment" => $assistance->assessment->activities];
+        }
     }
 }

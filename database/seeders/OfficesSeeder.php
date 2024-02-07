@@ -37,7 +37,7 @@ class OfficesSeeder extends Seeder
         
             $office = Offices::create($insert_data);
            
-            echo "created office: $office->name \n";
+          #  echo "created office: $office->name \n";
         }
     }
 

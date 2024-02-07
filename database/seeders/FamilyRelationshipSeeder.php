@@ -33,7 +33,7 @@ class FamilyRelationshipSeeder extends Seeder
         
             $data = FamilyRelationships::create($insert_data);
            
-            echo "created: $data->name \n";
+           # echo "created: $data->name \n";
         }
     }
 
