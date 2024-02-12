@@ -1168,7 +1168,7 @@ export default {
 
     },
     getActivityLog()
-    { console.log("aaaaa");
+    { 
       axios.get(route("api.assistance.activity_log",{ "assistance": this.$route.params.uuid }))
       .then(res=>{console.log(res.data)})
       .catch(error=>console.log(error))

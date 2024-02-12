@@ -32,6 +32,9 @@ class AicsAssessmentController extends Controller
      */
     public function create(Request $request)
     {
+
+       # var_dump($request);
+        
         if (Auth::check() &&   !Auth::user()->hasRole('user')) {
 
 
@@ -100,10 +103,12 @@ class AicsAssessmentController extends Controller
                             }
                         }
 
-                        DB::commit();
-
-                        return ["message" => "Saved!"];
+                       
                     }
+
+                    DB::commit();
+
+                    return ["message" => "Saved!"];
                 }
             } catch (\Throwable $th) {
                 DB::rollBack();
@@ -166,8 +171,7 @@ class AicsAssessmentController extends Controller
                     'assessment' => 'required',
                     'purpose' => 'required',
                     'amount' => 'required',
-                    'mode_of_assistance' => 'required',
-                    'interviewed_by' => 'required',
+                    'mode_of_assistance' => 'required',                    
                     'signatory_id' => 'required',
                 ]);
 

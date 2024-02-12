@@ -229,7 +229,7 @@
                                         </template>
 
                                         <div class="d-flex flex-no-wrap">
-                                            <v-avatar class="ma-3 " size="125" rounded="0">
+                                            <v-avatar class="ma-3 " size="125" rounded="0" v-if="user.profile_pic && user.profile_pic.file_directory">
                                                 <v-img :src="user.profile_pic.file_directory"></v-img>
                                             </v-avatar>
                                             <div>

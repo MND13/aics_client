@@ -4,9 +4,10 @@
 
       <v-card outlined>
         <div class="d-flex flex-no-wrap justify-space-between">
-          <v-avatar class="ma-3" size="125" rounded="0">
+          <v-avatar class="ma-3" size="125" rounded="0" v-if="user.profile_pic && user.profile_pic.file_directory">
             <v-img :src="user.profile_pic.file_directory"></v-img>
           </v-avatar>
+          <v-skeleton-loader v-else type="list-item-avatar"></v-skeleton-loader>
           <div>
             <v-card-title class="text-h5">
               {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}

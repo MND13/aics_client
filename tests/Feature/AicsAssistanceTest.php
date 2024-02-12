@@ -69,7 +69,7 @@ class AicsAssistanceTest extends TestCase
         $input['civil_status'] = "Married";
 
         $response = $this->putJson(route('assistances.update', $assistance_request->uuid), $input);
-        # $response->assertStatus(200);
+        # $response;
 
         $response
             ->assertJson(
