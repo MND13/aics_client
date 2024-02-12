@@ -112,7 +112,7 @@
     </p>
 
     <p style="text-align:left">
-        <b> Date:</b> {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }} <br> <br>
+        <b> Date:</b> {{ date('M d, Y', strtotime($assistance['schedule'])) }} <br> <br>
 
         <b>{{ $assistance['assessment']['provider']['addressee_name'] }} </b><br>
         @if (
@@ -129,7 +129,7 @@
     <p>Dear <b>Sir/Madam</b>,<br></p>
     <p></p>
 
-    <p> This has reference to the request for <b>{{ $assistance['aics_type']['name'] }}</b> of herein client,
+    <p> This has reference to the request for <b> {{$assistance_type}}</b> of herein client,
         <span
             class="upper bold">{{ trim($client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name']) }},
         </span>
@@ -196,7 +196,7 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; ">
+            <td >
                 <p></p>
                 <b> {{ $assistance['assessment']['gl_signatory']['name'] }}</b><br>
                 {{ $assistance['assessment']['gl_signatory']['position'] }}

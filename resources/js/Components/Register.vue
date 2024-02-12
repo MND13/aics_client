@@ -9,11 +9,7 @@
         </div>
       </v-card-title>
       <v-card-text>
-        <pre>
-        {{ form }}
-      </pre>
-      
-        <v-form ref="form">
+        <v-form ref="form" enctype="multipart/form-data">
           <input type="hidden" name="_token" :value="csrf">
           <div class="row">
             <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>

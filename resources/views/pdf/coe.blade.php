@@ -14,14 +14,19 @@
 
         }
 
-        body {
-            font-size: 10pt;
+        body,
+        th {
+            font-size: 9pt;
             font-family: Arial, sans-serif
+        }
+
+        h2 {
+            font-size: 12pt
         }
 
         h1>small,
         h2>small {
-            font-size: 13pt;
+            font-size: 10pt;
             font-weight: normal;
         }
 
@@ -30,6 +35,7 @@
             margin: 0 auto;
             border-bottom: solid 1px #000;
             text-transform: uppercase;
+            vertical-align: bottom;
         }
 
         .table {
@@ -41,9 +47,14 @@
             text-transform: uppercase;
         }
 
+        .dotted-table
+        {   padding-bottom: 10px;
+            border-bottom: dashed 1px #000;
+        }
+
         @page {
-            size: 8.27in 11.69in;
-            margin: 5%;
+            size: 8.27in 12in;
+            margin: 0.5in;
             opacity: 0.75;
             padding: 0 !important;
             font-size: 10pt;
@@ -60,16 +71,36 @@
             display: inline-block
         }
 
-        .sig {
-            height: 30px;
-            vertical-align: bottom;
-            line-height: 30px;
+
+        table.table-bordered td,
+        {
+        border: solid 1px #000
         }
 
+        .footer-ds {
+            font-size: 9pt;
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif
+        }
 
+        .signatories .sig {
+            font-size: 1vw;
+            vertical-align: bottom
+        }
 
-        table.table-bordered td {
-            border: solid 1px #000
+        ul {
+            list-style: none;
+            padding: 5px; margin: 0;
+
+        }
+
+        ul li {
+            display: inline;
+        }
+
+        p {
+            margin-top: 5px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -108,7 +139,7 @@
         <tr>
             <td></td>
             <td></td>
-            <td style="text-align:right"> Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
+            <td style="text-align:right"> Date: {{ date('M d, Y', strtotime($assistance['schedule'])) }}
             </td>
         </tr>
     </table>
@@ -169,13 +200,16 @@
                 <td>
                     <div>
                         <ul>
-                            <li>General Intake Sheet</li>
+                            <li><span style="font-family: DejaVu Sans, sans-serif;">✔</span>General Intake Sheet</li>
                             @foreach ($records as $record)
-                                <li>
+                                <li><span style="font-family: DejaVu Sans, sans-serif;">✔</span>
                                     {{ $record }}
+                                    @if($record == "Others")
+                                    :  <span style="text-decoration: underline;"> {{$records_others}} </span>
+                                    @endif
                                 </li>
                             @endforeach
-
+                            
 
 
                         </ul>
@@ -188,7 +222,7 @@
 
     <p class="text-center" style="line-height:2em">
         The client is hereby recommended to receive <span
-            class="underline">{{ $assistance['aics_type']['name'] }}</span> assistance <br>
+            class="underline">{{ $assistance_type }}  </span><br>
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
             ONLY</span>,
         PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
@@ -218,12 +252,12 @@
             </tr>
             <tr>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
                     </div>
                 </td>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $assistance['assessment']['interviewed_by']['first_name'] .
                             ' ' .
                             $assistance['assessment']['interviewed_by']['middle_name'] .
@@ -234,7 +268,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="sig">
+                    <div class="sig"><br>
                         {{ $assistance['assessment']['signatory']['name'] }}
 
 
@@ -244,10 +278,30 @@
             <tr>
                 <td><b>Beneficiary/Representative</b><br>Signature Over Printed Name</td>
                 <td><b>Social Worker</b><br>Signature Over Printed Name</td>
-                <td><b>SWADO</b><br>Signature Over Printed Name</td>
+                <td><b>{{ $assistance['assessment']['signatory']['position'] }}</b><br>Signature Over Printed Name</td>
             </tr>
         </tbody>
     </table>
+
+    @if($assistance['assessment']['amount'] >= 50000) <br><br>
+    <table  class="table text-center " style="table-layout: fixed">
+        <tr>
+            <td></td>
+            <td style="text-align:left;">Approved by:</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td> <div class="sig"><br>GEMMA D. DELA CRUZ</div></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><b>SWO V/PSD CHIEF</b><br>Signature Over Printed Name</td>
+            <td></td>
+        </tr>
+    </table>
+    @endif
     <br><br>
 
     @if ($assistance['assessment']['mode_of_assistance'] == 'CAV')

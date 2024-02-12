@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             'psgc_id' => 'required|exists:psgcs,id',
             'mobile_number' => 'required|numeric|digits:11',
             'gender' => 'required|string',
-            'office_id' => 'required|exists:offices,id',
+            'office_id' => 'sometimes|required|exists:offices,id',
             'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(request('id'))],
             'role' => 'required',

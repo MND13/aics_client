@@ -34,7 +34,7 @@ class AssessmentOptsSeeder extends Seeder
           
             $a = AssessmentOptions::create($insert_data);
            
-            echo "created assessment options: $a->option \n";
+            #echo "created assessment options: $a->option \n";
         }
     }
 

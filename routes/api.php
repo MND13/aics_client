@@ -26,6 +26,9 @@ Route::middleware('auth:sanctum')->get('/Providers', function (Request $request)
 Route::group(['prefix' => '/aics'], function () {
     Route::resource('assistances', \App\Http\Controllers\AicsAssistanceController::class);
     Route::resource('users', \App\Http\Controllers\UserController::class);
+    Route::get('users-clients', [\App\Http\Controllers\UserController::class, 'clients'])->name("users.clients");
+    Route::get('photos', [\App\Http\Controllers\UserController::class, 'photos'])->name("user.photos");
+  
     Route::get('assistance-types', [\App\Http\Controllers\AicsTypeController::class, 'index'])->name("api.aics.assistance-types");
     Route::get('assistance-types/{assistance-type}', [\App\Http\Controllers\AicsTypeController::class, 'show']);
     Route::get('categories', [\App\Http\Controllers\AicsBeneficiaryController::class, 'getCategories'])->name("api.categories");
@@ -34,8 +37,9 @@ Route::group(['prefix' => '/aics'], function () {
     Route::post('assessment', [\App\Http\Controllers\AicsAssessmentController::class, 'create'])->name("api.assessment.create");
     Route::post('assessment/{id}', [\App\Http\Controllers\AicsAssessmentController::class, 'update'])->name("api.assessment.update");
     Route::resource('signatories_settings', \App\Http\Controllers\SignatoriesSettingsController::class);
- 
+    Route::get('assessment/activity/{assistance}', [\App\Http\Controllers\AicsAssistanceController::class, 'activity_logs'])->name("api.assistance.activity_log");
 
+   
 });
 
 
@@ -75,7 +79,6 @@ Route::get('charging/txn/{id}', [\App\Http\Controllers\AicsAssessmentFundSourceC
 
 
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
-Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
 Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
 
 Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate");

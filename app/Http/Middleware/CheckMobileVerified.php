@@ -15,13 +15,17 @@ class CheckMobileVerified
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {    
-       
-        if (auth()->user()->mobile_verified) {
-            return $next($request);
-        }else{ 
-            return response()->view('otp');
-        }
+    {
+        
+        if (auth()->user()->hasRole("user")) {
 
+            if (auth()->user()->mobile_verified) {
+                return $next($request);
+            } else {
+                return response()->view('otp');
+            }
+        } else {
+            return $next($request);
+        }
     }
 }

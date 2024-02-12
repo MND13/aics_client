@@ -45,7 +45,7 @@ class UsersSeeder extends Seeder
             $user = User::create($insert_data);
             $user->assignRole($psgc_data[9]);
            
-            echo "created User: $user->username \n";
+          #  echo "created User: $user->username \n";
         }
     }
 

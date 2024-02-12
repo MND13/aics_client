@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Scottlaurent\Accounting\ModelTraits\AccountingJournal;
 
 
+
 class FundSource extends Model
 {
     use HasFactory, AccountingJournal;

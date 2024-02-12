@@ -303,7 +303,7 @@
 
         #assessment-fund_sources {
             left: 420pt;
-            top: 640pt;
+            top: 638pt;
             width: 100pt;
             text-align: center;
             line-height: 8pt;
@@ -496,7 +496,7 @@
     </div>
     <div id="assessment-fund_sources" class="data-textbox">
         @if (isset($assessment['fund_sources']))
-            <table style="table-layout: fixed; width:100%; font-size:8pt;  " cellpadding=0 cellspacing=0>
+            <table style="table-layout: fixed; width:100%; font-size:6pt; line-height:6pt; " cellpadding=0 cellspacing=0>
                 @foreach ($assessment['fund_sources'] as $fs)
                     <tr>
                         <td style=" text-align:right;">{{ $fs['fund_source']['name'] }} =

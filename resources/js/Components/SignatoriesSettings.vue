@@ -4,8 +4,7 @@
     <v-row no-gutters>
 
       <v-col cols="12" sm="4">
-        {{ formData }}
-
+      
         <v-form ref="form_settings">
           <v-text-field v-model="formData.min_range" label="Min Range" :error-messages="formErrors.name"></v-text-field>
 
@@ -13,7 +12,7 @@
 
 
           <v-autocomplete multiple class="my-2 rounded-0" chips outlined clearable dense v-model="formData.signatories"
-            :loading="!signatories" label="For Signatory" :items="signatories"
+            :loading="!signatories" label="For Signatory" :items="signatories" deletable-chips
             :error-messages="validationErrors.gl_for_signatory_id" item-value="id" item-text="name" hide-details="auto">
             <template v-slot:item="data">
               <v-list-item-content>
@@ -22,8 +21,6 @@
               </v-list-item-content>
             </template>
           </v-autocomplete>
-
-
 
 
           <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
@@ -140,7 +137,8 @@ export default {
       this.submit = true;
       this.formErrors = {};
       console.log(this.formData);
-      axios.post(route('signatories_settings.update', this.formData.id), this.formData)
+      
+      axios.put(route('signatories_settings.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;
           this.getSignatoriesSettings();
@@ -187,6 +185,7 @@ export default {
     editSignatory(signatory) {
       this.formType = "Update";
       this.formData = cloneDeep(signatory);
+      this.formData.signatories = this.formData.names;
 
     },
     deleteSignatory(signatory) {
@@ -194,6 +193,7 @@ export default {
         axios.delete(route('signatories_settings.destroy', signatory.id))
           .then(res => {
             this.getSignatories();
+            alert('Signatory has been deleted');
           })
           .catch(err => { })
           ;

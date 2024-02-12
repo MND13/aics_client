@@ -2,43 +2,69 @@
   <div class="container-fluid">
 
     <div class="row">
-      <div class="col-md-12"
-        v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
-        <v-spacer></v-spacer>
-        <v-btn dark @click="SendSMS()">Send SMS</v-btn>
-        <v-btn dark @click="PrintGIS()">Print GIS</v-btn>
-        <v-btn dark @click="PrintCOE()">Print COE</v-btn>
-        <v-btn dark @click="PrintCAV()"
-          v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">Print CAV</v-btn>
-        <v-btn dark @click="PrintGL()" v-else>Print GL</v-btn>
-      </div>
+ 
     </div>
     <div class="row g-2">
       <div class="col-md-3">
-
         <v-card flat outlined tile>
-          <v-card-text>
-            <v-row v-if="gis_data.aics_client">
-              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in gis_data.aics_client.profile_docs"
-                :key="i">
+          <v-card-text v-if="photos.length > 0">
+            <v-row>
+              <v-col cols="6" class="d-flex child-flex" md="6" v-for="(images, i) in photos" :key="i">
+
                 <a :href="images.file_directory" target="_blank">
                   <v-img :src="images.file_directory" max-height="100px" height="auto" width="100%"></v-img>
                 </a>
               </v-col>
             </v-row>
-            <v-skeleton-loader v-else type="list-item-avatar-three-line"></v-skeleton-loader>
           </v-card-text>
+          <v-card-text v-else>
+            <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
+          </v-card-text>
+
         </v-card>
+
 
         <v-card tile flat outlined class="mt-2">
           <v-card-subtitle class="indigo--text">Submission Info</v-card-subtitle>
+          <v-card-text>
+          <v-menu v-if="hasRoles(['social-worker']) && (gis_data.status == 'Serving' || gis_data.status == 'Served')">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn block dark v-bind="attrs" v-on="on">
+              <v-icon> mdi-printer </v-icon> Print
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="PrintGIS()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon>Print GIS <v-chip label small>CTLR + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintCOE()">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print COE <v-chip label small>CTLR + SHIFT + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintCAV()"
+              v-if="gis_data.assessment && gis_data.assessment.mode_of_assistance == 'CAV'">
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print CAV <v-chip label small>CTLR + ALT + P</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="PrintGL()" v-else>
+              <v-list-item-title>
+                <v-icon> mdi-printer </v-icon> Print GL <v-chip label small>CTLR + SPACE</v-chip>
+              </v-list-item-title>
+            </v-list-item>
+
+          </v-list>
+        </v-menu>  
           <v-list dense v-if="gis_data.status">
             <v-list-item two-line v-for="(e, i) in submission_info" :key="i">
               <v-list-item-content>
                 <v-list-item-title> {{ e.title }} </v-list-item-title>
                 <v-list-item-subtitle v-if="e.title == 'Status'">
 
-                  <v-chip class="white--text" dark small :color="status_color(e.value)"> {{
+                  <v-chip class="white--text" dark :color="status_color(e.value)"> {{
                     e.value
                   }} </v-chip> as of {{ gis_data.status_date | formatDateOnly }}</v-list-item-subtitle>
 
@@ -49,6 +75,7 @@
             </v-list-item>
           </v-list>
           <v-skeleton-loader v-else type="article"></v-skeleton-loader>
+        </v-card-text>
         </v-card>
 
 
@@ -102,7 +129,12 @@
         </v-card>
 
       </div>
-      <div class="col-md-9">
+      <div class="col-md-9" v-if="loading_gis">
+        <v-card flat outlined tile>
+          <v-skeleton-loader type="article, actions"></v-skeleton-loader>
+        </v-card>
+      </div>
+      <div class="col-md-9" v-else>
 
         <v-form @submit.prevent="submitForm" enctype="multipart/form-data" id="GIS">
 
@@ -331,6 +363,7 @@
           </v-card>
 
 
+
           <v-row v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending'" class="g-2">
             <v-col cols="12" md="4">
               <v-card flat outlined tile>
@@ -441,7 +474,7 @@
                         <td>TOTAL</td>
                         <td>{{ sumValue }}</td>
                         <td>
-                      
+
                         </td>
                       </tr>
                     </tfoot>
@@ -484,7 +517,7 @@
           </v-card>
 
 
-       
+
 
           <div class="card mt-2"
             v-if="hasRoles(['social-worker', 'admin', 'super-admin']) && gis_data.status != 'Pending' && form.mode_of_assistance == 'GL'">
@@ -493,7 +526,7 @@
             </div>
             <div class="card-body">
               <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
-                return-object outlined item-text="company_name" dense class="rounded-0">
+                return-object outlined item-text="company_name" dense class="rounded-0" track-by="id">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>
@@ -502,7 +535,7 @@
                 </template>
               </v-autocomplete>
 
-              <v-autocomplete class="rounded-0 my-2" outlined clearable dense v-model="form.gl_signatory_id"
+              <v-autocomplete class="rounded-0" outlined clearable dense v-model="form.gl_signatory_id"
                 :loading="!signatories" label="Signatory" :items="signatories"
                 :error-messages="validationErrors.gl_signatory_id" item-value="id" item-text="name" hide-details="auto">
                 <template v-slot:item="data">
@@ -531,6 +564,7 @@
               <hr>
 
               <div class="mt-2" v-if="selected_provider">
+                Preview <br />
 
                 {{ selected_provider.addressee_name }} <br />
                 {{ selected_provider.addressee_position }}<br />
@@ -547,6 +581,7 @@
               RECORDS IN FILE
             </div>
             <div class="card-body">
+
               <v-row align="start" no-gutters>
                 <template v-for="e in records_opts">
                   <v-col xs="12" sm="5" md="3" lg="3">
@@ -554,32 +589,42 @@
                   </v-col>
                 </template>
 
+                <v-col xs="12" sm="5" md="3" lg="3">
+                  <v-text-field outlined dense class="rounded-0" v-model="form.records_others"
+                    v-if="form.records.includes('Others')" label="Others"></v-text-field>
+                </v-col>
+
+              </v-row>
+              <v-row>
+
               </v-row>
 
             </div>
           </div>
 
+          <!-- ACTION BUTTONS -->
+
           <div class="text-center col-md-12" style="padding: 10px 0px">
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['encoder']) && gis_data.status == 'Pending'">
+              v-if="hasRoles(['encoder', 'social-worker']) && gis_data.status == 'Pending'">
               VERIFY
             </v-btn>
 
             <v-btn type="submit" large class="--white-text" color="primary" :disabled="submit"
-              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Verified' || gis_data.status == 'Serving' || gis_data.status == 'Served')">
+              v-if="hasRoles(['social-worker']) && (gis_data.status == 'Rejected' || gis_data.status == 'Verified' || gis_data.status == 'Serving' || gis_data.status == 'Served')">
 
               <span v-if="form.id">UPDATE</span>
               <span v-else>SUBMIT</span>
 
             </v-btn>
 
-            <v-btn @click="MarkServed" dark large class="--white-text" color="red" :disabled="submit"
+            <v-btn @click="MarkServed" dark large class="--white-text" color="green" :disabled="submit"
               v-if="hasRoles(['social-worker']) && gis_data.status == 'Serving'">
               Mark as Served
             </v-btn>
 
-            <v-btn v-if="gis_data.status == 'Pending' && hasRoles(['encoder'])" large class="--white-text" color="error"
-              @click="dialog_reject = true" :disabled="submit">
+            <v-btn large class="--white-text" color="red" dark @click="dialog_reject = true" :disabled="submit"
+              v-if="hasRoles(['social-worker'])">
               REJECT
             </v-btn>
 
@@ -621,20 +666,20 @@
 
           </div>
 
-          <v-dialog v-model="dialog_reject" width="50%">
+          <v-dialog v-model="dialog_reject" width="50%" app>
             <v-card>
-              <v-card-title>Reject GIS</v-card-title>
+              <v-card-title>Reject</v-card-title>
               <v-card-text>
-                Reason
-                <select class="form-control" v-model="rejectform.reason">
-                  <option :value="e" v-for="(e, i) in ['Incomplete Documents']" :key="i">{{ e }}</option>
-                </select>
-                Message
-                <textarea v-model="rejectform.remarks" id="" cols="10" rows="5" class="form-control"></textarea>
-
+                <v-text-field v-model="rejectform.reason" label="Reason" outlined dense></v-text-field>
+                <v-textarea outlined dense v-model="rejectform.remarks" label="Message" cols="30" rows="10"></v-textarea>
                 <v-btn @click="RejectGIS" dark color="red">
                   Reject
                 </v-btn>
+
+                <v-btn @click="dialog_reject = !dialog_reject" outlined>
+                  Close
+                </v-btn>
+
               </v-card-text>
 
             </v-card>
@@ -747,8 +792,10 @@ export default {
       for_reveresal: [],
       view_url: null,
       loading_view_url: false,
-     
       signatories_settings: [],
+      photos: {},
+      loading_gis: false,
+
 
     };
   },
@@ -778,13 +825,22 @@ export default {
 
     },
     sumValue() {
-      this.signatories_settings.forEach(e => {      
-        if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {         
+      const user_initials = this.my_initials;
+      let sw = this.gis_data.sw ? this.gis_data.sw : user_initials;
+
+      this.signatories_settings.forEach(e => {
+        if (this.sumValue <= e.max_range && this.sumValue >= e.min_range) {
           this.form.gl_signatory_id = e.names[0].id;
-          this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "" ;
-          this.form.initials = e.i + this.gis_data.en + "/"+ this.gis_data.sw;
+          this.form.gl_for_signatory_id = this.form.gl_for_signatory_id ? this.form.gl_for_signatory_id : "";
+          this.form.initials = e.i + this.gis_data.en + "/" + sw;
         }
       });
+    },
+    "form.records": function (newVal, oldVal) {
+      if (!newVal.includes("Others")) {
+
+        this.form.records_others = "";
+      }
     },
   },
   computed: {
@@ -805,9 +861,12 @@ export default {
         { title: "Interviewed by:", value: this.gis_data.assessment ? this.gis_data.assessment.interviewed_by : "---" },
       ]
     },
-
-
-
+    my_initials() {
+      let fn = this.user.first_name ? this.user.first_name.charAt(0) : ""
+      let mn = this.user.middle_name ? this.user.middle_name.charAt(0) : ""
+      let ln = this.user.last_name ? this.user.last_name.charAt(0) : ""
+      return fn + mn + ln;
+    },
   },
 
   methods: {
@@ -895,24 +954,14 @@ export default {
       }
 
     },
-
     resetForm() {
       this.form = {
         mode_of_admission: "Walk-in",
         records: [],
-
-
       };
     },
-
     isEmpty(value) {
       return _.isEmpty(value);
-    },
-
-    getAssistanceTypes() {
-      axios.get(route("api.aics.assistance-types")).then((response) => {
-        this.assistance_types = response.data;
-      });
     },
 
     getCategories() {
@@ -933,7 +982,6 @@ export default {
       this.rejectform.remarks = this.rejectform.reason + " - " + this.rejectform.remarks;
       this.rejectform.task = "update_status";
 
-
       axios.patch(route("assistances.update", { "assistance": this.gis_data.uuid }), this.rejectform).then(response => {
 
         console.log(response);
@@ -945,7 +993,7 @@ export default {
     },
 
     getGISData() {
-      // console.log({ "assistance": this.$route.params.uuid });
+      this.loading_gis = true;
       axios.get(route("assistances.show", { "assistance": this.$route.params.uuid }),)
         .then(response => {
 
@@ -969,18 +1017,20 @@ export default {
             }
 
             if (this.gis_data.assessment.interviewed_by) {
-            
-              this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name ;
+
+              this.form.interviewed_by = this.gis_data.assessment.interviewed_by.full_name;
             }
 
 
+
           }
+
+          this.loading_gis = false;
+
         }).catch(error => {
-          console.log("error");
-          console.log(error);
 
+          this.loading_gis = false;
           if (error.response.status === 404) {
-
             this.$router.push({ name: 'NotFound' });
           }
         })
@@ -1108,18 +1158,38 @@ export default {
         })
         ;
     },
+    getPhotos() {
+     
+      axios.get(route("user.photos", { "assistance": this.$route.params.uuid })).then(res => {
+
+        this.photos = res.data;
+
+      }).catch(error => console.log(error));
+
+    },
+    getActivityLog()
+    { 
+      axios.get(route("api.assistance.activity_log",{ "assistance": this.$route.params.uuid }))
+      .then(res=>{console.log(res.data)})
+      .catch(error=>console.log(error))
+    }
+
 
   },
   mounted() {
 
     this.getSignatoriesSettings();
-    this.getAssistanceTypes();
+    // this.getAssistanceTypes();
     this.getCategories();
     this.getAssessmentOpts();
     this.getFundSrc();
     this.getProviders();
     this.getSignatories();
     this.getGISData();
+    this.getPhotos();
+    this.getActivityLog();
+
+
 
   },
 };

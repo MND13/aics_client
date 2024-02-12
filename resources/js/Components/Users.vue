@@ -31,14 +31,14 @@
             </v-select>
 
 
-            <!--<v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
+           <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
               type="date"></v-text-field>
 
 
             <v-text-field v-model="formData.mobile_number" label="Mobile Number"
               :error-messages="formErrors.mobile_number"></v-text-field>
 
-            <v-select v-model="formData.gender" label="Select" :items="['Babae', 'Lalake']"></v-select>-->
+            <v-select v-model="formData.gender" label="Select" :items="['Babae', 'Lalake']"></v-select>
 
 
             <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
@@ -73,7 +73,6 @@
     <v-col cols="12" sm="8">
       <v-card flat>
         <v-card-title>
-
           User Table
           <v-spacer></v-spacer>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -125,9 +124,10 @@ export default {
     return {
       formType: "Create",
       formData: {
-        mobile_number : "",
-        gender : "",
-        birth_date : "",
+        mobile_number : "00000000000",
+        gender : "Lalake",
+        birth_date : "1900-01-01",
+        mobile_verified : "1",
       },
       formErrors: {},
       roles: [
@@ -171,10 +171,10 @@ export default {
     createUser() {
       this.submit = true;
       this.formData.psgc_id = 368;
-
       this.formData.mobile_number = "00000000000";
       this.formData.gender = "Lalake";
       this.formData.birth_date = "1900-01-01";
+      this.formData.mobile_verified = "1";
 
       axios.post(route('users.store'), this.formData)
         .then(res => {
@@ -191,7 +191,8 @@ export default {
     updateUser() {
       this.submit = true;
       this.formErrors = {};
-      console.log(this.formData);
+      //console.log(this.formData);
+      this.formData.mobile_verified = "1";
       axios.patch(route('users.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;

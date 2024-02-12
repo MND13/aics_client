@@ -4,9 +4,10 @@
 
       <v-card outlined>
         <div class="d-flex flex-no-wrap justify-space-between">
-          <v-avatar class="ma-3" size="125" rounded="0">
+          <v-avatar class="ma-3" size="125" rounded="0" v-if="user.profile_pic && user.profile_pic.file_directory">
             <v-img :src="user.profile_pic.file_directory"></v-img>
           </v-avatar>
+          <v-skeleton-loader v-else type="list-item-avatar"></v-skeleton-loader>
           <div>
             <v-card-title class="text-h5">
               {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{ user.ext_name }}
@@ -159,8 +160,8 @@ export default {
         { text: 'Beneficiary', value: 'aics_beneficiary', },    
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
-        { text: 'Date Submitted', value: 'created_at', width: "150px" },
-        { text: 'Schedule', value: 'schedule', width: "150px" },
+        { text: 'Office', value: 'office' },
+        { text: 'Verified By', value: 'verified_by.full_name', },
         { text: 'Status', value: 'status', width: "100px", filter: this.StatusFilter },
         { text: 'Actions', value: 'actions', width: "150px" },
       ],
@@ -216,16 +217,14 @@ export default {
       this.isLoading = true;
       axios.get(route("assistances.index"))
         .then(response => {
-          // console.log(response.data);
+
           this.assistances = response.data;
           this.assistances_copy = cloneDeep(this.assistances);
 
           this.isLoading = false;
         }).catch(error => console.log(error));
     },
-    /*openAssistance(item, row) {
-      window.open("/api/gis/" + item.uuid);
-    },*/
+
     openDetails(item) {
 
       this.dialog_data = {};

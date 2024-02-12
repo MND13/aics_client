@@ -99,8 +99,8 @@ class RegisterController extends Controller
             #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
             'street_number' => ['required', 'string', 'max:255'],
             #'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'valid_id' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
-            'client_photo' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048',
+            'valid_id' => 'required|file|mimes:jpeg,jpg,png',
+            'client_photo' => 'required|file|mimes:jpeg,jpg,png',
         ]);
 
         $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
@@ -170,6 +170,7 @@ class RegisterController extends Controller
             });
             $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
             $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $img->destroy();
             $url = Storage::url($path_OG);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
@@ -181,13 +182,14 @@ class RegisterController extends Controller
             $files = request('client_photo');
             $filename = $files->hashName();
 
-         
+
 
             $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
             $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
             $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+            $img->destroy();
             $url = Storage::url($path_OG);
             $doc = new ProfileDocuments([
                 'file_directory' => $url,
@@ -207,9 +209,9 @@ class RegisterController extends Controller
             $doc->save();*/
             $user->assignRole('user');
 
-            $msg = "Salamat sa pag registro sa DSWD Davao Region! Kni ang detalye sa imong account. 
+            $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account. 
 USERNAME: " . strtoupper($username)  . " 
-Ang initial na password ay Apelyedo at Birthay example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
+Ang initial na password ay Apelyedo at Birthday example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
 ANG PAG PROSESO AY LIBRE.";
             $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
             $res = $response->collect();
@@ -232,13 +234,6 @@ ANG PAG PROSESO AY LIBRE.";
 
     public function generateUserName($name)
     {
-        /* $username = Str::lower(Str::slug($name));
-        if (User::where('username', '=', $username)->exists()) {
-            $uniqueUserName = $username . '-' . mt_rand(0000, 9999);
-            $username = $this->generateUserName($uniqueUserName);
-        }
-        return $username;*/
-
         $username = Str::random(8);
         if (User::where('username', '=', $username)->exists()) {
             $uniqueUserName = Str::random(8);

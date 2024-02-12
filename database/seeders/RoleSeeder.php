@@ -26,7 +26,7 @@ class RoleSeeder extends Seeder
             $role = Role::create([
                 'name' => $role
             ]);
-            echo "Inserted Role -> ".$role->name."\n";
+           # echo "Inserted Role -> ".$role->name."\n";
         }
     }
 }

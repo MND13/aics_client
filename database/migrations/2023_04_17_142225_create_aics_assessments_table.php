@@ -23,7 +23,7 @@ class CreateAicsAssessmentsTable extends Migration
             $table->longText("purpose")->nullable();
             $table->double("amount", 12, 2);
             $table->string("mode_of_assistance")->nullable();
-            $table->string("interviewed_by")->nullable();
+          #  $table->string("interviewed_by")->nullable();
             $table->string("approved_by")->nullable();
             $table->string("sdo")->nullable();
             $table->json("records")->nullable();

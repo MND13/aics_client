@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ProvidersSeeder::class);
         $this->call(SignatoriesSeeder::class);
         $this->call(FamilyRelationshipSeeder::class);
-
+        $this->call(SignatoriesSettingsSeeder::class);
+       
      
     }
 }

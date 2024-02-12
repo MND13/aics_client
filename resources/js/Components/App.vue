@@ -240,17 +240,13 @@ export default {
             text: "Users",
           },
           {
+            to: "/clients",
+            text: "Clients",
+          },
+          {
             to: "/offices",
             text: "Offices",
           },
-          /*{
-            to: "/providers",
-            text: "Providers",
-          },
-          {
-            to: "/fund_source",
-            text: "Fund Source",
-          },*/
           {
             to: "/charging",
             text: "Charging",

@@ -30,7 +30,7 @@ class AicsTypeSeeder extends Seeder
             
             $insert_data['name'] = $aics_type[0];
             $assistance_types = AicsType::create($insert_data);
-            echo "created assistance_types: $assistance_types->name \n";
+         #   echo "created assistance_types: $assistance_types->name \n";
         }
     }
 

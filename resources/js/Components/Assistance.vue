@@ -275,7 +275,64 @@
                                 </v-col>
 
 
-                               
+                                <v-col cols="12">
+                                    <v-card outlined>
+                                        <template v-if="requester_type == 'Beneficiary'">
+                                            <v-card-title>IMPORMASYON NG BENEPISYARYO</v-card-title>
+                                            <v-card-subtitle> (Beneficiary's Identifying Information) </v-card-subtitle>
+                                        </template>
+                                        <template v-else-if="requester_type == 'Representative'">
+                                            <v-card-title>IMPORMASYON NG KINATAWAN </v-card-title>
+                                            <v-card-subtitle> (Representative's Identifying Information) </v-card-subtitle>
+                                        </template>
+
+                                        <div class="d-flex flex-no-wrap">
+                                            <v-avatar class="ma-3 " size="125" rounded="0" v-if="user.profile_pic && user.profile_pic.file_directory">
+                                                <v-img :src="user.profile_pic.file_directory"></v-img>
+                                            </v-avatar>
+                                            <div>
+                                                <v-card-title class="text-h5">
+                                                    {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{
+                                                        user.ext_name
+                                                    }}
+                                                </v-card-title>
+
+                                                <v-card-subtitle>
+                                                    {{ user.birth_date | formatDate }} <br />
+                                                    {{ user.mobile_number }}<br />
+                                                    {{ user.street_number }}<br />
+                                                    {{ psgc_data.brgy_name }}
+                                                    {{ psgc_data.city_name }},
+                                                    {{ psgc_data.province_name }},
+                                                    {{ psgc_data.region_name }}
+                                                </v-card-subtitle>
+                                            </div>
+                                        </div>
+
+                                        <v-card-text>
+                                            <v-divider></v-divider>
+                                            <v-select v-model="form.civil_status" label="Civil Status" outlined dense
+                                                :items="['Single', 'Married', 'Widowed', 'Separated']"
+                                                :error-messages="formErrors.civil_status">
+                                            </v-select>
+
+                                            <v-text-field v-model="form.occupation" label="Trabaho" class="mx-0" outlined
+                                                dense :error-messages="formErrors.occupation"></v-text-field>
+
+
+                                            <v-text-field v-model="form.monthly_salary" label="Buwanang Kita ng Pamilya"
+                                                outlined dense :error-messages="formErrors.monthly_salary"></v-text-field>
+
+                                            <v-autocomplete v-if="requester_type == 'Representative'"
+                                                item-text="relationship" v-model="form.rel_beneficiary" label="Relasyon"
+                                                outlined dense :items="relationships" item-value="relationship"
+                                                :error-messages="formErrors.rel_beneficiary">
+                                            </v-autocomplete>
+
+                                        </v-card-text>
+
+                                    </v-card>
+                                </v-col>
 
                             </v-row>
 

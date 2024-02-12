@@ -40,7 +40,7 @@ class ProvidersSeeder extends Seeder
             $insert_data['to_mention'] = $psgc_data[5];
             
             $provider = AicsProviders::create($insert_data);
-            echo "created psgc: $provider->company_name \n";
+           # echo "created psgc: $provider->company_name \n";
         }
     }
 

@@ -120,7 +120,7 @@ class FundSourceController extends Controller
     {
         try {
 
-            if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+            #if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
                 $f = FundSource::findOrFail($request->id);
                 if ($f) {
@@ -141,7 +141,7 @@ class FundSourceController extends Controller
                     DB::commit();
                     return ["message" => "Saved"];
                 }
-            }
+           # }
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

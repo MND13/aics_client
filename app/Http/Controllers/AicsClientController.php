@@ -182,6 +182,14 @@ class AicsClientController extends Controller
 
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
+        $assistance_type = $assistance->aics_type->name;
+        
+        if(str_contains( strtolower( $assistance->aics_type->name), "medical"))
+        {
+            $assistance_type =  "Medical Assistance"; # GENERALIZE ALL MEDICAL ASSISTANCE TYPE
+        }
+
       
         if ($assistance) {
             $pdf = Pdf::loadView(
@@ -189,8 +197,10 @@ class AicsClientController extends Controller
                 [
                     "client" => $res["aics_client"],
                     "assistance" => $res,
+                    "assistance_type" => $assistance_type,
                     "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
                     "records" => json_decode($res['assessment']['records']),
+                    "records_others" => isset($res['assessment']['records_others']) ? $res['assessment']['records_others'] : "" ,
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
                     "bene"=> $res["aics_beneficiary"],
                     "relationship" => $res["rel_beneficiary"]
@@ -249,12 +259,19 @@ class AicsClientController extends Controller
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
+        $assistance_type = $assistance->aics_type->name;
+        
+        if(str_contains( strtolower( $assistance->aics_type->name), "medical"))
+        {
+            $assistance_type =  "Medical Assistance"; # GENERALIZE ALL MEDICAL ASSISTANCE TYPE
+        }
  
         if ($assistance) {
             $pdf = Pdf::loadView(
                 'pdf.gl',
                 [
                     "assistance" =>   $assistance->toArray(),
+                    "assistance_type" => $assistance_type,
                     "client" => $res["aics_client"],
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
                     "bene"=> $res["aics_beneficiary"],

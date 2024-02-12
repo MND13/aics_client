@@ -19,13 +19,13 @@ class SignatoriesSettingsController extends Controller
     {
         return SignatoriesSettings::all()->transform(function ($s) {
 
-            $ss = implode(",",json_decode($s->signatories));
+            $ss = implode(",", json_decode($s->signatories));
             $s->names =  Signatories::select("id", "name", "initials")
                 ->whereIn("id", json_decode($s->signatories))
-                ->orderByRaw('FIELD(id,'.  $ss.')')
+                ->orderByRaw('FIELD(id,' .  $ss . ')')
                 ->get();
-        
-          
+
+
             $i = "";
             foreach ($s->names as $key => $value) {
                 $i .= $value["initials"] . "/";
@@ -95,7 +95,26 @@ class SignatoriesSettingsController extends Controller
      */
     public function update(Request $request, SignatoriesSettings $signatoriesSettings)
     {
-        //
+
+        try {
+            $s = SignatoriesSettings::findorFail($request->id);
+
+            $s->min_range = $request->min_range;
+            $s->max_range = $request->max_range;
+            $ids = array();
+            if (isset($request->signatories["0"]["id"])) {
+                $ids = array_column($request->signatories, 'id');
+                $s->signatories = json_encode($ids);
+            } else {
+                $s->signatories = json_encode($request->signatories);
+            }
+
+
+            $s->save();
+            return $s;
+        } catch (\Throwable $th) {
+            return  $th;
+        }
     }
 
     /**

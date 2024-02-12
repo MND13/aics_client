@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AcisCrimsExport;
+use App\Models\AicsAssessment;
 use App\Models\User;
 use Image;
+use Spatie\Activitylog\Models\Activity;
+
 
 class AicsAssistanceController extends Controller
 {
@@ -26,16 +29,18 @@ class AicsAssistanceController extends Controller
     public function store(Request $request)
     {
 
+
         DB::beginTransaction();
         $user = Auth::user();
         $year = date("Y");
         $month = date("m");
-
         if (Auth::check() &&   Auth::user()->hasRole('admin')) {
         }
 
 
-        if (Auth::check() &&   Auth::user()->hasRole('user')) {
+
+        if (Auth::check() && Auth::user()->hasRole('user')) {
+
             try {
                 $form_data = $request->all();
                 $errors = ["assistance" => []];
@@ -101,7 +106,7 @@ class AicsAssistanceController extends Controller
 
                         $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
                         $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
-                        $url = Storage::url($path_OG);                     
+                        $url = Storage::url($path_OG);
 
                         $documents[] = new AicsDocument([
                             'file_directory' => $url,
@@ -116,18 +121,21 @@ class AicsAssistanceController extends Controller
 
 
                 DB::commit();
-                return ["message" => "Saved"];
+                return ["message" => "Saved", "documents" => $documents];
             } catch (\Throwable $th) {
                 DB::rollBack();
                 throw $th;
+                return response()->json(['error' => 'failed', 'message' => $th->getMessage()], 500);
             }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
 
     public function show(Request $request, $uuid)
     {
 
-        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker', 'super-admin'])) {
 
             #RESTRICTED TO OFFICE ID 
             # Super Admin not bound to office id
@@ -156,135 +164,52 @@ class AicsAssistanceController extends Controller
                     return $q;
                 })
                 ->with("aics_client.profile_docs", function ($q) {
-
                     $q->select("id", "user_id", "name", "file_directory")
                         ->orderBy("id", "desc");
                     return $q;
-                })
-                ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
-                ->get()->transform(function ($asst) {
-
-                    if (isset($asst->assessment->fund_sources)) {
-                        $selected_fund_source = array();
-                        $i = 0;
-                        $r = array();
-                        foreach ($asst->assessment->fund_sources as $key => $value) {
-
-                            if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
-
-                                $selected_fund_source[$i] = (object) [];
-                                $selected_fund_source[$i]->id = $value["fund_source"]["id"];
-                                $selected_fund_source[$i]->name = $value["fund_source"]["name"];
-                                $selected_fund_source[$i]->amount = $value["amount"];
-                                $selected_fund_source[$i]->txn_id = $value["id"];
-                                $selected_fund_source[$i]->remarks = $value["remarks"];
-                                $selected_fund_source[$i]->key = $key;
-                                $r[$i] = $value["remarks"];
-                                $i++;
-                            }
-                        }
-
-                        $asst->selected_fs = $selected_fund_source;
-                        $asst->aa = $r;
-                    }
-
-
-                    if ($asst->aics_client->profile_docs) {
-                        foreach ($asst->aics_client->profile_docs as $key => $value) {
-                            $value->file_directory =  User::s3Url($value->file_directory);
-                        }
-                    }
-
-                    if ($asst->verified_by) {
-                        $asst->en = substr($asst->verified_by["first_name"], 0, 1)
-                            . substr($asst->verified_by["middle_name"], 0, 1)
-                            . substr($asst->verified_by["last_name"], 0, 1);
-                        $asst->en  = strtolower($asst->en);
-                    }
-
-                    if (isset($asst->assessment->interviewed_by)) {
-                        $asst->sw = substr($asst->assessment->interviewed_by->first_name, 0, 1)
-                            . substr($asst->assessment->interviewed_by->middle_name, 0, 1)
-                            . substr($asst->assessment->interviewed_by->last_name, 0, 1);
-                        $asst->sw  = strtolower($asst->sw);
-                    }
-
-                    return $asst;
                 });
 
+            if (Auth::check() &&  !Auth::user()->hasRole(['super-admin', 'user'])) {
 
+                $assisstance->whereRelation("office", "office_id", "=", Auth::user()->office_id);
+            }
 
-            return $assisstance[0];
-        }
+            return $assisstance->get()->transform(function ($asst) {
 
-        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+                if (isset($asst->assessment->fund_sources)) {
+                    $selected_fund_source = array();
+                    $i = 0;
+                    $r = array();
+                    foreach ($asst->assessment->fund_sources as $key => $value) {
 
-            $assisstance =  AicsAssistance::with([
+                        if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
 
-                "aics_type:id,name",
-                "aics_documents",
-                "aics_documents.requirement:id,name",
-                "office:id,name,address",
-                "aics_client:id,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number",
-                "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "aics_client.profile_docs:id,user_id,name,file_directory",
-                #"assessment.fund_sources:id,assessment_id,fund_source_id,amount,remarks", #FS TXN
-                "assessment.fund_sources.fund_source:id,name", # FS 
-                "verified_by:id,full_name",
-                "aics_beneficiary",
-                "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name",
-            ])->where("uuid", "=", $uuid)
-                ->with("assessment.fund_sources", function ($q) {
-                    $q->where("remarks", "!=", "CANCELLED")
-                        ->where("remarks", "!=", "REVERSAL")
-                        ->orWhereNull("remarks");
-
-                    return $q;
-                })
-                ->with("aics_client.profile_docs", function ($q) {
-
-                    $q->select("id", "user_id", "name", "file_directory")
-                        ->orderBy("id", "desc");
-                    return $q;
-                })
-                ->get()->transform(function ($asst) {
-
-                    if (isset($asst->assessment->fund_sources)) {
-                        $selected_fund_source = array();
-                        $i = 0;
-                        $r = array();
-                        foreach ($asst->assessment->fund_sources as $key => $value) {
-
-                            if (!in_array($value["remarks"], ["CANCELLED", "REVERSAL", "REVERSED"])) {
-
-                                $selected_fund_source[$i] = (object) [];
-                                $selected_fund_source[$i]->id = $value["fund_source"]["id"];
-                                $selected_fund_source[$i]->name = $value["fund_source"]["name"];
-                                $selected_fund_source[$i]->amount = $value["amount"];
-                                $selected_fund_source[$i]->txn_id = $value["id"];
-                                $selected_fund_source[$i]->remarks = $value["remarks"];
-                                $selected_fund_source[$i]->key = $key;
-                                $r[$i] = $value["remarks"];
-                                $i++;
-                            }
-                        }
-
-                        $asst->selected_fs = $selected_fund_source;
-                        $asst->aa = $r;
-                    }
-
-                    if ($asst->aics_client->profile_docs) {
-                        foreach ($asst->aics_client->profile_docs as $key => $value) {
-                            $value->file_directory =  User::s3Url($value->file_directory);
+                            $selected_fund_source[$i] = (object) [];
+                            $selected_fund_source[$i]->id = $value["fund_source"]["id"];
+                            $selected_fund_source[$i]->name = $value["fund_source"]["name"];
+                            $selected_fund_source[$i]->amount = $value["amount"];
+                            $selected_fund_source[$i]->txn_id = $value["id"];
+                            $selected_fund_source[$i]->remarks = $value["remarks"];
+                            $selected_fund_source[$i]->key = $key;
+                            $r[$i] = $value["remarks"];
+                            $i++;
                         }
                     }
 
-                    return $asst;
-                });
+                    $asst->selected_fs = $selected_fund_source;
+                }
 
 
+                if ($asst->verified_by) {
+                    $asst->en = $asst->verified_by->initials;
+                }
 
-            return $assisstance[0];
+                if (isset($asst->assessment->interviewed_by)) {
+                    $asst->sw = $asst->assessment->interviewed_by->initials;
+                }
+
+                return $asst;
+            })->firstOrFail();
         }
 
 
@@ -312,23 +237,22 @@ class AicsAssistanceController extends Controller
 
     public function index()
     {
-        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker'])) {
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'encoder', 'social-worker', 'super-admin'])) {
 
-            // var_dump(Auth::user());
 
-            return AicsAssistance::with([
-
+            $assistance = AicsAssistance::with([
                 "aics_type:id,name",
                 "office:id,name,address",
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
-                "assessment",
-                "aics_beneficiary",
+                "assessment:id,mode_of_assistance",
+                "verified_by:id,full_name,first_name,middle_name,last_name",
             ])
                 ->whereRelation("office", "office_id", "=", Auth::user()->office_id)
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
-                ->orderBy("created_at",  "desc")
-                ->get();
+                ->orderBy("created_at",  "desc");
+
+            return $assistance->get();
         }
 
 
@@ -348,7 +272,7 @@ class AicsAssistanceController extends Controller
                 ->where("user_id", "=", Auth::id())->get();
         }
 
-        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
+        /*if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
             // var_dump(Auth::user());
 
@@ -360,14 +284,15 @@ class AicsAssistanceController extends Controller
                 "aics_client:id,full_name,first_name,last_name,middle_name,ext_name,psgc_id,mobile_number,birth_date,gender,street_number,mobile_number",
                 "aics_client.psgc:id,region_name,province_name,city_name,brgy_name",
                 "assessment",
-                "aics_beneficiary",
+                "verified_by:id,full_name,first_name,middle_name,last_name",
+
 
             ])
 
                 ->orderBy("created_at",  "desc")
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
                 ->get();
-        }
+        }*/
     }
 
     public function update(request $request)
@@ -399,6 +324,10 @@ class AicsAssistanceController extends Controller
                         $sms_response = $this->sms($a);
                     }
                     return ["message" => "saved", "sms_response" => $sms_response];
+                } else {
+                    $a->fill($request);
+                    $a->save();
+                    return ["message" => "saved"];
                 }
             } else {
                 return ["message" => "Assistance Request Not Found",];
@@ -430,9 +359,8 @@ class AicsAssistanceController extends Controller
                 break;
         }
 
-       $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
-       return $response->collect();
-   
+        $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->aics_client->mobile_number, 1));
+        return $response->collect();
     }
 
     public function export(Request $request)
@@ -450,5 +378,15 @@ class AicsAssistanceController extends Controller
     public function view_attachment(Request $request)
     {
         return  User::s3Url($request->file_directory);
+    }
+
+    public function activity_logs(Request $request)
+    {
+
+        $assistance = AicsAssistance::where("uuid", "=", $request->assistance)->with("assessment", "assessment.activities")->firstOrFail();
+
+        if ($assistance) {
+            return ["assistance" => $assistance->activities, "assessment" => $assistance->assessment->activities];
+        }
     }
 }

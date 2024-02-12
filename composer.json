@@ -20,6 +20,7 @@
         "league/flysystem-aws-s3-v3": "1.0.29",
         "maatwebsite/excel": "^3.1",
         "scottlaurent/accounting": "^0.3.3",
+        "spatie/laravel-activitylog": "^4.7",
         "spatie/laravel-permission": "^5.9",
         "tightenco/ziggy": "^1.5"
     },
