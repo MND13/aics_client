@@ -33,8 +33,8 @@ class AicsAssessmentController extends Controller
     public function create(Request $request)
     {
 
-       # var_dump($request);
-        
+        # var_dump($request);
+
         if (Auth::check() &&   !Auth::user()->hasRole('user')) {
 
 
@@ -102,8 +102,6 @@ class AicsAssessmentController extends Controller
                                 $transaction_1->referencesObject($gis);
                             }
                         }
-
-                       
                     }
 
                     DB::commit();
@@ -171,7 +169,7 @@ class AicsAssessmentController extends Controller
                     'assessment' => 'required',
                     'purpose' => 'required',
                     'amount' => 'required',
-                    'mode_of_assistance' => 'required',                    
+                    'mode_of_assistance' => 'required',
                     'signatory_id' => 'required',
                 ]);
 
@@ -257,23 +255,19 @@ class AicsAssessmentController extends Controller
 
     public function sms(Request $request, $uuid)
     {  // dd($request);
-        if($request->bene)
-        {
+        if ($request->bene) {
             $msg = "Ang $request->assistance ay pwede na makuha ni: 
 BENEFICIARY: $request->bene, o ni
 REPRESENTATIVE: $request->client sa DSWD Regional Office. 
 AMOUNT: $request->amount
  MAMALIHOG MI NA DALAHON ANG ORIGINAL DOCUMENTS, UG ISA KA VALID ID. DAGHANG SALAMAT!";
-                 
-        }else
-        {
+        } else {
             $msg = "Ang $request->assistance ay pwede na makuha ni: 
 BENEFICIARY: $request->client sa DSWD Regional Office. 
 AMOUNT: $request->amount
 MAMALIHOG MI NA DALAHON ANG ORIGINAL DOCUMENTS, UG ISA KA VALID ID. DAGHANG SALAMAT!";
-          
         }
-       $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->mobile_no, 1));
-       return $response->collect();
+        $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($request->mobile_no, 1));
+        return $response->collect();
     }
 }

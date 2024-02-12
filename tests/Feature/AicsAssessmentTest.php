@@ -55,7 +55,6 @@ class AicsAssessmentTest extends TestCase
         $input['gl_for_signatory_id'] = NULL;
         $input['gl_signatory_id'] = NULL;
         $input['initials'] = mb_substr($social_worker->first_name, 0, 1);
-      #  $input['interviewed_by'] = $social_worker->first_name;
         $input['mode_of_admission'] = $this->faker()->randomElement(["CAV", "GL"]);
         $input['mode_of_assistance'] = "WALK-IN";
         $input['provider_id'] = $input['mode_of_admission']  == "GL" ? $provider->id : NULL;
@@ -78,7 +77,6 @@ class AicsAssessmentTest extends TestCase
                 fn (AssertableJson $json) =>
                 $json->has('message')
             );
-        #  dd($response->json());
     }
 
     public function test_it_can_update_assessment()
@@ -96,9 +94,7 @@ class AicsAssessmentTest extends TestCase
 
         $assessment = AicsAssessment::factory()
             ->create([
-                # 'gis_id' => $assistance->id,
                 'initials' => mb_substr($social_worker->first_name, 0, 1),
-               # 'interviewed_by' =>  $social_worker->first_name
             ])->first();
 
         $category =  Category::inRandomOrder()->first();
@@ -113,7 +109,6 @@ class AicsAssessmentTest extends TestCase
         $input['gl_for_signatory_id'] = NULL;
         $input['gl_signatory_id'] = NULL;
         $input['initials'] = mb_substr($social_worker->first_name, 0, 1);
-       # $input['interviewed_by'] = $social_worker->first_name;
         $input['mode_of_admission'] = $this->faker()->randomElement(["CAV", "GL"]);
         $input['mode_of_assistance'] = "WALK-IN";
         $input['provider_id'] = $input['mode_of_admission']  == "GL" ? $provider->id : NULL;
