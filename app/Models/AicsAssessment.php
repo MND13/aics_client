@@ -11,6 +11,7 @@ class AicsAssessment extends Model
 {
     use HasFactory, LogsActivity;
     protected $guarded = ["id"];
+    
 
     public function assistance()
     {

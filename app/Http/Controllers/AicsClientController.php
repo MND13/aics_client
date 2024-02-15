@@ -7,6 +7,7 @@ use App\Models\AicsClient;
 use Illuminate\Http\Request;
 use App\Models\Payroll;
 use App\Imports\ClientsImport;
+use App\Models\AicsAssessment;
 use App\Models\AicsAssistance;
 use App\Models\AicsType;
 use Carbon\Carbon;
@@ -175,11 +176,43 @@ class AicsClientController extends Controller
             "assessment.signatory:id,name,position",
             "aics_beneficiary",
             "aics_beneficiary.psgc:id,region_name,province_name,city_name,brgy_name,region_name_short",
-           
-
 
         )->where("uuid", "=", $uuid)->firstOrFail();
 
+
+        $record_options = [
+        "General Intake Sheet",
+        "Medical Certificate/Abstract",
+        "Discharge Summary",
+        "Death Summary",
+
+        "Valid ID Presented",
+        "Prescriptions",
+        "Laboratory Request",        
+        "Referral Letter",  
+        
+        "______________________",
+        "Statement of Account",
+        "Charge Slip",     
+        "Social Case Study Report", 
+
+        "4PS DSWD ID",
+        "Treatment Protocol",
+       
+        "Funeral Contract",
+        "Others",
+       
+       
+
+        "Justification",
+        "Quotation",
+        "Death Certificate",
+        
+       
+
+              
+        ];
+        
         $res = $assistance->toArray();
         $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
@@ -190,7 +223,20 @@ class AicsClientController extends Controller
             $assistance_type =  "Medical Assistance"; # GENERALIZE ALL MEDICAL ASSISTANCE TYPE
         }
 
-      
+        /*return view('pdf.coe',
+        [
+            "client" => $res["aics_client"],
+            "assistance" => $res,
+            "assistance_type" => $assistance_type,
+            "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
+            "records" => json_decode($res['assessment']['records']),
+            "records_others" => isset($res['assessment']['records_others']) ? $res['assessment']['records_others'] : "" ,
+            "amount_in_words" => $f->format($res["assessment"]["amount"]),
+            "bene"=> $res["aics_beneficiary"],
+            "relationship" => $res["rel_beneficiary"],
+            "record_options" =>  $record_options 
+        ]);*/
+
         if ($assistance) {
             $pdf = Pdf::loadView(
                 'pdf.coe',
@@ -203,9 +249,12 @@ class AicsClientController extends Controller
                     "records_others" => isset($res['assessment']['records_others']) ? $res['assessment']['records_others'] : "" ,
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
                     "bene"=> $res["aics_beneficiary"],
-                    "relationship" => $res["rel_beneficiary"]
+                    "relationship" => $res["rel_beneficiary"],
+                    "record_options" =>  $record_options 
                 ]
             );
+
+           
             return $pdf->stream('coe.pdf');
         }
     }

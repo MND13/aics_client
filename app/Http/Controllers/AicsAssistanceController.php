@@ -252,7 +252,10 @@ class AicsAssistanceController extends Controller
                 ->orderByRaw("FIELD(status , 'Pending', 'Verified', 'Serving', 'Served','Rejected') ASC")
                 ->orderBy("created_at",  "desc");
 
+            
+
             return $assistance->get();
+            
         }
 
 
