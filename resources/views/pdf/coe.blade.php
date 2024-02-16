@@ -33,7 +33,7 @@
         .sig {
             width: 90%;
             margin: 0 auto;
-          /*  border-bottom: solid 1px #000;*/
+            /*  border-bottom: solid 1px #000;*/
             text-transform: uppercase;
             vertical-align: bottom;
         }
@@ -108,12 +108,12 @@
             border-top: solid 1px #000;
         }
 
-        input[type="checkbox"]{
+        input[type="checkbox"] {
             margin-bottom: -5;
             padding: 0;
         }
 
-        input[type="radio"]{
+        input[type="radio"] {
             margin-bottom: -3;
             padding: 0;
         }
@@ -162,34 +162,42 @@
 
     <table class="table" style="table-layout:fixed; font-size:9pt">
         <tr>
-            <td  style="width:15%" >
-                <table class="table"  style="table-layout: fixed;"  cellspacing=0 cellpadding=0>
-                    <td style="width:25%" ><b> QN: </b></td>
+            <td style="width:15%">
+                <table class="table" style="table-layout: fixed;" cellspacing=0 cellpadding=0>
+                    <td style="width:25%"><b> QN: </b></td>
                     <td style="border:solid 1px"></td>
-                </table> 
+                </table>
             </td>
             <td style="width:50%">
-                <table class="table  text-center" style="table-layout: fixed;"  cellspacing=0 cellpadding=0>
-                    <td style="width:15%" ><b> PCN: </b></td>
-                    @for($i=0;$i<14;$i++)
-                    <td style="border:solid 1px"></td>
+                <table class="table  text-center" style="table-layout: fixed;" cellspacing=0 cellpadding=0>
+                    <td style="width:15%"><b> PCN: </b></td>
+                    @for ($i = 0; $i < 14; $i++)
+                        <td style="border:solid 1px"></td>
                     @endfor
-             
-                </table> 
+
+                </table>
             </td>
             <td>
                 <table class="table  text-center" cellspacing=0 cellpadding=0>
-                    <td><b> Date: </b></td>
-                    <td style="border:solid 1px">{{ date('M', strtotime($assistance['schedule'])) }}</td>
-                    <td style="border:solid 1px">{{ date('d', strtotime($assistance['schedule'])) }}</td>
-                    <td style="border:solid 1px">{{ date('Y', strtotime($assistance['schedule'])) }}</td>
+                    <tr>
+                        <td><b> Date: </b></td>
+                        <td style="border:solid 1px">{{ date('M', strtotime($assistance['schedule'])) }}</td>
+                        <td style="border:solid 1px">{{ date('d', strtotime($assistance['schedule'])) }}</td>
+                        <td style="border:solid 1px">{{ date('Y', strtotime($assistance['schedule'])) }}</td>
+                    </tr>
+                    <tr class="sub-label">
+                        <td></td>
+                        <td><i> MM</i></td>
+                        <td><i>DD</i></td>
+                        <td><i>YYYY</i></td>
+                    </tr>
                 </table>
-            </div>
+                </div>
 
             </td>
         </tr>
         <tr>
-           
+
             <td colspan="3">
                 <input type="checkbox">New
                 <input type="checkbox">Returning
@@ -197,12 +205,12 @@
                 <input type="checkbox">Walk-in
                 <input type="checkbox">Referral
                 <input type="radio">Off-site
-         
+
             </td>
-            
+
         </tr>
     </table>
-<br>
+    <br>
     <table class="table " cell-padding=0 cellspacing=0>
         <tr>
             <td>This is to certify that,</td>
@@ -280,7 +288,7 @@
                 <td>
                     @if ($index != 8)
                         <input type="checkbox" name="" id=""
-                            @if (in_array($record_option, $records)) checked="true" @endif>
+                            @if (in_array($record_option, $records) || $index == 0) checked="true" @endif>
                     @endif
 
                     {{ $record_option }}
@@ -303,9 +311,9 @@
     <p class="text-center" style="line-height:2em">
         The Client is hereby recommended to receive <span class="underline">{{ $assistance_type }} </span> <br>
         in the amount of <span class="underline" style="text-transform:uppercase">{{ $amount_in_words }} PESOS
-            ONLY</span>,
-        Php <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
-        CHARGABLE AGAINST: PSP <span class="underline">
+            ONLY</span>
+        Php. <span class="underline"> {{ number_format($assistance['assessment']['amount'], 2) }} </span>
+        CHARGABLE AGAINST:PSP <span class="underline">
             {{ date('Y', strtotime($assistance['assessment']['created_at'])) }} </span>
 
     </p>
@@ -344,9 +352,20 @@
                 </td>
             </tr>
             <tr>
-                <td style="border-top:solid 1px;"><b>Beneficiary/Representative</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
-                <td style="border-top:solid 1px;"><b>Social Worker</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
-                <td style="border-top:solid 1px;"><b>Approving Authority</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
+                <td style="border-top:solid 1px;">
+                    <b>Beneficiary/Representative</b><br>
+                    <i style="font-size: 7pt;">(Signature Over Printed Name)</i>
+                </td>
+                <td style="border-top:solid 1px;">
+                    <b>Social Worker</b><br>
+                    <i style="font-size: 7pt;">(Signature OverPrinted Name) </i>
+                </td>
+                <td style="border-top:solid 1px;">
+                    <b>Approving Authority</b><br>
+                    <i style="font-size: 7pt;">
+                        (Signature Over Printed Name)
+                    </i>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -368,7 +387,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td><b>SWO V/PSD CHIEF</b><br>Signature Over Printed Name</td>
+                <td><b>SWO V/PSD CHIEF</b><br>(Signature Over Printed Name)</td>
                 <td></td>
             </tr>
         </table>
@@ -380,34 +399,76 @@
             <b> Acknowledgement Receipt</b>
         </div>
         <br>
-        <div style="text-align:right">
-            Date: {{ date('M d, Y', strtotime($assistance['assessment']['created_at'])) }}
-        </div>
+        <table class="table" style="table-layout:fixed; font-size:9pt">
+            <tr>
+                <td style="width:15%">
 
+                </td>
+                <td style="width:50%">
 
+                </td>
+                <td>
+                    <table class="table  text-center" cellspacing=0 cellpadding=0>
+                        <tr class="sub-label">
+                            <td></td>
+                            <td><i> MM</i></td>
+                            <td><i>DD</i></td>
+                            <td><i>YYYY</i></td>
+                        </tr>
+                        <tr>
+                            <td><b> Date: </b></td>
+                            <td style="border:solid 1px">{{ date('M', strtotime($assistance['schedule'])) }}</td>
+                            <td style="border:solid 1px">{{ date('d', strtotime($assistance['schedule'])) }}</td>
+                            <td style="border:solid 1px">{{ date('Y', strtotime($assistance['schedule'])) }}</td>
+                        </tr>
 
-        Financial Assistance:
+                    </table>
+                    </div>
 
-        <span class="underline" style="text-transform:uppercase">
-            {{ $amount_in_words }} PESOS ONLY</span>,
-        PHP <span class="underline"> {{ number_format($assistance['assessment']['amount'], '2') }} </span>
+                </td>
+            </tr>
 
+        </table>
+
+        <table class="table">
+            <tr>
+                <td style="width: 25%">
+                    <input type="checkbox" name="" id="" checked="true"> Financial Assistance:
+                </td>
+                <td style="text-transform:uppercase">
+                    {{ $amount_in_words }} PESOS ONLY
+                </td>
+            </tr>
+            <tr class="sub-label">
+                <td></td>
+                <td class="underlined"><i>(Amount in Words)</i></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table>
+                        <tr>
+                        @foreach ($cav_assistance_options as $i=> $options)
+                        @if( $i % 3 == 0) </tr><tr> @endif
+                          <td><input type="checkbox" name="" id="">{{ $options }}
+                          </td> 
+                        @endforeach
+                    </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        
         <br>
 
-        <ul>
-            <li>{{ $assistance['aics_type']['name'] }}</li>
-        </ul>
-        <br>
-
-        <table class="table  text-center">
+        <table class="table  text-center" style="table-layout: fixed">
             <tbody>
                 <tr>
-                    <td style="text-align: left;">Accepted by:<br></td>
-                    <td style="text-align: left;">Paid by:<br></td>
-                    <td style="text-align: left;">Witnessed by:<br></td>
+                    <td style="text-align: left;"><b>Tinangap ni:</b><br></td>
+                    <td style="text-align: left;"><b>Binayaran ni:</b><br></td>
+                    <td style="text-align: left;"><b>Sinaksihan ni:</b><br></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="max-height:100px;">
                         <div class="sig">
                             {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
                         </div>
@@ -428,9 +489,29 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Beneficiary/Representative</b><br>Signature Over Printed Name</td>
-                    <td><b>Special Disbursing Officer</b><br>Signature Over Printed Name</td>
-                    <td><b>Social Worker</b><br>Signature Over Printed Name</td>
+
+                    <td style="border-top:solid 1px;">
+                        <b>Beneficiary/Representative</b><br>
+                        <i style="font-size: 7pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
+
+                    <td style="border-top:solid 1px;">
+                        <b>RDO/SDO</b><br>
+                        <i style="font-size: 7pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
+
+                    <td style="border-top:solid 1px;">
+                        <b>Approving Authority</b><br>
+                        <i style="font-size: 7pt;">
+                            (Signature Over Printed Name)
+                        </i>
+                    </td>
+
+
                 </tr>
                 <tr>
                     <td colspan="3"><br></td>

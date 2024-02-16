@@ -185,32 +185,30 @@ class AicsClientController extends Controller
         "Medical Certificate/Abstract",
         "Discharge Summary",
         "Death Summary",
-
         "Valid ID Presented",
         "Prescriptions",
         "Laboratory Request",        
-        "Referral Letter",  
-        
+        "Referral Letter",
         "______________________",
         "Statement of Account",
         "Charge Slip",     
-        "Social Case Study Report", 
-
+        "Social Case Study Report",
         "4PS DSWD ID",
-        "Treatment Protocol",
-       
+        "Treatment Protocol",       
         "Funeral Contract",
         "Others",
-       
-       
-
         "Justification",
         "Quotation",
         "Death Certificate",
-        
-       
+        ];
 
-              
+        $cav_assistance_options = [
+        "Medical Assistance",
+        "Funeral Assistance",
+        "Transportation Assistance",
+        "Education Assistance",
+        "Food Assistance",
+        "Cash Assistance for Support Services" 
         ];
         
         $res = $assistance->toArray();
@@ -223,19 +221,6 @@ class AicsClientController extends Controller
             $assistance_type =  "Medical Assistance"; # GENERALIZE ALL MEDICAL ASSISTANCE TYPE
         }
 
-        /*return view('pdf.coe',
-        [
-            "client" => $res["aics_client"],
-            "assistance" => $res,
-            "assistance_type" => $assistance_type,
-            "age" => Carbon::parse($res["aics_client"]["birth_date"])->age,
-            "records" => json_decode($res['assessment']['records']),
-            "records_others" => isset($res['assessment']['records_others']) ? $res['assessment']['records_others'] : "" ,
-            "amount_in_words" => $f->format($res["assessment"]["amount"]),
-            "bene"=> $res["aics_beneficiary"],
-            "relationship" => $res["rel_beneficiary"],
-            "record_options" =>  $record_options 
-        ]);*/
 
         if ($assistance) {
             $pdf = Pdf::loadView(
@@ -250,7 +235,8 @@ class AicsClientController extends Controller
                     "amount_in_words" => $f->format($res["assessment"]["amount"]),
                     "bene"=> $res["aics_beneficiary"],
                     "relationship" => $res["rel_beneficiary"],
-                    "record_options" =>  $record_options 
+                    "record_options" =>  $record_options ,
+                    "cav_assistance_options" => $cav_assistance_options,
                 ]
             );
 
