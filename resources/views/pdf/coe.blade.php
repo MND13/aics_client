@@ -33,7 +33,7 @@
         .sig {
             width: 90%;
             margin: 0 auto;
-            border-bottom: solid 1px #000;
+          /*  border-bottom: solid 1px #000;*/
             text-transform: uppercase;
             vertical-align: bottom;
         }
@@ -171,20 +171,9 @@
             <td style="width:50%">
                 <table class="table  text-center" style="table-layout: fixed;"  cellspacing=0 cellpadding=0>
                     <td style="width:15%" ><b> PCN: </b></td>
+                    @for($i=0;$i<14;$i++)
                     <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
-                    <td style="border:solid 1px"></td>
+                    @endfor
              
                 </table> 
             </td>
@@ -322,7 +311,7 @@
     </p>
     <br>
 
-    <table class="table text-center">
+    <table class="table text-center" style="table-layout: fixed">
         <tbody>
             <tr>
                 <td style="text-align: left;"><b>Conforme:</b></td>
@@ -330,7 +319,7 @@
                 <td style="text-align: left;"><b>Approved by:</b></td>
             </tr>
             <tr>
-                <td>
+                <td style="max-height:100px;">
                     <div class="sig"><br>
                         {{ $client['first_name'] . ' ' . $client['middle_name'] . ' ' . $client['last_name'] . ' ' . $client['ext_name'] }}
                     </div>
@@ -355,9 +344,9 @@
                 </td>
             </tr>
             <tr>
-                <td><b>Beneficiary/Representative</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
-                <td><b>Social Worker</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
-                <td><b>Approving Authority</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
+                <td style="border-top:solid 1px;"><b>Beneficiary/Representative</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
+                <td style="border-top:solid 1px;"><b>Social Worker</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
+                <td style="border-top:solid 1px;"><b>Approving Authority</b><br><i style="font-size: 7pt;">Signature Over Printed Name</i></td>
             </tr>
         </tbody>
     </table>
