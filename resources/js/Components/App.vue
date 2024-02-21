@@ -26,7 +26,7 @@
               <v-list-item-title>
                 {{ link.text }}
               </v-list-item-title>
-              <v-list-item-subtitle v-if=" link.subtitle ">
+              <v-list-item-subtitle v-if="link.subtitle">
                 <small> ({{ link.subtitle }})</small>
               </v-list-item-subtitle>
 
@@ -104,53 +104,7 @@
       </div>
     </v-main>
 
-    <!-- <div class="container-fluid">
-      <div class="row">
-
-        <div class="col-md-2">
-          <v-list dense>
-
-            <v-list-item-group v-model="selectedItem" color="primary" class="d-print-none">
-              <v-list-item v-for="(link, i) in links" :key="i" :to="link.to">
-                <v-list-item-icon>
-                  <v-icon v-text="link.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="link.text"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-          <v-divider inset></v-divider>
-
-
-          <v-list dense>
-            <v-list-item-group v-model="selectedItem" v-if="hasRoles(['super-admin'])" color="primary"
-              class="d-print-none">
-              <v-subheader inset>Libraries</v-subheader>
-
-              <v-list-item v-for="(link, i) in lib_menu" :key="i" :to="link.to">
-                <v-list-item-icon>
-                  <v-icon v-text="link.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="link.text"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-
-
-
-        </div>
-        <div class="col-md-10">
-          <router-view :user="user">
-
-          </router-view>
-        </div>
-      </div>
-    </div>-->
+   
   </v-app>
 </template>
 
@@ -162,7 +116,12 @@ export default {
   mixins: [userMixin],
   data() {
     return {
+      timer: null,
+      remainingTime: 0,
+      timeoutDuration: 3,
+      snackbar: false,
       drawer: null,
+      snackbar: false,
       logo:
         location.protocol +
         "//" +
@@ -182,11 +141,10 @@ export default {
           text: "Request Assistance",
 
         },
-        /* {
+        {
            to: "/profile",
            text: "Profile",
- 
-         },*/
+        },
         {
           to: "/contact",
           text: "Contact Us",
@@ -231,6 +189,10 @@ export default {
           to: "/reports",
           text: "Reports",
         },
+        {
+          to: "/profile",
+           text: "Profile",
+        }
 
       ],
       lib_menu:
@@ -264,7 +226,7 @@ export default {
         ]
     };
   },
-
+ 
   methods: {
     logout() {
       axios.post(route("logout")).then(response => {
@@ -274,11 +236,11 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
+    },
+  
   },
   mounted() {
-
-
+  
     switch (this.userData.role) {
       case "user":
         this.links = this.default_menu
@@ -289,6 +251,11 @@ export default {
     }
 
   },
+  beforeDestroy() {
+    // Clean up event listeners
+    document.removeEventListener("mousemove", this.resetLogoutTimer);
+    document.removeEventListener("keypress", this.resetLogoutTimer);
+  }
 };
 </script>
 

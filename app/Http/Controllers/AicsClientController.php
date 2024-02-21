@@ -204,10 +204,12 @@ class AicsClientController extends Controller
 
         $cav_assistance_options = [
         "Medical Assistance",
-        "Funeral Assistance",
         "Transportation Assistance",
-        "Education Assistance",
         "Food Assistance",
+        "Funeral Assistance",
+       
+        "Education Assistance",
+        
         "Cash Assistance for Support Services" 
         ];
         

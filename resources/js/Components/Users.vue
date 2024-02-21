@@ -143,6 +143,10 @@ export default {
           role: "Social Worker",
           value: "social-worker",
         },
+        {
+          role: "User",
+          value: "user",
+        },
       ],
       showPassword: false,
       showPasswordConfirmation: false,

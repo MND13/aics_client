@@ -35,21 +35,10 @@ class UserRequest extends FormRequest
             'office_id' => 'sometimes|required|exists:offices,id',
             'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(request('id'))],
-            'role' => 'required',
+            'role' => 'sometimes|required',
             'password' => 'sometimes|required|confirmed|max:255|min:8',
         ];
 
-/*
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'sometimes|required|string|max:255|min:2',
-        'last_name' => 'required|string|max:255',
-        'ext_name' => 'sometimes|required|string|max:255',
-        'birth_date' => 'date',
-        'psgc_id' => 'exists:psgcs,id',
-        'mobile_number' => 'required|numeric|digits:11',
-        'email' => 'sometimes|required|string|email|max:255|unique:users',
-        'street_number' => 'sometimes|required|string|max:255',
-        'password' => 'required|string|min:8|confirmed',*/
         
     }
 }

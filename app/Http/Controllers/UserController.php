@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\AicsAssistance;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -14,15 +15,27 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return [
-            'users' => User::with([
+
+        if (Auth::check() &&  Auth::user()->hasRole(['admin', 'social-worker', 'super-admin'])) {
+
+            $users =  User::with([
                 'roles',
                 'office',
                 'profile_docs'
-            ])->role(['admin', 'encoder', 'social-worker'])->get()
-        ];
+            ]);
+
+
+            if (Auth::user()->hasRole(['social-worker'])) {
+                $roles = ['user'];
+
+                $users->role($roles);
+            }
+
+
+            return ['users' => $users->get()];
+        }
     }
 
     /**
@@ -43,11 +56,13 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        if (Auth::check() &&  Auth::user()->hasRole(['super-admin'])) {
 
-        $user = User::create($request->all());
-        $user->assignRole($request->role);
+            $user = User::create($request->all());
+            $user->assignRole($request->role);
 
-        return $user;
+            return $user;
+        }
     }
 
     /**
@@ -58,7 +73,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        //allow admin
+        if (Auth::check()  &&  Auth::user()->hasRole(['super-admin'])) {
+            return User::with('profile_docs', 'psgc', 'office', 'roles')->findOrFail($id);
+        }
+
+        //allow self
+        else if (Auth::check() &&  Auth::id() == $id) {
+
+            return User::with('profile_docs', 'psgc', 'office', 'roles')->findOrFail(Auth::id());
+        }
     }
 
     /**
@@ -80,14 +104,19 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UserRequest $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
+    {   
 
-        $user->syncRoles([]);
-        $user->assignRole($request->role);
+        if (Auth::check()) {
+            $user = User::findOrFail($id);
+            $user->update($request->all());
 
-        return $user;
+            if (Auth::user()->hasRole(['super-admin']) && isset($request->role)) 
+            {   $user->syncRoles([]);
+                $user->assignRole($request->role);
+            }
+
+            return $user;
+        }
     }
 
     /**
@@ -108,7 +137,7 @@ class UserController extends Controller
             ->where("uuid", "=", $request->assistance)
             ->firstOrFail();
 
-        
+
         if ($asst->aics_client && $asst->aics_client->profile_docs) {
 
             foreach ($asst->aics_client->profile_docs as $key => $value) {
@@ -116,7 +145,6 @@ class UserController extends Controller
             }
 
             return $asst->aics_client->profile_docs;
-
         }
     }
 }
