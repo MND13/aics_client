@@ -13,7 +13,7 @@
 
         <v-col cols="12" md="10" sm="10" dense>
 
-            <v-card outlined dense>
+            <v-card dense flat>
 
                 <v-card-text>
                     <v-container v-if="selectedItem !== null">
@@ -148,7 +148,7 @@
                                 </v-card-text>
                             </v-card>
 
-                            <v-card v-if="hasRoles(['social-worker', 'admin', 'super-admin'])" class="mt-2" tiled outlined>
+                            <v-card v-if="hasRoles(['social-worker', 'admin', 'super-admin'])" class="mt-2" flat>
                                 <v-card-text>
                                     <v-row>
                                         <v-col cols="12" md="6">
@@ -169,25 +169,30 @@
                         </div>
                         <div v-if="selectedItem === 1">
 
+                            <v-card flat>
+                                <v-card-text>
 
-                            <v-form ref="form">
+                                    <v-form ref="form">
 
-                                <v-text-field v-model="formData.password"
-                                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                    :type="showPassword ? 'text' : 'password'" name="input-10-1" label="Password"
-                                    hint="At least 8 characters" counter @click:append="showPassword = !showPassword"
-                                    :error-messages="formErrors.password"></v-text-field>
+                                        <v-text-field v-model="formData.password"
+                                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :type="showPassword ? 'text' : 'password'" name="input-10-1" label="Password"
+                                            hint="At least 8 characters" counter
+                                            @click:append="showPassword = !showPassword"
+                                            :error-messages="formErrors.password"></v-text-field>
 
-                                <v-text-field v-model="formData.password_confirmation"
-                                    :append-icon="showPasswordConfirmation ? 'mdi-eye' : 'mdi-eye-off'"
-                                    :type="showPasswordConfirmation ? 'text' : 'password'" name="input-10-1"
-                                    label="Confirm Password" hint="At least 8 characters" counter
-                                    @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
+                                        <v-text-field v-model="formData.password_confirmation"
+                                            :append-icon="showPasswordConfirmation ? 'mdi-eye' : 'mdi-eye-off'"
+                                            :type="showPasswordConfirmation ? 'text' : 'password'" name="input-10-1"
+                                            label="Confirm Password" hint="At least 8 characters" counter
+                                            @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
-                                <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit">
-                                    Update
-                                </v-btn>
-                            </v-form>
+                                        <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit">
+                                            Update
+                                        </v-btn>
+                                    </v-form>
+                                </v-card-text>
+                            </v-card>
                         </div>
 
 
@@ -255,7 +260,7 @@ export default {
         submitForm() {
             axios.patch(route('users.update', this.formData.id), this.formData)
                 .then(res => {
-                 console.log(res);   
+                    console.log(res);
                 })
                 .catch(err => {
                     this.submit = false;

@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" sm="4">
+    <v-col cols="12" sm="3">
       <v-card flat>
         <v-card-title>User Form
 
@@ -31,17 +31,20 @@
             </v-select>
 
 
-           <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
+            <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
               type="date"></v-text-field>
 
 
             <v-text-field v-model="formData.mobile_number" label="Mobile Number"
               :error-messages="formErrors.mobile_number"></v-text-field>
 
-            <v-select v-model="formData.gender" label="Select" :items="['Babae', 'Lalake']"></v-select>
+            <v-select v-model="formData.gender" label="Gender" :items="['Babae', 'Lalake']"></v-select>
 
 
             <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
+
+           <v-checkbox v-model="formData.mobile_verified" :label="'Mobile Verified'" input-value="1" ></v-checkbox>
+
 
             <v-select v-model="formData.role" :items="roles" label="Role" item-text="role" item-value="value"
               :error-messages="formErrors.role"></v-select>
@@ -70,7 +73,7 @@
     </v-col>
 
 
-    <v-col cols="12" sm="8">
+    <v-col cols="12" sm="9">
       <v-card flat>
         <v-card-title>
           User Table
@@ -124,10 +127,10 @@ export default {
     return {
       formType: "Create",
       formData: {
-        mobile_number : "00000000000",
-        gender : "Lalake",
-        birth_date : "1900-01-01",
-        mobile_verified : "1",
+        mobile_number: "00000000000",
+        gender: "Lalake",
+        birth_date: "1900-01-01",
+        mobile_verified: "1",
       },
       formErrors: {},
       roles: [
@@ -151,9 +154,12 @@ export default {
       showPassword: false,
       showPasswordConfirmation: false,
       headers: [
-        { text: 'Name', value: 'username' },
+        { text: 'User Name', value: 'username' },
+        { text: 'First Name', value: 'first_name' },
+        { text: 'Middle Name', value: 'middle_name' },
+        { text: 'Last Name', value: 'last_name' },
+        { text: 'Mobile Number', value: 'mobile_number' },
         { text: 'Office', value: 'office' },
-        { text: 'Email Address', value: 'email' },
         { text: 'Role', value: 'role' },
         { text: 'Actions', value: 'actions' },
       ],
@@ -174,11 +180,11 @@ export default {
     }, 250),
     createUser() {
       this.submit = true;
-      this.formData.psgc_id = 368;
-      this.formData.mobile_number = "00000000000";
-      this.formData.gender = "Lalake";
-      this.formData.birth_date = "1900-01-01";
-      this.formData.mobile_verified = "1";
+      this.formData.psgc_id = this.formData.psgc_id ? this.formData.psgc_id : 368;
+      this.formData.mobile_number = this.formData.mobile_number ? this.formData.mobile_number : "00000000000";
+      this.formData.gender = this.formData.gender ? this.formData.gender : "Lalake";
+      this.formData.birth_date = this.formData.birth_date ? this.formData.birth_date : "1900-01-01";
+      this.formData.mobile_verified = this.formData.mobile_verified ? this.formData.mobile_verified : "1";
 
       axios.post(route('users.store'), this.formData)
         .then(res => {
@@ -196,7 +202,7 @@ export default {
       this.submit = true;
       this.formErrors = {};
       //console.log(this.formData);
-      this.formData.mobile_verified = "1";
+      //this.formData.mobile_verified = "1";
       axios.patch(route('users.update', this.formData.id), this.formData)
         .then(res => {
           this.submit = false;
@@ -210,7 +216,9 @@ export default {
         })
     },
     resetForm() {
-      this.formData = {};
+      this.formData = {
+
+      };
       this.formErrors = {};
       this.formType = "Create";
     },

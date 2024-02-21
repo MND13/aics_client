@@ -23,22 +23,38 @@ class UserRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'max:255',
-            'last_name' => 'required|string|max:255',
-            'birth_date' => 'required|date',
-            'psgc_id' => 'required|exists:psgcs,id',
-            'mobile_number' => 'required|numeric|digits:11',
-            'gender' => 'required|string',
-            'office_id' => 'sometimes|required|exists:offices,id',
-            'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore(request('id'))],
-            'role' => 'sometimes|required',
-            'password' => 'sometimes|required|confirmed|max:255|min:8',
-        ];
-
-        
+    {   
+        $role = $this->input('role');
+       
+        if($role == "user")
+        {
+            $rules = [
+                'first_name' => 'required|string|max:255',
+                'middle_name' => 'max:255',
+                'last_name' => 'required|string|max:255',
+                'birth_date' => 'required|date',
+                'psgc_id' => 'required|exists:psgcs,id',
+                'mobile_number' => ['required','numeric','digits:11', Rule::unique('users')->ignore(request('id'))],
+                'gender' => 'required|string',                
+                'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
+                'role' => 'sometimes|required',
+                'password' => 'sometimes|required|confirmed|max:255|min:8',
+            ];
+        }else
+        {
+            $rules = [
+                'first_name' => 'required|string|max:255',
+                'middle_name' => 'max:255',
+                'last_name' => 'required|string|max:255',
+               'office_id' => 'sometimes|required|exists:offices,id',
+                'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
+                'role' => 'sometimes|required',
+                'password' => 'sometimes|required|confirmed|max:255|min:8',
+                'gender' => 'required|string',                
+                
+            ];
+        }
+       
+        return  $rules;
     }
 }

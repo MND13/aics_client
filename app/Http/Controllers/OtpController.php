@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Http;
 class OtpController extends Controller
 {
     public static function generate()
-    {
+    {   
+        
+
         if (Auth::user()) {
             $otp = new UserOtps;
             $otp->user_id = Auth::user()->id;
@@ -21,8 +23,9 @@ class OtpController extends Controller
             {
                 $msg = "Maayong Adlaw! Kani na mensahe gikan sa DSWD Davao Region Office. Ang OTP mo ay ". $otp->otp ;
                 $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr(Auth::user()->mobile_number, 1));
-                $res = $response->collect();               
-                if($res["ErrorCode"] == 0)
+                $res = $response->collect();        
+                     
+                if(isset($res["ErrorCode"]) && $res["ErrorCode"] == 0)
                 {
                     return [
                         "success" => "OTP Sent to " . Auth::user()->mobile_number . ". OTP will expire in 15 min",
@@ -36,6 +39,8 @@ class OtpController extends Controller
 
            
         }
+
+        
     }
 
     public function verify(Request $request)

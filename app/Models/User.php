@@ -39,6 +39,7 @@ class User extends Authenticatable
         'office_id',
         'meta_full_name',
         'full_name',
+        'mobile_verified',
     ];
 
     public static function boot()
@@ -48,6 +49,8 @@ class User extends Authenticatable
             $model->uuid = (string) Str::uuid();
         });
         self::updating(function ($model) {
+            $model->full_name = trim($model->first_name . " " . $model->middle_name . " " . $model->last_name . " " . $model->ext_name);
+            $model->meta_full_name = trim(metaphone($model->first_name) . metaphone($model->middle_name) . metaphone($model->last_name));
         });
     }
 
@@ -120,7 +123,7 @@ class User extends Authenticatable
 
     public function getInitialsAttribute()
     {
-        $initials = '';       
+        $initials = '';
         if ($this->first_name) {
             $initials .= substr($this->first_name, 0, 1);
         }
@@ -135,5 +138,4 @@ class User extends Authenticatable
 
         return $initials;
     }
-
 }
