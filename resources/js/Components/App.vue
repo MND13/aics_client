@@ -201,10 +201,7 @@ export default {
             to: "/users",
             text: "Users",
           },
-          {
-            to: "/clients",
-            text: "Clients",
-          },
+         
           {
             to: "/offices",
             text: "Offices",

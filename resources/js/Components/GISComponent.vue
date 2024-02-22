@@ -509,11 +509,8 @@
                     v-if="form.mode_of_admission == 'Referral'" label="Referral" hide-details="auto"
                     :error-messages="validationErrors.referral"></v-text-field>
                 </v-col>
-
               </v-row>
-
             </v-card-text>
-
           </v-card>
 
 
@@ -526,7 +523,7 @@
             </div>
             <div class="card-body">
               <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
-                return-object outlined item-text="company_name" dense class="rounded-0" track-by="id">
+                return-id outlined item-text="company_name" dense class="rounded-0" track-by="id">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>

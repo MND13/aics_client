@@ -14,7 +14,7 @@ class PsgcController extends Controller
      */
     public function index()
     {
-        return Psgc::getBrgys("region_psgc", "170000000");
+        return Psgc::getBrgys();
     }
 
     /**
@@ -59,8 +59,8 @@ class PsgcController extends Controller
                 $value = $request->value;
                 return Psgc::getCities($field, $value)->toArray();
             case 'brgy':
-               # return Psgc::getBrgys($request->fields);
-               $fields = $request->fields;
+                return Psgc::getBrgys($request->fields);
+               /*$fields = $request->fields;
                $instance = Psgc::select();
          
                foreach ($fields as $f) 
@@ -69,7 +69,7 @@ class PsgcController extends Controller
                }
                
                $instance->where("region_psgc", "110000000")->orderBy("brgy_name");
-               return $instance->get();
+               return $instance->get();*/
 
 
             case 'id':

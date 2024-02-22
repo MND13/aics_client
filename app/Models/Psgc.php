@@ -34,16 +34,27 @@ class Psgc extends Model
             ->get();
     }
 
-    /*public static function getBrgys($fields)
+    public static function getBrgys($fields = array())
     {
-        $instance = new static;
-         
-        foreach ($fields as $f) 
-        {
+        /*$instance = new static;
+
+        foreach ($fields as $f) {
             $instance->where($f["field"], $f["value"]);
         }
-        
+
         $instance->where("region_psgc", "110000000")->orderBy("brgy_name");
-        return $instance->toSql();
-    }*/
+        return $instance->get();*/
+
+        $instance = Psgc::select();
+        if (sizeof($fields) > 0) {
+            foreach ($fields as $f) {
+                $instance->where($f["field"], $f["value"]);
+            }
+        }
+        $instance->where("region_psgc", "110000000")
+            ->orderBy("province_name")
+            ->orderBy("city_name")
+            ->orderBy("brgy_name");
+        return $instance->get();
+    }
 }

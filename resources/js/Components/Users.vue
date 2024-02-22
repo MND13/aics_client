@@ -7,6 +7,10 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="form">
+
+            <v-select v-model="formData.role" :items="roles" label="Role" item-text="role" item-value="value"
+              :error-messages="formErrors.role"></v-select>
+
             <v-text-field v-model="formData.first_name" label="First Name"
               :error-messages="formErrors.first_name"></v-text-field>
 
@@ -22,32 +26,43 @@
 
 
             <v-select v-model="formData.office_id" label="Office" :items="offices" item-value="id" item-text="name"
-              :error-messages="formErrors.office_id">
-
+              :error-messages="formErrors.office_id" v-if="formData.role != 'user'" >
               <template v-slot:selection="{ item }">
                 {{ getText(item) }}
               </template>
-
             </v-select>
 
 
-            <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
-              type="date"></v-text-field>
+            <div v-if="formData.role == 'user'">
+              <v-text-field v-model="formData.birth_date" label="Birth Day" :error-messages="formErrors.birth_date"
+                type="date"></v-text-field>
+
+              <v-text-field v-model="formData.mobile_number" label="Mobile Number"
+                :error-messages="formErrors.mobile_number"></v-text-field>
+
+              <v-select v-model="formData.gender" label="Gender" :items="['Babae', 'Lalake']"></v-select>
+
+              <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
 
 
-            <v-text-field v-model="formData.mobile_number" label="Mobile Number"
-              :error-messages="formErrors.mobile_number"></v-text-field>
-
-            <v-select v-model="formData.gender" label="Gender" :items="['Babae', 'Lalake']"></v-select>
+              <v-text-field v-model="formData.street_number" label="Street Number" :error-messages="formErrors.street_number"></v-text-field>
 
 
-            <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
+              <v-autocomplete label="Address (Brgy, City, Province)" v-model="formData.psgc_id" :items="psgcs" item-value="id"
+                item-text="brgy_name" track-by="id">
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ data.item.brgy_name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ data.item.city_name }}, {{ data.item.province_name }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
 
-           <v-checkbox v-model="formData.mobile_verified" :label="'Mobile Verified'" input-value="1" ></v-checkbox>
 
+            </div>
 
-            <v-select v-model="formData.role" :items="roles" label="Role" item-text="role" item-value="value"
-              :error-messages="formErrors.role"></v-select>
+            <v-checkbox v-model="formData.mobile_verified" :label="'Mobile Verified'"
+              :error-messages="formErrors.mobile_verified" input-value="1"></v-checkbox>
 
             <v-text-field v-model="formData.password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 8 characters"
@@ -59,8 +74,9 @@
               hint="At least 8 characters" counter
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
+           <!--IF ROLE IS USER && FORM ID -->
             <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="hasRoles(['super-admin', 'admin'])">
+              v-if="hasRoles(['super-admin', 'admin']) ">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -97,7 +113,8 @@
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editUser(item)" v-if="hasRoles(['super-admin', 'admin'])">
+              <v-icon small class="mr-2" @click="editUser(item)"
+                v-if="hasRoles(['super-admin', 'admin', 'social-worker'])">
                 mdi-pencil
               </v-icon>
               <v-icon small class="mr-2" @click="deleteUser(item)" v-if="hasRoles(['super-admin', 'admin'])">
@@ -167,7 +184,8 @@ export default {
       loading: true,
       submit: false,
       offices: [],
-      search: ''
+      search: '',
+      psgcs: []
     };
   },
   methods: {
@@ -261,10 +279,14 @@ export default {
       }).catch(error => console.log(error));
     },
     getText(item) { return `${item.name}` },
+    getPsgc() {
+      axios.get(route("api.psgc")).then(res => { this.psgcs = res.data }).catch(e => console.log(e));
+    }
   },
   mounted() {
     this.getOffices()
     this.getUsers();
+    this.getPsgc();
   },
 }
 </script>
