@@ -58,7 +58,7 @@
         </template>
 
         <template v-slot:item.created_at="{ item }">
-          {{ item.created_at | formatDate }}
+          {{ item.created_at | formatDateOnly }}
         </template>
 
         <template v-slot:item.schedule="{ item }">
@@ -156,8 +156,10 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Client', value: 'aics_client', },
-        { text: 'Beneficiary', value: 'aics_beneficiary', },    
+
+        { text: 'Date Submitted', value: 'created_at', },
+        { text: 'Schedule', value: 'schedule', },
+        { text: 'Beneficiary', value: 'aics_beneficiary', },
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
         { text: 'Office', value: 'office' },
