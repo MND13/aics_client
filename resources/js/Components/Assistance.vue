@@ -105,9 +105,7 @@
                                         </template>
 
                                         <div class="d-flex flex-no-wrap">
-                                            <v-avatar class="ma-3 " size="125" rounded="0">
-                                                <v-img :src="user.profile_pic.file_directory"></v-img>
-                                            </v-avatar>
+                                           
                                             <div>
                                                 <v-card-title class="text-h5">
                                                     {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{
@@ -116,7 +114,7 @@
                                                 </v-card-title>
 
                                                 <v-card-subtitle>
-                                                    {{ user.birth_date | formatDate }} <br />
+                                                    {{ user.birth_date | formatDateOnly }} <br />
                                                     {{ user.mobile_number }}<br />
                                                     {{ user.street_number }}<br />
                                                     {{ psgc_data.brgy_name }}
@@ -248,9 +246,8 @@
                                                 </v-col>
 
                                                 <v-col cols="12">
-                                                    <v-select v-model="bene.civil_status" label="Civil Status"
-                                                        outlined dense
-                                                        :items="['Single', 'Married', 'Widowed', 'Separated']"
+                                                    <v-select v-model="bene.civil_status" label="Civil Status" outlined
+                                                        dense :items="['Single', 'Married', 'Widowed', 'Separated']"
                                                         :error-messages="formErrors.civil_status">
                                                     </v-select>
                                                 </v-col>
@@ -272,68 +269,7 @@
                                         </v-card-text>
 
                                     </v-card>
-                                </v-col>
-
-
-                                <v-col cols="12">
-                                    <v-card outlined>
-                                        <template v-if="requester_type == 'Beneficiary'">
-                                            <v-card-title>IMPORMASYON NG BENEPISYARYO</v-card-title>
-                                            <v-card-subtitle> (Beneficiary's Identifying Information) </v-card-subtitle>
-                                        </template>
-                                        <template v-else-if="requester_type == 'Representative'">
-                                            <v-card-title>IMPORMASYON NG KINATAWAN </v-card-title>
-                                            <v-card-subtitle> (Representative's Identifying Information) </v-card-subtitle>
-                                        </template>
-
-                                        <div class="d-flex flex-no-wrap">
-                                            <v-avatar class="ma-3 " size="125" rounded="0" v-if="user.profile_pic && user.profile_pic.file_directory">
-                                                <v-img :src="user.profile_pic.file_directory"></v-img>
-                                            </v-avatar>
-                                            <div>
-                                                <v-card-title class="text-h5">
-                                                    {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }} {{
-                                                        user.ext_name
-                                                    }}
-                                                </v-card-title>
-
-                                                <v-card-subtitle>
-                                                    {{ user.birth_date | formatDate }} <br />
-                                                    {{ user.mobile_number }}<br />
-                                                    {{ user.street_number }}<br />
-                                                    {{ psgc_data.brgy_name }}
-                                                    {{ psgc_data.city_name }},
-                                                    {{ psgc_data.province_name }},
-                                                    {{ psgc_data.region_name }}
-                                                </v-card-subtitle>
-                                            </div>
-                                        </div>
-
-                                        <v-card-text>
-                                            <v-divider></v-divider>
-                                            <v-select v-model="form.civil_status" label="Civil Status" outlined dense
-                                                :items="['Single', 'Married', 'Widowed', 'Separated']"
-                                                :error-messages="formErrors.civil_status">
-                                            </v-select>
-
-                                            <v-text-field v-model="form.occupation" label="Trabaho" class="mx-0" outlined
-                                                dense :error-messages="formErrors.occupation"></v-text-field>
-
-
-                                            <v-text-field v-model="form.monthly_salary" label="Buwanang Kita ng Pamilya"
-                                                outlined dense :error-messages="formErrors.monthly_salary"></v-text-field>
-
-                                            <v-autocomplete v-if="requester_type == 'Representative'"
-                                                item-text="relationship" v-model="form.rel_beneficiary" label="Relasyon"
-                                                outlined dense :items="relationships" item-value="relationship"
-                                                :error-messages="formErrors.rel_beneficiary">
-                                            </v-autocomplete>
-
-                                        </v-card-text>
-
-                                    </v-card>
-                                </v-col>
-
+                                </v-col>                                
                             </v-row>
 
 
@@ -412,22 +348,6 @@
                     <v-card class="mb-12" flat>
                         Upload Files
 
-                        <!--<ul v-if="requirements.length > 0">
-                            <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
-                                <label for="" class="form-label">
-
-                                    <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
-                                    <span v-else>(OPTIONAL)</span>
-
-                                    {{ r.name }}
-                                </label><br>
-
-                                <input type="file" @input="onFileChange(r.id, $event)"
-                                    accept="application/pdf,image/jpeg,image/png" :required="r.is_required" />
-                                <hr>
-                            </li>
-                        </ul>-->
-
                         <template v-if="requirements.length > 0">
                             <v-list-item two-line v-for="r in requirements[0].requirements" :key="r.id">
                                 <v-list-item-content>
@@ -438,9 +358,8 @@
                                             <span v-else>(OPTIONAL)</span>
                                             {{ r.name }}</v-list-item-subtitle>
                                     </v-list-item-title>
-                                    <v-file-input ref="valid_id" accept="image/png, image/jpeg, image/jpg"
-                                        capture="camera" :error-messages="formErrors.valid_id"
-                                        v-model="form.documents[r.id]">
+                                    <v-file-input ref="valid_id" accept="image/png, image/jpeg, image/jpg" capture="camera"
+                                        :error-messages="formErrors.valid_id" v-model="form.documents[r.id]">
                                     </v-file-input>
                                     <v-progress-linear v-if="form.documents[r.id]"
                                         :value="uploadProgress"></v-progress-linear>
@@ -449,25 +368,7 @@
                             </v-list-item>
                         </template>
 
-
-                        <!--<ul v-if="requirements.length > 0">
-                            <li v-for="r in requirements[0].requirements" :key="r.id" style="list-style: number;">
-                                <label for="" class="form-label">
-
-                                    <span v-if="r.is_required" style="color:red">(REQUIRED)</span>
-                                    <span v-else>(OPTIONAL)</span>
-
-                                    {{ r.name }}
-                                </label><br>
-
-                                <v-file-input ref="valid_id" accept="image/png, image/jpeg, application/pdf"
-                                    capture="camera" :error-messages="formErrors.valid_id"
-                                    v-model="valid_id"></v-file-input>
-                            </li>
-                        </ul>
--->
-
-                        <div class="row">
+                       <div class="row">
                             <ul></ul>
                         </div>
 
