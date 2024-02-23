@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <div>
 
     <v-navigation-drawer v-model="drawer" app>
       <v-list-item>
@@ -67,6 +67,11 @@
       </v-list>
     </v-navigation-drawer>
 
+    <div>
+        <v-idle @idle="onidle" @remind="onremind" :reminders="[10]" :loop="true" :wait="0" :duration="900"
+          :events="['mousemove', 'click', 'keypress', 'touchstart', 'touchmove',]" ref="foo"
+          style="visibility: hidden;" />
+      </div>
 
     <v-app-bar app color="indigo darken-3" flat dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
@@ -75,6 +80,8 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
+
+      
 
       {{ user.username }}
 
@@ -97,17 +104,35 @@
 
     <v-main grey>
       <div class="container-fluid">
-
         <router-view :user="user">
-
         </router-view>
       </div>
     </v-main>
 
-   
-  </v-app>
-</template>
 
+    <v-dialog v-model="snackbar" class="text-center" max-width="600">
+      <v-app>
+        <v-card>
+          <v-card-title></v-card-title>
+          <v-card-text class="text-center">
+
+            <h1> <span class="mdi mdi-alert-octagon-outline"></span></h1>
+            You will be logged out in <strong color="red"> {{ mytimer }} </strong> due to inactivity.
+
+          </v-card-text>
+          
+        </v-card>
+      </v-app>
+    </v-dialog>
+
+
+  </div>
+</template>
+<style scoped lang="scss">
+::v-deep .v-application--wrap {
+  min-height: fit-content;
+}
+</style>
 <script>
 import userMixin from '../Mixin/userMixin';
 
@@ -116,12 +141,9 @@ export default {
   mixins: [userMixin],
   data() {
     return {
-      timer: null,
-      remainingTime: 0,
-      timeoutDuration: 3,
       snackbar: false,
       drawer: null,
-      snackbar: false,
+      mytimer: 0,
       logo:
         location.protocol +
         "//" +
@@ -142,8 +164,8 @@ export default {
 
         },
         {
-           to: "/profile",
-           text: "Profile",
+          to: "/profile",
+          text: "Profile",
         },
         {
           to: "/contact",
@@ -191,7 +213,7 @@ export default {
         },
         {
           to: "/profile",
-           text: "Profile",
+          text: "Profile",
         }
 
       ],
@@ -201,7 +223,10 @@ export default {
             to: "/users",
             text: "Users",
           },
-         
+          {
+            to: "/clients",
+            text: "Clients",
+          },
           {
             to: "/offices",
             text: "Offices",
@@ -223,7 +248,20 @@ export default {
         ]
     };
   },
- 
+  watch: {
+
+    mytimer: {
+      handler(value) {
+        setTimeout(() => {
+          this.mytimer = this.$refs.foo.$el.innerHTML;
+        }, 1000);
+
+      },
+      immediate: true, // This ensures the watcher is triggered upon creation
+      deep: true
+    }
+
+  },
   methods: {
     logout() {
       axios.post(route("logout")).then(response => {
@@ -234,10 +272,35 @@ export default {
           console.log(error);
         });
     },
-  
+    onidle() {
+      this.logout();
+    },
+    onremind(time) {
+      this.snackbar = true;
+      this.mytimer = this.$refs.foo.$el.innerHTML;
+    },
+    resetTimer()
+    {
+      this.snackbar = false;
+    }
+
   },
+
   mounted() {
-  
+
+    //this.mytimer = this.$refs.foo.$el.innerHTML;
+    // console.log(this.mytimer );
+
+    setTimeout(() => {
+      this.mytimer = this.$refs.foo.$el.innerHTML;
+    }, 1000);
+
+    window.addEventListener('mousemove', this.resetTimer);
+    window.addEventListener('keydown', this.resetTimer);
+    window.addEventListener('keypress', this.resetTimer);
+    
+
+
     switch (this.userData.role) {
       case "user":
         this.links = this.default_menu
@@ -248,11 +311,7 @@ export default {
     }
 
   },
-  beforeDestroy() {
-    // Clean up event listeners
-    document.removeEventListener("mousemove", this.resetLogoutTimer);
-    document.removeEventListener("keypress", this.resetLogoutTimer);
-  }
+
 };
 </script>
 

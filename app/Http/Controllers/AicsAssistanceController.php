@@ -21,6 +21,7 @@ use App\Models\AicsAssessment;
 use App\Models\User;
 use Image;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Facades\LogBatch;
 
 
 class AicsAssistanceController extends Controller
@@ -42,6 +43,7 @@ class AicsAssistanceController extends Controller
         if (Auth::check() && Auth::user()->hasRole('user')) {
 
             try {
+                LogBatch::startBatch();
                 $form_data = $request->all();
                 $errors = ["assistance" => []];
 
@@ -121,6 +123,7 @@ class AicsAssistanceController extends Controller
 
 
                 DB::commit();
+                LogBatch::endBatch();
                 return ["message" => "Saved", "documents" => $documents];
             } catch (\Throwable $th) {
                 DB::rollBack();
@@ -387,9 +390,9 @@ class AicsAssistanceController extends Controller
     {
 
         $assistance = AicsAssistance::where("uuid", "=", $request->assistance)->with("assessment", "assessment.activities")->firstOrFail();
-
-        if ($assistance) {
-            return ["assistance" => $assistance->activities, "assessment" => $assistance->assessment->activities];
+     
+        if ($assistance->activities) {
+           return ["assistance" => $assistance->activities, "assessment" => $assistance->assessment->activities];
         }
     }
 }

@@ -159,6 +159,7 @@ export default {
 
         { text: 'Date Submitted', value: 'created_at', },
         { text: 'Schedule', value: 'schedule', },
+        { text: 'Beneficiary', value: 'aics_client', },
         { text: 'Beneficiary', value: 'aics_beneficiary', },
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },

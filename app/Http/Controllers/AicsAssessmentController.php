@@ -12,6 +12,8 @@ use App\Models\AicsAssessmentFundSource;
 use App\Models\FundSource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Facades\LogBatch;
 
 class AicsAssessmentController extends Controller
 {
@@ -37,10 +39,10 @@ class AicsAssessmentController extends Controller
 
         if (Auth::check() &&   !Auth::user()->hasRole('user')) {
 
-
+           
             DB::beginTransaction();
             try {
-
+                LogBatch::startBatch();
                 $gis = AicsAssistance::with("aics_client")->findOrFail($request->gis_id);
 
                 if ($gis) {
@@ -105,6 +107,8 @@ class AicsAssessmentController extends Controller
                     }
 
                     DB::commit();
+                    LogBatch::endBatch();
+
 
                     return ["message" => "Saved!"];
                 }
@@ -159,10 +163,10 @@ class AicsAssessmentController extends Controller
     {
         if (Auth::check() && !Auth::user()->hasRole(['user'])) {
 
-
+           
             DB::beginTransaction();
             try {
-
+                LogBatch::endBatch();
                 $validator = Validator::make($request->all(), [
                     'category_id' => 'required',
                     'mode_of_admission' => 'required',
@@ -233,6 +237,8 @@ class AicsAssessmentController extends Controller
 
 
                     DB::commit();
+                    LogBatch::endBatch();
+
                     return ["message" => "Saved!"];
                 }
             } catch (\Throwable $th) {

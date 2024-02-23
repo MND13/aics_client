@@ -505,7 +505,7 @@
                 </v-col>
 
                 <v-col cols="12" md="12">
-                  <v-text-field outlined dense class="rounded-0" v-model="form.referral"
+                  <v-text-field outlined dense class="rounded-0" v-model="form.referal"
                     v-if="form.mode_of_admission == 'Referral'" label="Referral" hide-details="auto"
                     :error-messages="validationErrors.referral"></v-text-field>
                 </v-col>
@@ -522,8 +522,8 @@
               GL
             </div>
             <div class="card-body">
-              <v-autocomplete v-model="selected_provider" :loading="!providers" :items="providers" label="Provider"
-                return-id outlined item-text="company_name" dense class="rounded-0" track-by="id">
+              <v-autocomplete v-model="form.provider_id" :loading="!providers" :items="providers" label="Provider"
+                 item-value="id" outlined item-text="company_name" dense class="rounded-0" track-by="id">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.company_name }}</v-list-item-title>
@@ -556,19 +556,7 @@
               </v-autocomplete>
 
               <v-text-field class="my-2 rounded-0" v-model="form.initials" outlined dense
-                label="Signatory Initials"></v-text-field>
-
-              <hr>
-
-              <div class="mt-2" v-if="selected_provider">
-                Preview <br />
-
-                {{ selected_provider.addressee_name }} <br />
-                {{ selected_provider.addressee_position }}<br />
-                {{ selected_provider.company_name }}<br />
-                {{ selected_provider.company_address }}<br />
-
-              </div>
+                label="Signatory Initials"></v-text-field>             
             </div>
           </div>
 
@@ -725,7 +713,7 @@ export default {
       gis_data: {},
       form: {
         mode_of_admission: "Walk-in",
-        interviewed_by: this.user.first_name + " " + this.user.middle_name + " " + this.user.last_name,
+        interviewed_by: this.user.full_name,
         records: [],
         gl_signatory_id: 6,
         initials: "",
@@ -875,8 +863,7 @@ export default {
       this.form.gis_id = this.gis_data.id; // FOREIGN KEY
       this.form.fund_sources = this.selected_fund_sources;
       this.form.amount = this.sumValue;
-      if (this.form.mode_of_assistance == "GL") { this.form.provider_id = this.selected_provider.id; }
-
+     
       if (this.form.id) { //UPDATE
         this.updateAssessment();
       } else { //CREATE 
@@ -1005,9 +992,7 @@ export default {
 
             this.form.records = JSON.parse(this.gis_data.assessment.records);
 
-            if (this.form.provider_id) {
-              this.selected_provider = this.providers.find(el => el.id === this.form.provider_id);
-            }
+           
 
             if (this.gis_data.assessment.fund_sources) {
               this.selected_fund_sources = this.gis_data.selected_fs;

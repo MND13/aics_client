@@ -9,7 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue').default;
 import '@mdi/font/css/materialdesignicons.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-
+import IdleVue from 'idle-vue'
 import Vuetify from 'vuetify';
 import VueRouter from "vue-router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -33,6 +33,7 @@ import Charging from "./Components/Charging.vue"
 import Reports from "./Components/Reports.vue"
 import SignatoriesSettings from "./Components/SignatoriesSettings.vue"
 import Profile from "./Components/Profile.vue"
+import Vidle from 'v-idle-3'
 
 Vue.use(Vuetify);
 Vue.use(VueRouter);
@@ -40,6 +41,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueViewer);
 Vue.use(require('vue-shortkey'));
+Vue.use(Vidle)
 
 
 
