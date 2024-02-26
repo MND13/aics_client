@@ -101,6 +101,7 @@ class RegisterController extends Controller
             #'password' => ['required', 'string', 'min:8', 'confirmed'],
             'valid_id' => 'required|file|mimes:jpeg,jpg,png',
             'client_photo' => 'required|file|mimes:jpeg,jpg,png',
+            
         ]);
 
         $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
@@ -156,6 +157,7 @@ class RegisterController extends Controller
             'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
             'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
             'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
+            'mobile_verified' => 1,
         ]);
 
         if ($user->id) {
@@ -213,8 +215,8 @@ class RegisterController extends Controller
 USERNAME: " . strtoupper($username)  . " 
 Ang initial na password ay Apelyedo at Birthday example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
 ANG PAG PROSESO AY LIBRE.";
-            $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
-            $res = $response->collect();
+          #  $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
+           # $res = $response->collect();
         }
 
         return $user;

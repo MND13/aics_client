@@ -1,24 +1,36 @@
 <template>
   <KeepAlive>
-    <v-card flat>
-      <v-card-title class="text-center">
-        <div class="row">
-          <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" /> <br>
-            Assistance to Individuals In Crisis (AICS) - Register
+
+    <v-card flat outlined tile class="m-2 p-5">
+      <v-card-title class="text-center my-0 py-0">
+        <div class="row justify-content-center my-0">
+          <div class="col-md-12 my-0 py-0">
+
+            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD" /> <br>
+            <b>Welcome to Assistance to Individuals in Crisis (AICS)! </b>
           </div>
         </div>
       </v-card-title>
       <v-card-text>
+
+        <div class="row mb-2 text-center">
+          <p> Register to create your account & immediately request for Medical, Educational, Funeral, Food,
+            Transportation or Other Cash Assistance.</p>
+          <br>
+        </div>
+
+
         <v-form ref="form" enctype="multipart/form-data">
           <input type="hidden" name="_token" :value="csrf">
-          <div class="row">
-            <div class="col-md-12 offset-md-1"> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
+          <div class="row justify-content-center">
+            <div class="col-md-12 "> <b> FULL NAME (ACCORDING TO PRESENTED VALID ID) </b></div>
+            <hr>
           </div>
-          <div class="row g-2">
+          <div class="row justify-content-center g-2">
 
-            <div class="offset-md-1  col-md-3">
+            <div class="col-md-3">
               <v-text-field v-model="form.first_name" label="First Name*" outlined dense
-                :error-messages="formErrors.first_name"></v-text-field>
+                :error-messages="formErrors.first_name" required></v-text-field>
             </div>
 
             <div class="col-md-3">
@@ -29,33 +41,34 @@
 
             <div class="col-md-3">
               <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
-                :error-messages="formErrors.last_name"></v-text-field>
+                :error-messages="formErrors.last_name" required></v-text-field>
             </div>
 
-            <div class="col-md-1">
+            <div class="col-md-3">
               <v-select v-model="form.ext_name" label="Ext Name" outlined dense :items="suffixes" item-value="id"
-                item-text="name" :error-messages="formErrors.ext_name">
+                item-text="name" :error-messages="formErrors.ext_name" clearable>
               </v-select>
             </div>
           </div>
 
 
-          <div class="row">
-            <div class="col-md-12 offset-md-1"> <b> ADDRESS </b> </div>
+          <div class="row justify-content-center">
+            <div class="col-md-12 "> <b> ADDRESS </b> </div>
+            <hr>
           </div>
 
-          <div class="row g-2">
-            <div class=" offset-md-1  col-md-10">
+          <div class="row justify-content-center g-2">
+            <div class="col-md-12">
 
               <v-text-field v-model="form.street_number" label="House No./Street/Purok*" outlined dense
-                :error-messages="formErrors.street_number"></v-text-field>
+                :error-messages="formErrors.street_number" required></v-text-field>
 
             </div>
           </div>
 
-          <div class="row g-2">
+          <div class="row justify-content-center g-2">
 
-            <div class="offset-md-1  col-md-1">
+            <div class="col-md-3">
               <v-select label="Region" v-model="region" outlined dense :items="['XI']">
               </v-select>
             </div>
@@ -72,22 +85,22 @@
             <div class="col-md-3">
               <v-autocomplete v-model="form.psgc_id" :disabled="!brgys" :loading="loading" :items="brgys" hide-no-data
                 hide-details label="Barangay" outlined item-text="brgy_name" item-value="id" dense
-                :error-messages="formErrors.psgc_id"></v-autocomplete>
+                :error-messages="formErrors.psgc_id" required></v-autocomplete>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-12 offset-md-1"> <b> OTHER INFORMATION </b> </div>
+          <div class="row justify-content-center">
+            <div class="col-md-12 "> <b> OTHER INFORMATION </b> </div>
           </div>
+          <hr>
 
-          <div class="row g-2">
+          <div class="row justify-content-center g-2">
 
-            <div class="offset-md-1  col-md-3">
+            <div class="  col-md-3">
               <v-text-field type="date" v-model="form.birth_date" label="Birthday*" outlined dense
-                :error-messages="formErrors.birth_date" @input="calculateAge"></v-text-field>
+                :error-messages="formErrors.birth_date" @input="calculateAge" required></v-text-field>
             </div>
-            <div class="col-md-1">
-
+            <div class="col-md-3">
               <v-text-field v-model="form.age" label="Age" outlined dense :error-messages="formErrors.age"
                 readonly></v-text-field>
             </div>
@@ -108,8 +121,8 @@
           </div>
 
 
-          <!-- <div class="row g-2">
-          <div class="offset-md-1 col-md-3">
+          <!-- <div class="row justify-content-center g-2">
+          <div class=" col-md-3">
 
 
            <v-text-field  type="email" v-model="form.email" label="E-mail" outlined dense
@@ -135,14 +148,16 @@
 
           </div>
         </div>-->
-          <div class="row">
-            <div class="col-md-12 offset-md-1">
-              <b>PROOF OF IDENTIFICATION </b> <br>
 
+
+          <div class="row justify-content-center">
+            <div class="col-md-12 ">
+              <b>PROOF OF IDENTIFICATION </b> <br>
+              <hr>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4 offset-md-1 ">
+          <div class="row justify-content-center">
+            <div class="col-md-6  ">
               <p>Upload a clear copy of your valid ID</p>
 
               <p> Accepted valid IDS:</p>
@@ -172,8 +187,8 @@
 
           </div>
 
-          <div class="row">
-            <div class="col-md-4 offset-md-1 ">
+          <div class="row justify-content-center">
+            <div class="col-md-6  ">
               <p>Upload/Take a picture of yourself</p>
             </div>
             <div class="col-md-6">
@@ -188,8 +203,8 @@
           </div>
 
 
-          <div class="row">
-            <div class="col-md-10 offset-md-1 " v-if="formErrors && formErrors.full_name">
+          <div class="row justify-content-center">
+            <div class="col-md-12  " v-if="formErrors && formErrors.full_name">
 
 
               <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
@@ -201,13 +216,22 @@
 
           </div>
 
-          <div class="row ">
-            <div class="offset-md-1  col-md-10">
+          <div class="row justify-content-center ">
+            <div class="col-auto">
 
-             
+              <vue-recaptcha sitekey="6Lel0H8pAAAAAGlAu2JVZbVnlqV13L5hWUzjHs7p" :loadRecaptchaScript="true"
+                @verify="captchaVerify" @error="captchaError">                
+              </vue-recaptcha>
+
+             <div class="error--text"> {{ formErrors.captcha_verified }}</div>
+
+            </div>
+            <div class="  col-md-12">
+
               <v-btn color="primary" @click="submitForm" :disabled="submit" :loading="submit" block>
                 REGISTER
               </v-btn>
+
 
               <div class="m-5 text-center">
                 Already have an account? Please <a href="/login">Login</a>
@@ -225,11 +249,13 @@
 </template>
 
 <script>
-import { debounce, cloneDeep, isEmpty } from 'lodash'
+import { debounce, cloneDeep, isEmpty } from 'lodash';
+import VueRecaptcha from 'vue-recaptcha';
 
 export default
   {
-    props: ["provinces"],
+    components: { VueRecaptcha },
+    props: ["provinces",],
     data() {
       return {
         form: {},
@@ -258,7 +284,9 @@ export default
           "X"],
         loading: false,
         submit: false,
-        region: "XI"
+        region: "XI",
+        captcha_verified: false
+
 
       }
     },
@@ -335,6 +363,7 @@ export default
 
       submitForm: debounce(function () {
 
+        this.$refs.form.validate() ;
 
         let formData = new FormData();
         formData.append('valid_id', this.valid_id);
@@ -351,22 +380,41 @@ export default
 
         sessionStorage.setItem('form_stored', JSON.stringify(this.form));
 
-        axios.post("register", formData).then(response => {
+        if (this.captcha_verified) {
+          axios.post("register", formData).then(response => {
 
+            this.submit = false;
+            location.reload();
+          }).catch(error => {
+            this.submit = false;
+            console.log(this.submit);
+            if (error.response.data.errors) { this.formErrors = error.response.data.errors; }
+
+          });
+        } else {
           this.submit = false;
-          location.reload();
-        }).catch(error => {
-          this.submit = false;
-          console.log(this.submit);
-          if (error.response.data.errors) { this.formErrors = error.response.data.errors; }
-
-        });
-
+          this.formErrors.captcha_verified = "Captcha is Required";
+        }
 
       }, 250),
+      captchaVerify(e) {
+        if (e) { this.captcha_verified = true; }
+
+      },
+      captchaError(e) {
+        if (e) {
+          this.captcha_verified = false;
+          this.formErrors.captcha_verified = "Captcha is Expired. Recheck Again";
+
+          console.log(e);
+
+        }
+
+      },
 
     },
     mounted() {
+
 
       if (sessionStorage.getItem('form_stored')) {
         try {
