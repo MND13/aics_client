@@ -3,7 +3,7 @@
     <v-card flat>
       <v-card-title class="text-center">
         <div class="row">
-          <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" />
+          <div class="col-md-12"> <img src="/images/DSWD-DVO-LOGO.png" style="max-width: 250px; height: auto;" /> <br>
             Assistance to Individuals In Crisis (AICS) - Register
           </div>
         </div>
@@ -204,6 +204,7 @@
           <div class="row ">
             <div class="offset-md-1  col-md-10">
 
+             
               <v-btn color="primary" @click="submitForm" :disabled="submit" :loading="submit" block>
                 REGISTER
               </v-btn>

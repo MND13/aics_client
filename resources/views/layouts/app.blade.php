@@ -10,7 +10,10 @@
     <title>AICS Online Application</title>
 
     <!-- Scripts -->
+     
     <script src="{{ asset('js/app.js') }}" defer></script>
+    
+    {!! NoCaptcha::renderJs() !!}
 
     <!-- Fonts 
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

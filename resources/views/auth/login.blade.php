@@ -3,29 +3,27 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
+            <div class="col-6 ">
+                <div class="card justify-content-center p-5">
 
-                    
 
                     <div class="card-body "> <br>
                         <h5 class="text-center mb-5">
                             <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain
                                 alt="DSWD" /> <br><br>
 
-                            Assistance to Individuals in Crisis (AICS)
+                          <b>  Assistance to Individuals in Crisis (AICS)</b>
+                          <hr>
                         </h5>
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="username"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="username" type="text"
-                                        class="form-control @error('username') is-invalid @enderror" name="username"
+                               
+                                <div class="col-md-12">
+                                    <input id="username" type="text" placeholder="Username"
+                                        class="form-control  form-control-lg @error('username') is-invalid @enderror" name="username"
                                         value="{{ old('username') }}" required autocomplete="username" autofocus>
                                     <!-- <input id="username" type="text"  value="icts.fo11@dswd.gov.ph" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus> -->
 
@@ -38,13 +36,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="password"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <!-- <input id="password" value = "DSWD12345" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"> -->
-                                    <input id="password" type="password"
-                                        class="form-control @error('password') is-invalid @enderror" name="password"
+                                 <div class="col-md-12">
+                                    <input id="password" type="password" placeholder="Password"
+                                        class="form-control  form-control-lg  @error('password') is-invalid @enderror" name="password"
                                         required autocomplete="current-password">
 
                                     @error('password')
@@ -55,8 +49,8 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <div class="col-md-6 offset-md-4">
+                            <div class="row justify-content-center">
+                                <div class="col-auto  ">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="remember" id="remember"
                                             {{ old('remember') ? 'checked' : '' }}>
@@ -68,22 +62,47 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Login') }}
-                                    </button>
 
+                            <div class="row justify-content-center">
+                                <div class="col-auto  ">
+                                    <div class="form-check">
+                                        {!! NoCaptcha::display() !!}
+
+
+                                        @if ($errors->has('g-recaptcha-response'))
+                                            <strong
+                                                style="color:#dc3545">{{ $errors->first('g-recaptcha-response') }}</strong>
+                                        @endif
+
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+                            <div class="row px-5">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    {{ __('Login') }}
+                                </button>
+    
+                             
+                            </div>
+                          
+
+
+                            <div class="row justify-content-center" >
+                                <div class="col-auto  ">
+                                  
+                                    <hr>
                                     @guest
 
                                         @if (Route::has('register'))
-                                            <a class="btn btn-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                        Dont have an account? <a class="btn btn-link" href="{{ route('register') }}">{{ __('Register') }} here</a>
                                         @endif
 
                                     @endguest
 
                                     @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                       |  <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
                                         </a>
                                     @endif
