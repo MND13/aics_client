@@ -152,7 +152,7 @@ class AcisCrimsExport implements FromCollection,  WithHeadings, WithMapping
         return [
             $assistance->created_at->format("m/d/Y h:i:s"),
             $entered_by,
-            "",
+            $assistance->assessment->control_no."-".$assistance->id,
             $assistance->status_date,
             $assistance->aics_client->psgc->region_name . "/" . $assistance->aics_client->psgc->region_psgc,
             $assistance->aics_client->psgc->province_name . "/" . $assistance->aics_client->psgc->province_psgc,

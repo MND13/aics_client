@@ -108,10 +108,10 @@ const router = new VueRouter({
             path: "/providers",
             name: "Providers",
             component: Providers,
-            /*meta: {
+            meta: {
                 requiresAuth: true,
-                requiresRoles: ["super-admin", "admin"]
-            }*/
+                requiresRoles: ["super-admin", "admin","social-worker"]
+            }
         },
         {
             path: "/fund_source",
@@ -119,7 +119,7 @@ const router = new VueRouter({
             component: FundSource,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["super-admin", "admin"]
+                requiresRoles: ["super-admin", "admin","social-worker"]
             }
         },
         {   
@@ -164,7 +164,7 @@ const router = new VueRouter({
             component:  Reports,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["super-admin"]
+                requiresRoles: ["super-admin","social-worker","encoder"]
             }            
         },
         {

@@ -118,9 +118,10 @@
 <script>
 import userMixin from './../Mixin/userMixin.js'
 import { debounce, cloneDeep, isEmpty } from 'lodash'
+import authMixin from './../Mixin/authMixin.js'
 
 export default {
-    mixins: [userMixin],
+    mixins: [userMixin,authMixin],
     props: ['user'],
     data() {
         return {
