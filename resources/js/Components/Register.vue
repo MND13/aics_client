@@ -6,7 +6,7 @@
         <div class="row justify-content-center my-0">
           <div class="col-md-12 my-0 py-0">
 
-            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD" ref="logo" />
+            <img style="max-height:64px; max-width:300px" src="images/DSWD-DVO-LOGO.png" contain alt="DSWD" ref="logo" />
             <br>
             <b>Welcome to Assistance to Individuals in Crisis (AICS)! </b>
           </div>

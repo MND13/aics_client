@@ -6,7 +6,7 @@
         <v-list-item-content centered>
           <v-list-item-title>
 
-            <v-img max-height="64" max-width="250px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD"></v-img>
+            <v-img max-height="64" max-width="250px" src="images/DSWD-DVO-LOGO.png" contain alt="DSWD"></v-img>
 
           </v-list-item-title>
         </v-list-item-content>

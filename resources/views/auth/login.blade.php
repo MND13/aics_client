@@ -9,7 +9,7 @@
 
                     <div class="card-body "> <br>
                         <h5 class="text-center mb-5">
-                            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain
+                            <img style="max-height:64px; max-width:300px" src="images/DSWD-DVO-LOGO.png" contain
                                 alt="DSWD" /> <br><br>
 
                           <b>  Assistance to Individuals in Crisis (AICS)</b>
