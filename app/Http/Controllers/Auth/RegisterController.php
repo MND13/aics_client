@@ -76,6 +76,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
 
+
         if (!isset($data['middle_name'])) {
             $data['middle_name'] = NULL;
         }
@@ -86,23 +87,44 @@ class RegisterController extends Controller
         $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
         $data["full_name"] = trim($first_name . " " . $middle_name . " " . $last_name . " " . $ext_name);
 
-        $validator = Validator::make($data, [
-            'first_name' => ['bail', 'required', 'string', 'max:255'],
-            'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
-            'last_name' => ['bail', 'required', 'string', 'max:255'],
-            'ext_name' => ['sometimes', 'string', 'max:255'],
-            'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
-            'full_name' => ['unique:users'],
-            'gender' => ['required'],
-            'psgc_id' => ['required', 'exists:psgcs,id'],
-            'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users'],
-            #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
-            'street_number' => ['required', 'string', 'max:255'],
-            #'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'valid_id' => 'required|file|mimes:jpeg,jpg,png',
-            'client_photo' => 'required|file|mimes:jpeg,jpg,png',
-            
-        ]);
+        if (config('app.env') == 'production') {
+            $fields  = [
+                'first_name' => ['bail', 'required', 'string', 'max:255'],
+                'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
+                'last_name' => ['bail', 'required', 'string', 'max:255'],
+                'ext_name' => ['sometimes', 'string', 'max:255'],
+                'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
+                'full_name' => ['unique:users'],
+                'gender' => ['required'],
+                'psgc_id' => ['required', 'exists:psgcs,id'],
+                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users'],
+                #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
+                'street_number' => ['required', 'string', 'max:255'],
+                #'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'valid_id' => 'required|file|mimes:jpeg,jpg,png',
+                'client_photo' => 'required|file|mimes:jpeg,jpg,png',
+                'g-recaptcha-response' =>  'required|captcha',
+            ];
+        } else {
+            $fields  = [
+                'first_name' => ['bail', 'required', 'string', 'max:255'],
+                'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
+                'last_name' => ['bail', 'required', 'string', 'max:255'],
+                'ext_name' => ['sometimes', 'string', 'max:255'],
+                'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
+                'full_name' => ['unique:users'],
+                'gender' => ['required'],
+                'psgc_id' => ['required', 'exists:psgcs,id'],
+                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'street_number' => ['required', 'string', 'max:255'],
+                'valid_id' => 'required|file|mimes:jpeg,jpg,png',
+                'client_photo' => 'required|file|mimes:jpeg,jpg,png',
+
+            ];
+        }
+
+
+        $validator = Validator::make($data,  $fields);
 
         $validator->after(function ($validator) use ($data, $first_name, $middle_name, $last_name, $ext_name) {
             if (isset($data['birth_date'])) {
@@ -133,93 +155,100 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $usernametemp = substr($data['first_name'], 0, 1) .  substr($data['middle_name'], 0, 1) . $data['last_name'];
-        $username = $this->generateUserName($usernametemp);
-        $middle_name = isset($data['middle_name']) && $data['middle_name'] != "NMN" ?  strtoupper($data['middle_name']) : NULL;
-
-        $first_name = mb_strtoupper(trim($data['first_name'] ?? null));
-        $middle_name = mb_strtoupper(trim($middle_name));
-        $last_name = mb_strtoupper(trim($data['last_name'] ?? null));
-        $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
-
-        $user =  User::create([
-            'username' => strtoupper($username),
-            'first_name' => $first_name,
-            'middle_name' => $middle_name,
-            'last_name' =>  $last_name,
-            'ext_name' => $ext_name,
-            'birth_date' => $data['birth_date'],
-            'psgc_id' => $data['psgc_id'],
-            'gender' => $data['gender'],
-            'mobile_number' => $data['mobile_number'],
-            'email' => isset($data['email']) ?  $data['email'] : NULL,
-            'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
-            'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
-            'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
-            'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
-            'mobile_verified' => 1,
-        ]);
-
-        if ($user->id) {
-            $year = date("Y");
-            $month = date("m");
-
-            $files = request('valid_id');
-            $filename = $files->hashName();
-
-            $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
-            $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
-            $img->destroy();
-            $url = Storage::url($path_OG);
-            $doc = new ProfileDocuments([
-                'file_directory' => $url,
-                'user_id' => $user->id,
-                'name' => "valid_id",
-            ]);
-            $doc->save();
-
-            $files = request('client_photo');
-            $filename = $files->hashName();
+        try {
+            //code...
 
 
+            $usernametemp = substr($data['first_name'], 0, 1) .  substr($data['middle_name'], 0, 1) . $data['last_name'];
+            $username = $this->generateUserName($usernametemp);
+            $middle_name = isset($data['middle_name']) && $data['middle_name'] != "NMN" ?  strtoupper($data['middle_name']) : NULL;
 
-            $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
-            $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
-            $img->destroy();
-            $url = Storage::url($path_OG);
-            $doc = new ProfileDocuments([
-                'file_directory' => $url,
-                'user_id' => $user->id,
-                'name' => "client_photo",
-            ]);
-            $doc->save();
+            $first_name = mb_strtoupper(trim($data['first_name'] ?? null));
+            $middle_name = mb_strtoupper(trim($middle_name));
+            $last_name = mb_strtoupper(trim($data['last_name'] ?? null));
+            $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
 
-            /*$files = request('client_photo');
-            $path = Storage::disk('s3')->put("public/uploads/$year/$month/" . $user->uuid, $files);
-            $url = Storage::url($path);
-            $doc = new ProfileDocuments([
-                'file_directory' => $url,
-                'user_id' => $user->id,
-                'name' => "client_photo",
-            ]);
-            $doc->save();*/
+            $fields = [
+                'username' => strtoupper($username),
+                'first_name' => $first_name,
+                'middle_name' => $middle_name,
+                'last_name' =>  $last_name,
+                'ext_name' => $ext_name,
+                'birth_date' => $data['birth_date'],
+                'psgc_id' => $data['psgc_id'],
+                'gender' => $data['gender'],
+                'mobile_number' => $data['mobile_number'],
+                'email' => isset($data['email']) ?  $data['email'] : NULL,
+                'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
+                'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
+                'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
+                'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
+
+            ];
+
+            if (config('app.env') != 'production') {
+                $fields["mobile_verified"] = 1;
+            }
+
+
+            $user =  User::create($fields);
             $user->assignRole('user');
 
-            $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account. 
+            if ($user->id) {
+                #if (config('app.env') == 'production') {
+
+                $year = date("Y");
+                $month = date("m");
+
+                $files = request('valid_id');
+                $filename = $files->hashName();
+
+                $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
+                $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+                $img->destroy();
+                $url = Storage::url($path_OG);
+                $doc = new ProfileDocuments([
+                    'file_directory' => $url,
+                    'user_id' => $user->id,
+                    'name' => "valid_id",
+                ]);
+                $doc->save();
+
+                $files = request('client_photo');
+                $filename = $files->hashName();
+
+
+
+                $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                $path_OG = "public/uploads/$year/$month/" . $user->uuid . "/" . $filename;
+                $path = Storage::disk('s3')->put($path_OG,  $img->stream()->__toString());
+                $img->destroy();
+                $url = Storage::url($path_OG);
+                $doc = new ProfileDocuments([
+                    'file_directory' => $url,
+                    'user_id' => $user->id,
+                    'name' => "client_photo",
+                ]);
+                $doc->save();
+
+                $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account. 
 USERNAME: " . strtoupper($username)  . " 
 Ang initial na password ay Apelyedo at Birthday example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
 ANG PAG PROSESO AY LIBRE.";
-          #  $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
-           # $res = $response->collect();
-        }
+                $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
+                $res = $response->collect();
+                #}
+            }
 
-        return $user;
+            return $user;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function showRegistrationForm()

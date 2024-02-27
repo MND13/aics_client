@@ -46,13 +46,11 @@ class LoginController extends Controller
     }
 
     protected function validateLogin(Request $request)
-    {   
-       
-        $request->validate([                                                                                                                                                                                                                                                           
-            'g-recaptcha-response' => 'required|captcha'                                                                                                                                                                                                                                       
-        ]);
-   
-
+    {
+        if (config('app.env') == 'production') {
+            $request->validate([
+                'g-recaptcha-response' => 'required|captcha'
+            ]);
+        }
     }
-    
 }

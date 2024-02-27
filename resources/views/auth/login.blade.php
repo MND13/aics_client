@@ -62,7 +62,7 @@
                                 </div>
                             </div>
 
-
+                           @if(config('app.env') == 'production')
                             <div class="row justify-content-center">
                                 <div class="col-auto  ">
                                     <div class="form-check">
@@ -77,6 +77,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                            
                             <div class="row px-5">

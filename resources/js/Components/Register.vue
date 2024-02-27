@@ -6,7 +6,8 @@
         <div class="row justify-content-center my-0">
           <div class="col-md-12 my-0 py-0">
 
-            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD" /> <br>
+            <img style="max-height:64px; max-width:300px" src="/images/DSWD-DVO-LOGO.png" contain alt="DSWD" ref="logo" />
+            <br>
             <b>Welcome to Assistance to Individuals in Crisis (AICS)! </b>
           </div>
         </div>
@@ -17,6 +18,14 @@
           <p> Register to create your account & immediately request for Medical, Educational, Funeral, Food,
             Transportation or Other Cash Assistance.</p>
           <br>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-md-12  " v-if="formErrors && formErrors.full_name">
+            <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
+              {{ e }}
+            </v-alert>
+          </div>
         </div>
 
 
@@ -203,28 +212,15 @@
           </div>
 
 
-          <div class="row justify-content-center">
-            <div class="col-md-12  " v-if="formErrors && formErrors.full_name">
 
-
-              <v-alert v-for="(e, i) in formErrors.full_name " :key="i" type="error">
-                {{ e }}
-              </v-alert>
-
-
-            </div>
-
-          </div>
 
           <div class="row justify-content-center ">
-            <div class="col-auto">
-
-              <vue-recaptcha sitekey="6Lel0H8pAAAAAGlAu2JVZbVnlqV13L5hWUzjHs7p" :loadRecaptchaScript="true"
-                @verify="captchaVerify" @error="captchaError">                
+            <div v-if="showcpatcha" class="col-auto">
+              <vue-recaptcha :sitekey="nocaptchakey" :loadRecaptchaScript="true" @verify="onCaptchaVerified"
+                @expired="onCaptchaExpired">
               </vue-recaptcha>
-
-             <div class="error--text"> {{ formErrors.captcha_verified }}</div>
-
+              <div class="error--text"> {{
+                $data["formErrors"]["g-recaptcha-response"] }}</div>
             </div>
             <div class="  col-md-12">
 
@@ -285,8 +281,10 @@ export default
         loading: false,
         submit: false,
         region: "XI",
-        captcha_verified: false
-
+        captcha_verified: false,
+        nocaptchakey: process.env.MIX_NOCAPTCHA_SITEKEY,
+        showcpatcha: process.env.MIX_APP_ENV == "production" ? true : false,
+        recaptcha: '',
 
       }
     },
@@ -319,7 +317,8 @@ export default
       url_selfie() {
         if (!this.client_photo) return;
         return URL.createObjectURL(this.client_photo);
-      }
+      },
+
     },
     methods:
     {
@@ -363,11 +362,11 @@ export default
 
       submitForm: debounce(function () {
 
-        this.$refs.form.validate() ;
 
         let formData = new FormData();
         formData.append('valid_id', this.valid_id);
         formData.append('client_photo', this.client_photo);
+        formData.append('g-recaptcha-response', this.recaptcha);
 
         if (this.form.ext_name == "") { delete this.form["ext_name"]; }
 
@@ -380,37 +379,40 @@ export default
 
         sessionStorage.setItem('form_stored', JSON.stringify(this.form));
 
-        if (this.captcha_verified) {
-          axios.post("register", formData).then(response => {
 
-            this.submit = false;
-            location.reload();
-          }).catch(error => {
-            this.submit = false;
-            console.log(this.submit);
-            if (error.response.data.errors) { this.formErrors = error.response.data.errors; }
-
-          });
-        } else {
+        axios.post("register", formData).then(response => {
           this.submit = false;
-          this.formErrors.captcha_verified = "Captcha is Required";
-        }
+          location.reload();
+          
+          
+        }).catch(error => {
+          this.submit = false;
+          if (error.response.data.errors) {
+            this.formErrors = error.response.data.errors;
+            // this.$refs.logo.scrollIntoView({ behavior: 'smooth' });
+            this.$nextTick(() => {
+              const el = this.$el.querySelector(".error--text:first-of-type");
+              this.$vuetify.goTo(el);
+              return;
+            });
+          }
+
+        });
 
       }, 250),
-      captchaVerify(e) {
-        if (e) { this.captcha_verified = true; }
+
+
+      onCaptchaVerified: function (recaptchaToken) {
+        this.recaptcha = recaptchaToken
+        this.validateCaptcha = true
+
 
       },
-      captchaError(e) {
-        if (e) {
-          this.captcha_verified = false;
-          this.formErrors.captcha_verified = "Captcha is Expired. Recheck Again";
-
-          console.log(e);
-
-        }
-
+      onCaptchaExpired: function () {
+        this.$refs.recaptcha.reset();
       },
+
+
 
     },
     mounted() {

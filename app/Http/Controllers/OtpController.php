@@ -12,8 +12,6 @@ class OtpController extends Controller
 {
     public static function generate()
     {   
-        
-
         if (Auth::user()) {
             $otp = new UserOtps;
             $otp->user_id = Auth::user()->id;
