@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Offices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OfficesRequest;
 
 
 class OfficesController extends Controller
@@ -34,7 +35,7 @@ class OfficesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OfficesRequest $request)
     {
         DB::beginTransaction();
 
@@ -79,7 +80,7 @@ class OfficesController extends Controller
      * @param  \App\Models\Offices  $offices
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(OfficesRequest $request)
     {
         $office = Offices::findOrFail($request->id);
         
