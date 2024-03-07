@@ -6,6 +6,7 @@ use App\Models\SignatoriesSettings;
 use Illuminate\Http\Request;
 use App\Models\Signatories;
 use Illuminate\Support\Arr;
+use App\Http\Requests\SignatorySettingsRequest;
 
 
 class SignatoriesSettingsController extends Controller
@@ -51,8 +52,10 @@ class SignatoriesSettingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SignatorySettingsRequest $request)
     {
+        
+
         try {
             $s = new SignatoriesSettings;
             $s->fill($request->toArray());
@@ -93,7 +96,7 @@ class SignatoriesSettingsController extends Controller
      * @param  \App\Models\SignatoriesSettings  $signatoriesSettings
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SignatoriesSettings $signatoriesSettings)
+    public function update(SignatorySettingsRequest $request, SignatoriesSettings $signatoriesSettings)
     {
 
         try {
