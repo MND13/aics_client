@@ -18,14 +18,7 @@
                         <v-select label="Txn Type" :items="txn_type" item-value="value" item-text="name"
                             v-model="form.movement" :error-messages="formErrors.movement">
                         </v-select>
-                        <!-- Amount<CurrencyInput v-model="form.amount"
-                            :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
-                            
-                            <select name="" id="" v-model="form.movement" class="form-control">
-                            <option :value="e.value" v-for="(e, i) in txn_type" :key="i">{{ e.name }}</option>
-                        </select>-->
-
-
+                        
                         <v-text-field label="Remarks" v-model="form.remarks" :error-messages="formErrors.remarks">
                         </v-text-field>
 
