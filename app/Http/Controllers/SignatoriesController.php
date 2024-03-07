@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Signatories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SignatoryPostRequest;
+
 
 class SignatoriesController extends Controller
 {
@@ -33,8 +36,9 @@ class SignatoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SignatoryPostRequest $request)
     {
+
         $sig = new Signatories;
         $sig->fill($request->toArray());
         $sig->save();
@@ -73,8 +77,9 @@ class SignatoriesController extends Controller
      * @param  \App\Models\Signatories  $signatories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Signatories $signatories)
+    public function update(SignatoryPostRequest $request, Signatories $signatories)
     {
+       
         $sig = Signatories::findOrFail($request->id);
         if ($sig) {
             $sig->fill($request->toArray());
@@ -93,7 +98,6 @@ class SignatoriesController extends Controller
         $sig = Signatories::findOrFail($request->id);
         if ($sig) {
             $sig->delete();
-            
         }
     }
 }
