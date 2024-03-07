@@ -14,7 +14,7 @@ class ChangeColumnInAccountingJournalTransactionsTable extends Migration
     public function up()
     {
         Schema::table('accounting_journal_transactions', function (Blueprint $table) {
-            //
+            $table->longText('ref_class')->change();
         });
     }
 
@@ -26,7 +26,7 @@ class ChangeColumnInAccountingJournalTransactionsTable extends Migration
     public function down()
     {
         Schema::table('accounting_journal_transactions', function (Blueprint $table) {
-            //
+            $table->string('ref_class')->change();
         });
     }
 }

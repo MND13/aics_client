@@ -5,31 +5,33 @@
                 <v-card-title>Charging</v-card-title>
                 <v-card-text>
 
-                    <form @submit.prevent="submitForm" enctype="multipart/form-data" id="charging"  ref="charging">
-                        Fund Source
-                        <select v-model="form.fund_source_id" name="" id="" class="form-control" @change="viewTxn()">
-                            <option :value="fund_source.id" v-for="fund_source in fund_sources" :key="fund_source.id">
-                                {{ fund_source.name }} {{ fund_source.description }}
-                            </option>
-                        </select>
-                        Amount
+                    <form @submit.prevent="submitForm" enctype="multipart/form-data" id="charging" ref="charging">
 
-                        <CurrencyInput v-model="form.amount"
+                        <v-select v-model="form.fund_source_id" :items="fund_sources" @change="viewTxn()"
+                            item-value="id" item-text="name" label="Fund Source"
+                            :error-messages="formErrors.fund_source_id">
+                        </v-select>
+
+                        <v-text-field v-model="form.amount" label="Amount"
+                            :error-messages="formErrors.amount"></v-text-field>
+
+                        <v-select label="Txn Type" :items="txn_type" item-value="value" item-text="name"
+                            v-model="form.movement" :error-messages="formErrors.movement">
+                        </v-select>
+                        <!-- Amount<CurrencyInput v-model="form.amount"
                             :options="{ currency: 'PHP', currencyDisplay: 'hidden', autoDecimalDigits: 'true' }" />
-
-                        <!--  <input type="text" name="" id="" v-model="form.amount" class="form-control">-->
-
-                        Txn Type
-                        <select name="" id="" v-model="form.movement" class="form-control">
+                            
+                            <select name="" id="" v-model="form.movement" class="form-control">
                             <option :value="e.value" v-for="(e, i) in txn_type" :key="i">{{ e.name }}</option>
-                        </select>
+                        </select>-->
 
-                        Remarks
-                        <input type="text" name="" id="" v-model="form.remarks" class="form-control">
+
+                        <v-text-field label="Remarks" v-model="form.remarks" :error-messages="formErrors.remarks">
+                        </v-text-field>
+
                         <br>
                         <v-btn type="submit" large class="mt-2 --white-text" color="primary" :disabled="submit"
                             v-if="hasRoles(['super-admin'])">
-
                             SUBMIT
                         </v-btn>
                     </form>
@@ -40,7 +42,9 @@
         <div class="col-md-8">
 
             <v-data-table dense :items-per-page="10" :items="transactions" :headers="txn_headers">
-
+                <template v-slot:item.created_at="{ item }">
+                    {{ item.created_at | formatDateOnly }}
+                </template>
             </v-data-table>
 
 
@@ -78,7 +82,9 @@ export default {
                 { name: "Allocation", value: 1 },
                 { name: "Withdrawal", value: -1 }
             ],
-            transactions:[],
+            transactions: [],
+            formErrors: {},
+
         };
     },
     methods:
@@ -95,14 +101,12 @@ export default {
                 alert(response.data.message);
                 this.$refs.charging.reset();
                 this.viewTxn();
+            }).catch(err => {
+                this.submit = false;
+                this.formErrors = err.response.data.errors
             });
 
         }, 250),
-        
-        getAmount(item) {
-            let x = item.amount * item.movement;
-            return x.toLocaleString();
-        },
 
         getBalance() {
             axios.get(route()).then(res => {

@@ -13,7 +13,7 @@ class AicsAssessmentFundSourceController extends Controller
 {
     public function index()
     {
-       
+
         return FundSource::with("journal", "journal.transactions")->get();
     }
 
@@ -24,8 +24,11 @@ class AicsAssessmentFundSourceController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
+                'fund_source_id' => 'required|exists:fund_sources,id',
                 'amount' => 'required',
                 'movement' => 'required',
+            ], [
+                'movement.required' => 'Txn Type is required.',
             ]);
 
             if ($validator->fails()) {
@@ -76,14 +79,13 @@ class AicsAssessmentFundSourceController extends Controller
             $txn = $fs->journal->transactions->sortByDesc("created_at");
 
             $txn->map(function ($t) {
-              
-                $t->credit = $t->credit/100;
-                $t->debit = $t->debit/100;
-                return $t;
 
+                $t->credit = $t->credit / 100;
+                $t->debit = $t->debit / 100;
+                return $t;
             });
 
-            return $txn->values()->all()  ;
+            return $txn->values()->all();
         }
         return $fs;
     }

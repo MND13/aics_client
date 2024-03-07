@@ -20,7 +20,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\OtpController;
 use Image;
-
+use App\Rules\ValidCellphoneNumber;
 
 
 
@@ -97,7 +97,7 @@ class RegisterController extends Controller
                 'full_name' => ['unique:users'],
                 'gender' => ['required'],
                 'psgc_id' => ['required', 'exists:psgcs,id'],
-                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber( $data['mobile_number'])],
                 #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
                 'street_number' => ['required', 'string', 'max:255'],
                 #'password' => ['required', 'string', 'min:8', 'confirmed'],
