@@ -47,8 +47,8 @@
 
         <template v-slot:item.aics_client="{ item }">
           <span v-if="item.aics_client">{{
-            item.aics_client.last_name }}, {{ item.aics_client.first_name }} {{ item.aics_client.middle_name }} {{
-    item.aics_client.ext_name }}
+      item.aics_client.last_name }}, {{ item.aics_client.first_name }} {{ item.aics_client.middle_name }} {{
+      item.aics_client.ext_name }}
           </span>
         </template>
 
@@ -159,7 +159,7 @@ export default {
 
         { text: 'Date Submitted', value: 'created_at', },
         { text: 'Schedule', value: 'schedule', },
-        { text: 'Beneficiary', value: 'aics_client', },
+        { text: 'Client', value: 'aics_client', },
         { text: 'Beneficiary', value: 'aics_beneficiary', },
         { text: 'Mobile No.', value: 'aics_client.mobile_number', },
         { text: 'Assistance', value: 'aics_type', },
@@ -271,4 +271,3 @@ export default {
 
 }
 </script>
-
