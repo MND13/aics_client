@@ -38,6 +38,9 @@ class UserRequest extends FormRequest
                 'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
                 'role' => 'sometimes|required',
                 'password' => 'sometimes|required|confirmed|max:255|min:8',
+                'mobile_number' => ['required', 'numeric', 'digits:11', Rule::unique('users')->ignore(request('id'))],
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(request('id'))],
+          
             ];
         } else {
             $rules = [

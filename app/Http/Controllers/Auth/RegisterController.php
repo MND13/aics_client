@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\OtpController;
 use Image;
 use App\Rules\ValidCellphoneNumber;
+use App\Rules\AllowedStringName;
 
 
 
@@ -87,40 +88,27 @@ class RegisterController extends Controller
         $ext_name = mb_strtoupper(trim($data['ext_name'] ?? null));
         $data["full_name"] = trim($first_name . " " . $middle_name . " " . $last_name . " " . $ext_name);
 
-        if (config('app.env') == 'production') {
-            $fields  = [
-                'first_name' => ['bail', 'required', 'string', 'max:255'],
-                'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
-                'last_name' => ['bail', 'required', 'string', 'max:255'],
-                'ext_name' => ['sometimes', 'string', 'max:255'],
-                'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
-                'full_name' => ['unique:users'],
-                'gender' => ['required'],
-                'psgc_id' => ['required', 'exists:psgcs,id'],
-                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber( $data['mobile_number'])],
-                #'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
-                'street_number' => ['required', 'string', 'max:255'],
-                #'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'valid_id' => 'required|file|mimes:jpeg,jpg,png',
-                'client_photo' => 'required|file|mimes:jpeg,jpg,png',
-                'g-recaptcha-response' =>  'required|captcha',
-            ];
-        } else {
-            $fields  = [
-                'first_name' => ['bail', 'required', 'string', 'max:255'],
-                'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
-                'last_name' => ['bail', 'required', 'string', 'max:255'],
-                'ext_name' => ['sometimes', 'string', 'max:255'],
-                'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
-                'full_name' => ['unique:users'],
-                'gender' => ['required'],
-                'psgc_id' => ['required', 'exists:psgcs,id'],
-                'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber( $data['mobile_number'])],
-                'street_number' => ['required', 'string', 'max:255'],
-                'valid_id' => 'required|file|mimes:jpeg,jpg,png',
-                'client_photo' => 'required|file|mimes:jpeg,jpg,png',
+        $fields = [
+            'first_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['first_name'])],
+            'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
+            'last_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['last_name'])],
+            'ext_name' => ['sometimes', 'string', 'max:255'],
+            'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
+            'full_name' => ['unique:users', new AllowedStringName($data['full_name'])],
+            'gender' => ['required'],
+            'psgc_id' => ['required', 'exists:psgcs,id'],
+            'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber($data['mobile_number'])],
+            'street_number' => ['required', 'string', 'max:255'],
+            'valid_id' => 'required|file|mimes:jpeg,jpg,png',
+            'client_photo' => 'required|file|mimes:jpeg,jpg,png',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users',],
+            # 'g-recaptcha-response' =>  'required|captcha',
 
-            ];
+
+        ];
+
+        if (config('app.env') === 'production') {
+            $fields['g-recaptcha-response'] = ['required', 'captcha'];
         }
 
 
@@ -178,7 +166,7 @@ class RegisterController extends Controller
                 'psgc_id' => $data['psgc_id'],
                 'gender' => $data['gender'],
                 'mobile_number' => $data['mobile_number'],
-                'email' => isset($data['email']) ?  $data['email'] : NULL,
+                'email' => $data['email'],
                 'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
                 'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
                 'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
@@ -220,8 +208,6 @@ class RegisterController extends Controller
                 $files = request('client_photo');
                 $filename = $files->hashName();
 
-
-
                 $img = Image::make($files->getRealPath())->resize(150, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
@@ -236,9 +222,11 @@ class RegisterController extends Controller
                 ]);
                 $doc->save();
 
-                $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account. 
+                $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account.  
+
 USERNAME: " . strtoupper($username)  . " 
-Ang initial na password ay Apelyedo at Birthday example: DELA-CRUZ" . date('md', strtotime($data['birth_date'])) . ". 
+PASSWORD:" . Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])) . " 
+
 ANG PAG PROSESO AY LIBRE.";
                 $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));
                 $res = $response->collect();

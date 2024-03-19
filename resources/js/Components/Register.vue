@@ -6,7 +6,8 @@
         <div class="row justify-content-center my-0">
           <div class="col-md-12 my-0 py-0">
 
-            <img style="max-height:64px; max-width:300px" src="images/DSWD-DVO-LOGO.png" contain alt="DSWD" ref="logo" />
+            <img style="max-height:64px; max-width:300px" src="images/DSWD-DVO-LOGO.png" contain alt="DSWD"
+              ref="logo" />
             <br>
             <b>Welcome to Assistance to Individuals in Crisis (AICS)! </b>
           </div>
@@ -83,8 +84,8 @@
             </div>
             <div class="col-md-3">
               <v-autocomplete v-model="province_name" :loading="loading" :items="provinces" @change="getCities()"
-                cache-items hide-no-data hide-details label="Province" outlined item-text="province_name" item-value="id"
-                dense></v-autocomplete>
+                cache-items hide-no-data hide-details label="Province" outlined item-text="province_name"
+                item-value="id" dense></v-autocomplete>
             </div>
             <div class="col-md-3">
               <v-autocomplete v-model="city_name" :disabled="!cities" :loading="loading" :items="cities"
@@ -130,33 +131,33 @@
           </div>
 
 
-          <!-- <div class="row justify-content-center g-2">
-          <div class=" col-md-3">
+          <div class="row dense">
+            <div class=" col-md-3">
 
 
-           <v-text-field  type="email" v-model="form.email" label="E-mail" outlined dense
-              :error-messages="formErrors.email"></v-text-field>
+              <v-text-field type="email" v-model="form.email" label="E-mail" outlined dense
+                :error-messages="formErrors.email"></v-text-field>
 
+            </div>
+
+            <div class=" col-md-3">
+
+              <v-text-field type="password" v-model="form.password" label="Password" outlined dense
+                :error-messages="formErrors.password"></v-text-field>
+
+
+            </div>
+
+            <div class=" col-md-3">
+
+
+              <v-text-field type="password" v-model="form.password_confirmation" label="Confirm Password" outlined dense
+                :error-messages="formErrors.password_confirmation"></v-text-field>
+
+
+
+            </div>
           </div>
-
-          <div class=" col-md-3">
-
-           <v-text-field  type="password" v-model="form.password" label="Password" outlined dense
-              :error-messages="formErrors.password"></v-text-field>
-
-
-          </div>
-
-          <div class=" col-md-3">
-
-
-           <v-text-field  type="password" v-model="form.password_confirmation" label="Confirm Password" outlined dense
-              :error-messages="formErrors.password_confirmation"></v-text-field>
-
-
-
-          </div>
-        </div>-->
 
 
           <div class="row justify-content-center">
@@ -201,8 +202,8 @@
               <p>Upload/Take a picture of yourself</p>
             </div>
             <div class="col-md-6">
-              <v-file-input ref="file_selfie" label="Upload/Take a picture of yourself" accept="image/*" capture="camera"
-                :error-messages="formErrors.client_photo" v-model="client_photo"></v-file-input>
+              <v-file-input ref="file_selfie" label="Upload/Take a picture of yourself" accept="image/*"
+                capture="camera" :error-messages="formErrors.client_photo" v-model="client_photo"></v-file-input>
 
               <div class="preview">
                 <v-img v-if="url_selfie" :src="url_selfie" tyle="max-width: 300px;" />
@@ -220,7 +221,7 @@
                 @expired="onCaptchaExpired">
               </vue-recaptcha>
               <div class="error--text"> {{
-                $data["formErrors"]["g-recaptcha-response"] }}</div>
+            $data["formErrors"]["g-recaptcha-response"] }}</div>
             </div>
             <div class="  col-md-12">
 
@@ -383,8 +384,8 @@ export default
         axios.post("register", formData).then(response => {
           this.submit = false;
           location.reload();
-          
-          
+
+
         }).catch(error => {
           this.submit = false;
           if (error.response.data.errors) {

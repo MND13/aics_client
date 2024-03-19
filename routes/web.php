@@ -4,6 +4,7 @@ use App\Http\Controllers\AicsBeneficiaryController;
 use App\Http\Controllers\AicsClientController;
 use App\Http\Controllers\AicsDocumentController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,3 +33,14 @@ Route::get('/holiday-crawler', [App\Models\HolidayCrawler::class, 'crawler'])->n
 Route::get('/verify_mobile', [App\Models\OtpController::class, 'index'])->name('otp.form');
 
 Route::get('/{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any','^(?!js/).*')->middleware('mobile_verified');
+Route::get('send-mail', function () {
+   
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+   
+    Mail::to('mari.deleon00@gmail.com')->send(new \App\Mail\MyTestMail($details));
+   
+    dd("Email is Sent.");
+});

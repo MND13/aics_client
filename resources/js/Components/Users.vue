@@ -26,7 +26,7 @@
 
 
             <v-select v-model="formData.office_id" label="Office" :items="offices" item-value="id" item-text="name"
-              :error-messages="formErrors.office_id" v-if="formData.role != 'user'" >
+              :error-messages="formErrors.office_id" v-if="formData.role != 'user'">
               <template v-slot:selection="{ item }">
                 {{ getText(item) }}
               </template>
@@ -45,15 +45,17 @@
               <v-text-field v-model="formData.email" label="E-mail" :error-messages="formErrors.email"></v-text-field>
 
 
-              <v-text-field v-model="formData.street_number" label="Street Number" :error-messages="formErrors.street_number"></v-text-field>
+              <v-text-field v-model="formData.street_number" label="Street Number"
+                :error-messages="formErrors.street_number"></v-text-field>
 
 
-              <v-autocomplete label="Address (Brgy, City, Province)" v-model="formData.psgc_id" :items="psgcs" item-value="id"
-                item-text="brgy_name" track-by="id">
+              <v-autocomplete label="Address (Brgy, City, Province)" v-model="formData.psgc_id" :items="psgcs"
+                item-value="id" item-text="brgy_name" track-by="id">
                 <template v-slot:item="data">
                   <v-list-item-content>
                     <v-list-item-title>{{ data.item.brgy_name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ data.item.city_name }}, {{ data.item.province_name }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ data.item.city_name }}, {{ data.item.province_name
+                      }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </template>
               </v-autocomplete>
@@ -74,9 +76,9 @@
               hint="At least 8 characters" counter
               @click:append="showPasswordConfirmation = !showPasswordConfirmation"></v-text-field>
 
-           <!--IF ROLE IS USER && FORM ID -->
+            <!--IF ROLE IS USER && FORM ID -->
             <v-btn color="primary" class="mr-4" @click="submitForm" :disabled="submit"
-              v-if="hasRoles(['super-admin', 'admin']) ">
+              v-if="hasRoles(['super-admin', 'admin'])">
               <span>{{ formType }} User</span>
             </v-btn>
 
@@ -94,7 +96,8 @@
         <v-card-title>
           User Table
           <v-spacer></v-spacer>
-          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
+            hide-details></v-text-field>
 
         </v-card-title>
         <v-card-text>
@@ -261,9 +264,10 @@ export default {
       this.formData.role = this.userRole(user);
     },
     deleteUser(user) {
-      if (confirm(`Are you sure you want to delete ${user.email}`)) {
+      if (confirm(`Are you sure you want to delete ${user.first_name} ${user.last_name}`)) {
         axios.delete(route('users.destroy', user.id))
           .then(res => {
+            this.resetForm();
             this.getUsers();
           })
           .catch(err => { })
