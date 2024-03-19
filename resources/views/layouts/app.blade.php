@@ -26,6 +26,8 @@
         @import url('node_modules/material-design-icons-iconfont/dist/material-design-icons.css');
       </style> -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+
     <!--<link href="https://cdn.jsdelivr.net/npm/mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">-->
 
     @routes()
