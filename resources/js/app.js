@@ -15,8 +15,8 @@ import VueRouter from "vue-router";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import App from "./components/App.vue";
-import Home from "./components/Home.vue";
+import App from "./Components/App.vue";
+import Home from "./Components/Home.vue";
 import moment from 'moment';
 import 'viewerjs/dist/viewer.css'
 import VueViewer from 'v-viewer'
@@ -197,8 +197,8 @@ Vue.filter("formatDateOnly", function (value) {
     }
 });
 
-Vue.component('register-component', require('./components/Register.vue').default);
-Vue.component('otp-gen-component', require('./components/OtpGen.vue').default);
+Vue.component('register-component', require('./Components/Register.vue').default);
+Vue.component('otp-gen-component', require('./Components/OtpGen.vue').default);
 
 
 export default new Vuetify({
@@ -210,7 +210,7 @@ export default new Vuetify({
 
 const app = new Vue({
     el: '#app',
-    components: { App },
+    Components: { App },
     router,
     vuetify: new Vuetify(),
 });
