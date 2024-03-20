@@ -18,7 +18,7 @@ class UserOtps extends Model
         parent::boot();
         self::creating(function ($model) {
             $model->otp = rand(123456, 999999);
-            $model->expire_at = now()->addMinutes(15);
+            $model->expire_at = now()->addMinutes(10);
         });
        
     }

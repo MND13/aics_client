@@ -6,7 +6,7 @@
             <v-col cols="9" class="ma-auto">
 
                 <v-card flat tile outlined class="p-auto text-center">
-                    <img src="/images/DSWD-DVO-LOGO.png" class="m-5" style="max-width: 60%; height: auto;" />
+                    <img src="images/DSWD-DVO-LOGO.png" class="m-5" style="max-width: 60%; height: auto;" />
 
                     <v-spacer></v-spacer>
                     <v-card-title class="justify-center">HI, {{ user.full_name }}! <br>
@@ -99,13 +99,14 @@ export default {
 
                 this.$refs.form.reset()
             }).catch(e => {
+                this.loading = false;
                 this.formErrors = e.response.data.message
             });
         }
     },
     mounted()
     {
-        this.otp_gen();
+      //  this.otp_gen();
     }
 }
 </script>
