@@ -215,7 +215,4 @@ const app = new Vue({
     vuetify: new Vuetify(),
 });
 
-console.log(process.env.MIX_APP_ENV);
-console.log(process.env.MIX_NOCAPTCHA_SITEKEY);
-console.log(process.env.MIX_BASE_NAME);
 
