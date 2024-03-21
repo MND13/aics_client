@@ -2,14 +2,14 @@
     <v-container>
         <v-row>
 
-           
+
             <v-col cols="9" class="ma-auto">
 
                 <v-card flat tile outlined class="p-auto text-center">
                     <img src="images/DSWD-DVO-LOGO.png" class="m-5" style="max-width: 60%; height: auto;" />
 
                     <v-spacer></v-spacer>
-                    <v-card-title class="justify-center">HI, {{ user.full_name }}! <br>
+                    <v-card-title class="justify-center">Welcome, {{ user.full_name }}! <br>
                         Please Verify Your Account <br></v-card-title>
                     <v-card-subtitle>We sent a OTP to validate your mobile number: {{ user.mobile_number }}
                     </v-card-subtitle>
@@ -88,7 +88,7 @@ export default {
         otp_gen() {
             this.loading = true;
             axios.post(route("api.otp.generate")).then(response => {
-                console.log(response);
+                
                 this.loading = false;
 
                 if (response.data.success) {
@@ -96,17 +96,16 @@ export default {
                     this.formErrors = "";
                 }
 
-
                 this.$refs.form.reset()
             }).catch(e => {
                 this.loading = false;
+                this.success_message = false;
                 this.formErrors = e.response.data.message
             });
         }
     },
-    mounted()
-    {
-      //  this.otp_gen();
+    mounted() {
+        //  this.otp_gen();
     }
 }
 </script>
