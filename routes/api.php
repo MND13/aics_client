@@ -81,7 +81,7 @@ Route::get('charging/txn/{id}', [\App\Http\Controllers\AicsAssessmentFundSourceC
 Route::get('statement', [\App\Http\Controllers\FundSourceStatementController::class, 'create'])->name("statement.create");
 Route::get('family_rel', [\App\Http\Controllers\FamilyRelationshipsController::class, 'index'])->name("api.family_rel");
 
-Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate");
+Route::post('otp/generate', [\App\Http\Controllers\OtpController::class, 'generate'])->name("api.otp.generate"); 
 Route::post('otp/verify', [\App\Http\Controllers\OtpController::class, 'verify'])->name("api.otp.verify");
 
 Route::post('assessment/{uuid}/sms', [\App\Http\Controllers\AicsAssessmentController::class, 'sms'])->name("api.assessment.sms");

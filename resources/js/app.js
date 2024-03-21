@@ -199,7 +199,7 @@ Vue.filter("formatDateOnly", function (value) {
 
 Vue.component('register-component', require('./Components/Register.vue').default);
 Vue.component('otp-gen-component', require('./Components/OtpGen.vue').default);
-Vue.component('app', App);
+
 
 export default new Vuetify({
     icons: {
