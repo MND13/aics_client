@@ -1024,16 +1024,17 @@ export default {
       }).catch(error => console.log(error))
     },
     PrintGIS() {
-      window.open("/api/gis/" + this.gis_data.uuid)
+      console.log( "/" + process.env.MIX_BASE_NAME + "/api/gis/" + this.gis_data.uuid);
+      window.open( "/" + process.env.MIX_BASE_NAME + "/api/gis/" + this.gis_data.uuid);
     },
     PrintCOE() {
-      window.open("/api/coe/" + this.gis_data.uuid)
+      window.open( "/" + process.env.MIX_BASE_NAME +"/api/coe/" + this.gis_data.uuid)
     },
     PrintCAV() {
-      window.open("/api/cav/" + this.gis_data.uuid)
+      window.open( "/" + process.env.MIX_BASE_NAME +"/api/cav/" + this.gis_data.uuid)
     },
     PrintGL() {
-      window.open("/api/gl/" + this.gis_data.uuid)
+      window.open( "/" + process.env.MIX_BASE_NAME +"/api/gl/" + this.gis_data.uuid)
     },
     getProviders() {
       axios.get(route("api.providers")).then(response => {
