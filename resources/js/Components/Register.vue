@@ -50,7 +50,7 @@
             </div>
 
             <div class="col-md-3">
-              <v-text-field v-model="form.last_name" label="Last Name*" outlined dense 
+              <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
                 :error-messages="formErrors.last_name" :rules="noHtmlTagsRule" required></v-text-field>
             </div>
 
@@ -107,12 +107,12 @@
           <div class="row justify-content-center g-2">
 
             <div class="  col-md-3">
-              <v-text-field type="date" v-model="form.birth_date" label="Birthday*" :rules="noHtmlTagsRule" outlined dense
-                :error-messages="formErrors.birth_date" @input="calculateAge" required></v-text-field>
+              <v-text-field type="date" v-model="form.birth_date" label="Birthday*" :rules="noHtmlTagsRule" outlined
+                dense :error-messages="formErrors.birth_date" @input="calculateAge" required></v-text-field>
             </div>
             <div class="col-md-3">
-              <v-text-field v-model="form.age" label="Age" :rules="noHtmlTagsRule" outlined dense :error-messages="formErrors.age"
-                readonly></v-text-field>
+              <v-text-field v-model="form.age" label="Age" :rules="noHtmlTagsRule" outlined dense
+                :error-messages="formErrors.age" readonly></v-text-field>
             </div>
 
             <div class="col-md-3">
@@ -136,14 +136,14 @@
 
 
               <v-text-field type="email" v-model="form.email" label="E-mail" outlined dense
-                :error-messages="formErrors.email" :rules="noHtmlTagsRule" ></v-text-field>
+                :error-messages="formErrors.email" :rules="noHtmlTagsRule"></v-text-field>
 
             </div>
 
             <div class=" col-md-3">
 
               <v-text-field type="password" v-model="form.password" label="Password" outlined dense
-                :error-messages="formErrors.password" :rules="passwordRules"></v-text-field>
+                :error-messages="formErrors.password" :rules="passwordRules" autocomplete="off"></v-text-field>
 
 
             </div>
@@ -152,7 +152,7 @@
 
 
               <v-text-field type="password" v-model="form.password_confirmation" label="Confirm Password" outlined dense
-                :error-messages="formErrors.password_confirmation" :rules="confirmPasswordRules"></v-text-field>
+                :error-messages="formErrors.password_confirmation" :rules="confirmPasswordRules" autocomplete="off"></v-text-field>
 
 
 
@@ -230,16 +230,13 @@
               </v-btn>
 
 
-              <div class="m-5 text-center">
-                Already have an account? Please <a href="/login">Login</a>
-              </div>
+
 
             </div>
           </div>
         </v-form>
 
-
-
+      
       </v-card-text>
     </v-card>
   </KeepAlive>
@@ -286,7 +283,9 @@ export default
         nocaptchakey: process.env.MIX_NOCAPTCHA_SITEKEY,
         showcpatcha: process.env.MIX_APP_ENV == "production" ? true : false,
         recaptcha: '',
-       
+        login_path: process.env.MIX_BASE_NAME + "/login",
+
+
 
       }
     },
@@ -332,11 +331,13 @@ export default
           value => value === this.form.password || 'Passwords do not match'
         ];
       },
-      
-      noHtmlTagsRule(){ return [
-        v => !!v || 'Input Field is required',
-        v => !/<[^>]+>/.test(v) || 'HTML tags are not allowed!'
-      ]}
+
+      noHtmlTagsRule() {
+        return [
+          v => !!v || 'Input Field is required',
+          v => !/<[^>]+>/.test(v) || 'HTML tags are not allowed!'
+        ]
+      }
 
     },
     methods:

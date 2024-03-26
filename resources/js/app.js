@@ -58,6 +58,7 @@ const router = new VueRouter({
             redirect: { name: "home" },
           
         },
+       
         {
             path: "/home/:status?",
             name: "home",
