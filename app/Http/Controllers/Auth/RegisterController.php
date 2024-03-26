@@ -89,19 +89,21 @@ class RegisterController extends Controller
         $data["full_name"] = trim($first_name . " " . $middle_name . " " . $last_name . " " . $ext_name);
 
         $fields = [
-            'first_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['first_name'])],
-            'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2'],
-            'last_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['last_name'])],
-            'ext_name' => ['sometimes', 'string', 'max:255'],
-            'birth_date' => ['bail', 'required', 'date', 'before:18 years ago'],
-            'full_name' => ['unique:users', new AllowedStringName($data['full_name'])],
+            'first_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['first_name']),  'regex:/^[^<>]*$/'],
+            'middle_name' => ['sometimes', 'required', 'string', 'max:255', 'min:2', 'regex:/^[^<>]*$/'],
+            'last_name' => ['bail', 'required', 'string', 'max:255', new AllowedStringName($data['last_name']),  'regex:/^[^<>]*$/'],
+            'ext_name' => ['sometimes', 'string', 'max:255','regex:/^[^<>]*$/'],
+            'birth_date' => ['bail', 'required', 'date', 'before:18 years ago','regex:/^[^<>]*$/'],
+            'full_name' => ['unique:users', new AllowedStringName($data['full_name']), 'regex:/^[^<>]*$/'],
             'gender' => ['required'],
             'psgc_id' => ['required', 'exists:psgcs,id'],
-            'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber($data['mobile_number'])],
-            'street_number' => ['required', 'string', 'max:255'],
+            'mobile_number' => ['required', 'numeric', 'digits:11', 'unique:users', new ValidCellphoneNumber($data['mobile_number']), 'regex:/^[^<>]*$/'],
+            'street_number' => ['required', 'string', 'max:255', 'regex:/^[^<>]*$/'],
             'valid_id' => 'required|file|mimes:jpeg,jpg,png',
             'client_photo' => 'required|file|mimes:jpeg,jpg,png',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users',],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users','regex:/^[^<>]*$/'],
+            'password' => ['required','confirmed','min:12','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'],
+           
             # 'g-recaptcha-response' =>  'required|captcha',
 
 
@@ -167,7 +169,8 @@ class RegisterController extends Controller
                 'gender' => $data['gender'],
                 'mobile_number' => $data['mobile_number'],
                 'email' => $data['email'],
-                'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
+                'password' => $data["password"],
+                //'password' => Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])),
                 'street_number' =>  mb_strtoupper(trim($data['street_number'] ?? null)),
                 'meta_full_name' => metaphone($first_name) . metaphone($middle_name) . metaphone($last_name),
                 'full_name' => trim($first_name . " " . $middle_name . " " . $last_name),
@@ -225,7 +228,6 @@ class RegisterController extends Controller
                 $msg = "Salamat sa pag rehistro sa DSWD Davao Region! Kani ang detalye sa imong account.  
 
 USERNAME: " . strtoupper($username)  . " 
-PASSWORD:" . Str::upper(Str::slug($last_name)) .  date('md', strtotime($data['birth_date'])) . " 
 
 ANG PAG PROSESO AY LIBRE.";
                 $response = Http::get('http://34.80.139.96/api/v2/SendSMS?ApiKey=LWtHZKzgbIh1sNQUPInRyqDFsj8W0K+8YCeSIdN08zA=&ClientId=3b3f49c9-b8e2-4558-9ed2-d618d7743fd5&SenderId=DSWD11AICS&Message=' . $msg . '&MobileNumbers=63' . substr($data['mobile_number'], 1));

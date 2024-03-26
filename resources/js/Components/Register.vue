@@ -40,18 +40,18 @@
 
             <div class="col-md-3">
               <v-text-field v-model="form.first_name" label="First Name*" outlined dense
-                :error-messages="formErrors.first_name" required></v-text-field>
+                :error-messages="formErrors.first_name" :rules="noHtmlTagsRule" required></v-text-field>
             </div>
 
             <div class="col-md-3">
               <v-text-field class="mb-0" v-model="form.middle_name" label="Middle Name" outlined dense
-                :error-messages="formErrors.middle_name"></v-text-field>
+                :error-messages="formErrors.middle_name" :rules="noHtmlTagsRule"></v-text-field>
               <v-checkbox class="mt-0" label="I have No Middle Name (NMN)" v-model="nmn"></v-checkbox>
             </div>
 
             <div class="col-md-3">
-              <v-text-field v-model="form.last_name" label="Last Name*" outlined dense
-                :error-messages="formErrors.last_name" required></v-text-field>
+              <v-text-field v-model="form.last_name" label="Last Name*" outlined dense 
+                :error-messages="formErrors.last_name" :rules="noHtmlTagsRule" required></v-text-field>
             </div>
 
             <div class="col-md-3">
@@ -71,7 +71,7 @@
             <div class="col-md-12">
 
               <v-text-field v-model="form.street_number" label="House No./Street/Purok*" outlined dense
-                :error-messages="formErrors.street_number" required></v-text-field>
+                :error-messages="formErrors.street_number" :rules="noHtmlTagsRule" required></v-text-field>
 
             </div>
           </div>
@@ -107,17 +107,17 @@
           <div class="row justify-content-center g-2">
 
             <div class="  col-md-3">
-              <v-text-field type="date" v-model="form.birth_date" label="Birthday*" outlined dense
+              <v-text-field type="date" v-model="form.birth_date" label="Birthday*" :rules="noHtmlTagsRule" outlined dense
                 :error-messages="formErrors.birth_date" @input="calculateAge" required></v-text-field>
             </div>
             <div class="col-md-3">
-              <v-text-field v-model="form.age" label="Age" outlined dense :error-messages="formErrors.age"
+              <v-text-field v-model="form.age" label="Age" :rules="noHtmlTagsRule" outlined dense :error-messages="formErrors.age"
                 readonly></v-text-field>
             </div>
 
             <div class="col-md-3">
               <v-select v-model="form.gender" label="Sex*" outlined dense :items="['Lalake', 'Babae']" item-value="id"
-                item-text="name" :error-messages="formErrors.gender">
+                item-text="name" :rules="noHtmlTagsRule" :error-messages="formErrors.gender">
               </v-select>
 
             </div>
@@ -125,7 +125,7 @@
 
 
               <v-text-field v-model="form.mobile_number" label="Mobile Number*" outlined dense
-                :error-messages="formErrors.mobile_number" counter></v-text-field>
+                :error-messages="formErrors.mobile_number" :rules="noHtmlTagsRule" counter></v-text-field>
 
             </div>
           </div>
@@ -136,14 +136,14 @@
 
 
               <v-text-field type="email" v-model="form.email" label="E-mail" outlined dense
-                :error-messages="formErrors.email"></v-text-field>
+                :error-messages="formErrors.email" :rules="noHtmlTagsRule" ></v-text-field>
 
             </div>
 
             <div class=" col-md-3">
 
               <v-text-field type="password" v-model="form.password" label="Password" outlined dense
-                :error-messages="formErrors.password"></v-text-field>
+                :error-messages="formErrors.password" :rules="passwordRules"></v-text-field>
 
 
             </div>
@@ -152,7 +152,7 @@
 
 
               <v-text-field type="password" v-model="form.password_confirmation" label="Confirm Password" outlined dense
-                :error-messages="formErrors.password_confirmation"></v-text-field>
+                :error-messages="formErrors.password_confirmation" :rules="confirmPasswordRules"></v-text-field>
 
 
 
@@ -286,6 +286,7 @@ export default
         nocaptchakey: process.env.MIX_NOCAPTCHA_SITEKEY,
         showcpatcha: process.env.MIX_APP_ENV == "production" ? true : false,
         recaptcha: '',
+       
 
       }
     },
@@ -319,6 +320,23 @@ export default
         if (!this.client_photo) return;
         return URL.createObjectURL(this.client_photo);
       },
+      passwordRules() {
+        return [
+          value => !!value || 'Password is required',
+          value => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/.test(value) || 'Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be at least 12 characters long.'
+        ];
+      },
+      confirmPasswordRules() {
+        return [
+          value => !!value || 'Please confirm your password',
+          value => value === this.form.password || 'Passwords do not match'
+        ];
+      },
+      
+      noHtmlTagsRule(){ return [
+        v => !!v || 'Input Field is required',
+        v => !/<[^>]+>/.test(v) || 'HTML tags are not allowed!'
+      ]}
 
     },
     methods:

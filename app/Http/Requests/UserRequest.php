@@ -37,7 +37,7 @@ class UserRequest extends FormRequest
                 'gender' => 'required|string',
                 'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
                 'role' => 'sometimes|required',
-                'password' => 'sometimes|required|confirmed|max:255|min:8',
+                'password' => 'sometimes|required|confirmed|min:12|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
                 'mobile_number' => ['required', 'numeric', 'digits:11', Rule::unique('users')->ignore(request('id'))],
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(request('id'))],
           
@@ -50,7 +50,7 @@ class UserRequest extends FormRequest
                 'office_id' => 'sometimes|required|exists:offices,id',
                 'username' => ['required', 'max:255', Rule::unique('users')->ignore(request('id'))],
                 'role' => 'sometimes|required',
-                'password' => 'sometimes|required|confirmed|max:255|min:8',
+                'password' => 'sometimes|required|confirmed|min:12|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
                
             ];
         }

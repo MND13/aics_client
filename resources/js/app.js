@@ -100,7 +100,7 @@ const router = new VueRouter({
             component: Users,
             meta: {
                 requiresAuth: true,
-                requiresRoles: ["super-admin", "admin", "social-worker"]
+                requiresRoles: ["super-admin", "admin"]
             }
         },
        
